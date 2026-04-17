@@ -26,9 +26,22 @@
     </select>
     </p>
     </form>
+    
+    <div class="message_area" style="height: 100px;">
     {% if shortest_path_string %}
     <h3>[{{start}}] から [{{end}}] のルート</h3>
     <p>{{shortest_path_string}}</p>
+    {% else %}
+    <p>出発地点と目標地点を選択してください</p>
     {% endif %}
+    </div>
+    
+    {% load static %}
+    <img src="{% static 'toyosu_campus_navi/image/' %}{{ map_image_file }}" style="width:1000px">
+
+
+
+
+
 </body>
 </html>
