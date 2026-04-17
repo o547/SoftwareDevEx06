@@ -6,7 +6,29 @@
     <title>Document</title>
 </head>
 <body>
-    <h3>[{{start}}] から [{{end}}] の行き方</h3>
+    <form method="POST",enctype="multipart/form-data">
+        {% csrf_token %}
+    <p>
+    出発地点：
+    <select name="form_start" id="form_start" onchange="this.form.submit()">
+          <option value="">--選択してください--</option>
+          {% for node in nodes %}
+          <option value="{{node}}" {% if start == node %}selected{% endif %} >{{node}}</option>
+          {% endfor %}
+        </select>
+    </p>
+    目標地点：
+    <select name="form_end" id="form_end" onchange="this.form.submit()">
+          <option value="">--選択してください--</option>
+          {% for node in nodes %}
+          <option value="{{node}}" {% if end == node %}selected{% endif %} >{{node}}</option>
+          {% endfor %}
+    </select>
+    </p>
+    </form>
+    {% if shortest_path_string %}
+    <h3>[{{start}}] から [{{end}}] のルート</h3>
     <p>{{shortest_path_string}}</p>
+    {% endif %}
 </body>
 </html>

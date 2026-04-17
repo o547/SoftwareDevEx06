@@ -1,6 +1,8 @@
 import networkx as nx
 class navi:
     instance = None
+    # ノード（頂点）のリスト
+    NODE_LIST = ["403教室", "404教室", "405教室", "406教室", "407教室", "408教室", "男性トイレ", "女性トイレ", "多目的トイレ", "渡り廊下", "自動販売機"]
 
     @classmethod
     def get_instance(cls):
@@ -11,9 +13,7 @@ class navi:
     @classmethod
     def initialize(cls):
         print("初期化処理を実行")
-        
-        # ノード（頂点）のリスト
-        NODE_LIST = ["403教室", "404教室", "405教室", "406教室", "407教室", "408教室", "男性トイレ", "女性トイレ", "多目的トイレ", "渡り廊下", "自動販売機"]
+        NODE_LIST = cls.NODE_LIST
 
         # エッジ（辺）のリスト
         # (始点, 終点, 重み)
