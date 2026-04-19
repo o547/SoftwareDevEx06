@@ -2,7 +2,8 @@ import cv2
 from .navi import navi
 
 class map:
-
+    
+    #リスト「path」に従い平面地図に矢印を引く
     @classmethod
     def drow_arrows(cls,path):
         input_name = "static/toyosu_campus_navi/image/map4F.png"
@@ -15,14 +16,12 @@ class map:
         img = cv2.imread(input_name)
 
         for i in range (len(path)-1):
-            # print(str(path[i])+"→"+str(path[i+1]))
             start = nodes[path[i]]
-            end = nodes[path[i+1]]
-            # 線を引く
+            goal = nodes[path[i+1]]
             cv2.arrowedLine(
                 img,
                 start,
-                end,
+                goal,
                 color,
                 thickness=thickness,
                 line_type=line_type,
