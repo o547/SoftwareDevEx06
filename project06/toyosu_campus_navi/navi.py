@@ -54,7 +54,7 @@ class navi:
             ("教室棟_多目的トイレ", "教室棟_男性トイレ", cls.pythagorean(nodes["教室棟_多目的トイレ"], nodes["教室棟_男性トイレ"])),
             ("中継_教室棟_トイレ", "教室棟_多目的トイレ", cls.pythagorean(nodes["中継_教室棟_トイレ"], nodes["教室棟_多目的トイレ"])),
             ("403教室", "教室棟_渡り廊下入口", cls.pythagorean(nodes["403教室"], nodes["教室棟_渡り廊下入口"])),
-            ("教室棟_渡り廊下入口", "交流棟_渡り廊下入口", cls.pythagorean(nodes["教室棟_渡り廊下入口"], nodes["交流棟_渡り廊下入口"])*2),
+            ("教室棟_渡り廊下入口", "交流棟_渡り廊下入口", cls.pythagorean(nodes["教室棟_渡り廊下入口"], nodes["交流棟_渡り廊下入口"])*1.5),
             ("交流棟_渡り廊下入口", "自動販売機", cls.pythagorean(nodes["交流棟_渡り廊下入口"], nodes["自動販売機"])),
             ("交流棟_渡り廊下入口", "中継_交流棟_トイレ", cls.pythagorean(nodes["交流棟_渡り廊下入口"], nodes["中継_交流棟_トイレ"])),
             ("中継_交流棟_トイレ", "交流棟_男性トイレ", cls.pythagorean(nodes["中継_交流棟_トイレ"], nodes["交流棟_男性トイレ"])),
@@ -84,7 +84,7 @@ class navi:
         Graph=cls.get_instance()
         # ダイクストラ法で最短経路とその推定移動時間を求める
         shortest_path = nx.dijkstra_path(Graph, start, goal)
-        estimated_time = nx.dijkstra_path_length(Graph, start, goal) / 8
+        estimated_time = nx.dijkstra_path_length(Graph, start, goal) / 7
         return shortest_path, estimated_time
 
     @classmethod
