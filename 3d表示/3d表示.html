@@ -1,0 +1,92 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <title>屋内地図</title>
+    <style>
+      body {
+        margin: 0;
+      }
+    </style>
+
+    <!-- ★これを追加 -->
+    <script type="importmap">
+      {
+        "imports": {
+          "three": "https://unpkg.com/three@0.160.0/build/three.module.js"
+        }
+      }
+    </script>
+    <!-- <style>
+      canvas {
+        width: 1200px !important;
+        height: 600px !important;
+        margin: 50px;
+      }
+    </style> -->
+  </head>
+
+  <body>
+    <script type="module">
+      import * as THREE from "three";
+      import { OrbitControls } from "https://unpkg.com/three@0.160.0/examples/jsm/controls/OrbitControls.js";
+
+      const scene = new THREE.Scene();
+
+      const camera = new THREE.PerspectiveCamera(
+        75,
+        window.innerWidth / window.innerHeight,
+        0.1,
+        1000,
+      );
+      camera.position.set(0, 5, 15);
+
+      const renderer = new THREE.WebGLRenderer();
+      renderer.setSize(window.innerWidth, window.innerHeight);
+      document.body.appendChild(renderer.domElement);
+
+      const controls = new OrbitControls(camera, renderer.domElement);
+      controls.target.set(0, 0, 0);
+      controls.update();
+
+      // テクスチャ読み込み
+      const loader = new THREE.TextureLoader();
+
+function createFloor(imagePath, z, opacity) {
+    const texture = loader.load(imagePath, (tex) => {
+
+        const image = tex.image;
+        const aspect = image.width / image.height;
+
+        const height = 5;        // 基準サイズ（好きに決める）
+        const width = height * aspect;
+
+        const geometry = new THREE.PlaneGeometry(width, height);
+
+        const material = new THREE.MeshBasicMaterial({
+            map: tex,
+            transparent: true,
+            opacity: opacity
+        });
+
+        const mesh = new THREE.Mesh(geometry, material);
+        mesh.position.z = z;
+
+        scene.add(mesh);
+    });
+}
+
+      // 各階を追加
+      scene.add(createFloor("floor2.png", 0, 0.5));
+      scene.add(createFloor("floor3.png", 2, 0.5));
+      scene.add(createFloor("floor4.png", 4, 0.5));
+
+      function animate() {
+        requestAnimationFrame(animate);
+        controls.update();
+        renderer.render(scene, camera);
+      }
+      animate();
+    </script>
+  </body>
+</html>
