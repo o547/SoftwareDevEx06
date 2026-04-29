@@ -1,25 +1,58 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Document</title>
-    <link rel="stylesheet" href="./style.css">
-</head>
-<body>
+    <link rel="stylesheet" href="./style.css" />
+  </head>
+  <body>
     <div class="app">
-        <div class="main"><img src="./スクリーンショット 2026-04-28 184525.png"></div>
-        <div class="sidebar">
-            <div class="sidebar-square-group">
-                <div class="sidebar-button square">menu</div>
-                <div class="sidebar-button square">language</div>
+      <div class="main">
+        <img src="./スクリーンショット 2026-04-28 184525.png" />
+      </div>
+      <div class="sidebar">
+        <div class="sidebar-square-group">
+          <div class="sidebar-button square">menu</div>
+          <div class="sidebar-button square">language</div>
+        </div>
+        <div class="sidebar-button" onclick="openModal()">検索</div>
+        <div class="sidebar-button">履歴</div>
+        <div class="sidebar-button">チャットボット</div>
+        <div class="sidebar-notice">お知らせ</div>
+      </div>
+    </div>
+    <!-- モーダルウィンドウ -->
+    <div id="modal" class="modal">
+      <div class="modal-content">
+        <div class="modal-row modal-header">
+            <h2 class="modal-title">検索</h2>
+            <h2 onclick="closeModal()" class="modal-close-button">×</h2>
+        </div>
+        <div class="modal-main" style="display: none;">
+            <div class="modal-row">
+                <div class="sidebar-button">出発地</div>
             </div>
-            <div class="sidebar-button">検索</div>
-            <div class="sidebar-button">履歴</div>
-            <div class="sidebar-button">チャットボット</div>
-            <div class="sidebar-notice ">お知らせ</div>
-
+            <div class="modal-row">
+                <div class="sidebar-button">到着地</div>
+            </div>
+        </div>
+        
+        <div class="modal-main">
+            <div class="modal-main-title">自動入力</div>
+            <div class="modal-row">
+                <div class="sidebar-button">GPSから推定</div>
+                <div class="sidebar-button">地図から選択</div>
+            </div>
+            <div class="modal-main-title">手動入力</div>
+            <div class="modal-row">
+                <div class="sidebar-button">--棟を選択--</div>
+                <div class="sidebar-button">--階を選択--</div>
+                <div class="sidebar-button">--部屋を選択--</div>
+            </div>
         </div>
     </div>
-</body>
+    </div>
+  </body>
+<script src="./script.js"> </script>
 </html>
