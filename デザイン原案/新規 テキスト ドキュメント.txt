@@ -1,0 +1,19 @@
+* {
+  margin: 0;
+  padding: 0;
+}
+
+.app {
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+}
+
+
+
+.sidebar {
+  width: 20vw;
+  height: 100vh;
+  background-color: moccasin;
+  justify-content:  flex-end;
+}
