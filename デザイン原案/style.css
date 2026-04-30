@@ -33,7 +33,7 @@
   justify-content: center;
   align-items: center;
   background-color: #156082;
-  border: 4px solid #0c3f57;
+  border: 4px solid #0b3a4e;
   width: 260px;
   height: 50px;
   font-size: large;
@@ -46,9 +46,10 @@
   justify-content: center;
   align-items: center;
   background-color: #156082;
-  border: 4px solid #0c3f57;
+  border: 4px solid #0b3a4e;
   width: 260px;
   height: 260px;
+  font-size: large;
   margin-top: 25px;
   margin-bottom: 25px;
   color: white;
@@ -75,11 +76,11 @@
   left: 0;
   width: 100vw;
   height: 100vh;
-  background: rgba(0, 0, 0, 0.6); /* 薄い黒 */
+  background: rgba(0, 0, 0, 0.6);
   display: flex;
   justify-content: center;
   align-items: center;
-  visibility: hidden; /* 初期は非表示 */
+  visibility: hidden;
   opacity: 0;
   transition: 0.2s;
 }
@@ -94,7 +95,7 @@
   width: 80vw;
   height: 80vh;
   background-color: #156082;
-  border: 4px solid #0c3f57;
+  border: 4px solid #0b3a4e;
   border-radius: 10px;
   padding: 20px;
   color: white;
@@ -111,13 +112,12 @@
   margin-right: 7px;
 }
 
-.modal-main {
+.modal-body {
   display: flex;
   flex-direction: column;
   justify-content: space-around;
   height: 100%;
   width: 100%;
-  padding: 50px 0;
 }
 .modal-row {
   display: flex;
@@ -130,6 +130,12 @@
   justify-content: space-between;
 }
 
-.modal-main-title{
+.modal-footer{
+  justify-content: right;
+  margin-bottom: 0;
+}
+
+.modal-body-title{
   margin-left: 50px;
 }
+

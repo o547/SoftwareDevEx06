@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
+    <title>デザイン原案</title>
     <link rel="stylesheet" href="./style.css" />
   </head>
   <body>
@@ -13,46 +13,104 @@
       </div>
       <div class="sidebar">
         <div class="sidebar-square-group">
-          <div class="sidebar-button square">menu</div>
-          <div class="sidebar-button square">language</div>
+          <div class="sidebar-button square">
+            <img src="./bars_24.png" style="width: 45px;" />
+          </div>
+          <div class="sidebar-button square"  onclick="openMenu('search-menu', 'language-menu');openModal()">言語切替</div>
         </div>
         <div class="sidebar-button" onclick="openModal()">検索</div>
-        <div class="sidebar-button">履歴</div>
+        <div class="sidebar-button">ログイン</div>
         <div class="sidebar-button">チャットボット</div>
         <div class="sidebar-notice">お知らせ</div>
       </div>
     </div>
-    <!-- モーダルウィンドウ -->
+    <!-- モーダルウィンドウ開始 -->
     <div id="modal" class="modal">
       <div class="modal-content">
-        <div class="modal-row modal-header">
+        <div id="search-menu" style="display: contents">
+          <div class="modal-row modal-header">
             <h2 class="modal-title">検索</h2>
             <h2 onclick="closeModal()" class="modal-close-button">×</h2>
+          </div>
+          <div class="modal-body" style="padding: 8vh 0">
+            <div class="modal-row">
+              <div class="sidebar-button" onclick="openMenu('search-menu', 'start-point-menu')">出発地</div>
+            </div>
+            <div class="modal-row">
+              <div class="sidebar-button" onclick="openMenu('search-menu', 'goal-point-menu')">目的地</div>
+            </div>
+          </div>
         </div>
-        <div class="modal-main" style="display: none;">
+
+        <div id="start-point-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">出発地点入力</h2>
+            <h2 onclick="closeModal();openMenu('start-point-menu', 'search-menu')" class="modal-close-button">×</h2>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-title">自動入力</div>
             <div class="modal-row">
-                <div class="sidebar-button">出発地</div>
+              <div class="sidebar-button">GPSから推定</div>
+              <div class="sidebar-button">地図から選択</div>
+              <div class="sidebar-button" style="visibility: hidden"></div>
             </div>
+            <div class="modal-body-title">手動入力</div>
             <div class="modal-row">
-                <div class="sidebar-button">到着地</div>
+              <div class="sidebar-button">--棟を選択--</div>
+              <div class="sidebar-button">--階を選択--</div>
+              <div class="sidebar-button">--部屋を選択--</div>
             </div>
+          </div>
+          <div class="modal-row modal-footer">
+            <div class="sidebar-button square" onclick="openMenu('start-point-menu', 'search-menu')">決定</div>
+          </div>
         </div>
-        
-        <div class="modal-main">
-            <div class="modal-main-title">自動入力</div>
+
+        <div id="goal-point-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">目的地点入力</h2>
+            <h2 onclick="closeModal();openMenu('goal-point-menu', 'search-menu')" class="modal-close-button">×</h2>
+          </div>
+          <div class="modal-body">
+            <div class="modal-body-title">自動入力</div>
             <div class="modal-row">
-                <div class="sidebar-button">GPSから推定</div>
-                <div class="sidebar-button">地図から選択</div>
+              <div class="sidebar-button">地図から選択</div>
+              <div class="sidebar-button" style="visibility: hidden"></div>
+              <div class="sidebar-button" style="visibility: hidden"></div>
             </div>
-            <div class="modal-main-title">手動入力</div>
+            <div class="modal-body-title">手動入力</div>
             <div class="modal-row">
-                <div class="sidebar-button">--棟を選択--</div>
-                <div class="sidebar-button">--階を選択--</div>
-                <div class="sidebar-button">--部屋を選択--</div>
+              <div class="sidebar-button">--棟を選択--</div>
+              <div class="sidebar-button">--階を選択--</div>
+              <div class="sidebar-button">--部屋を選択--</div>
             </div>
+          </div>
+          <div class="modal-row modal-footer">
+            <div class="sidebar-button square" onclick="openMenu('goal-point-menu', 'search-menu')">決定</div>
+          </div>
         </div>
+
+        <div id="language-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">言語選択</h2>
+            <h2 onclick="closeModal();openMenu('language-menu', 'search-menu')" class="modal-close-button">×</h2>
+          </div>
+          <div class="modal-body" style="padding: 4vh 0">
+            <div class="modal-row">
+              <div class="sidebar-button">日本語</div>
+            </div>
+            <div class="modal-row">
+              <div class="sidebar-button">English</div>
+            </div>
+            <div class="modal-row">
+              <div class="sidebar-button">中文</div>
+            </div>
+          </div>
+        </div>
+
+      </div>
     </div>
-    </div>
+    <!-- モーダルウィンドウ終了 -->
   </body>
-<script src="./script.js"> </script>
+  <script src="./script.js"></script>
 </html>
