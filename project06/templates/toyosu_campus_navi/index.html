@@ -21,10 +21,30 @@
           </div>
           <div class="sidebar-button square"  onclick="openMenu('search-menu', 'language-menu');openModal()">言語切替</div>
         </div>
-        <div class="sidebar-button" onclick="openModal()">検索</div>
+        <!-- <div class="sidebar-button" onclick="openModal()">検索</div>
         <div class="sidebar-button">ログイン</div>
         <div class="sidebar-button">チャットボット</div>
-        <div class="sidebar-notice">お知らせ</div>
+        <div class="sidebar-notice">お知らせ</div> -->
+        <div class="sidebar-account">
+          <p style="font-size: 20px;">履歴の閲覧には<br>ログインが必要です</p>
+          <form type="submit" method="post">
+          <div class="account-row">
+              {% csrf_token %}
+              <label for="login-id">ログインID</label>
+              <input id="login-id" id="login-id"  required>
+              <label for="login-password">パスワード</label>
+              <input id="login-password" id="login-password" type="password" required>
+              <button type="submit" formaction="/submit1">ログイン</button>
+              <button>キャンセル</button>
+
+            </div>
+          </form>
+          <div class="account-row">
+            <p>アカウントがない方</p>
+            <div class="link-text">新規登録</div>
+          </div>
+          
+        </div>
       </div>
     </div>
     <!-- モーダルウィンドウ開始 -->
