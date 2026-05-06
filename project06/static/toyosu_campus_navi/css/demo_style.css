@@ -1,0 +1,14 @@
+body{
+    margin: 15px;
+}
+
+.message_area{
+    min-height: 110px;
+    background-color: rgb(227, 227, 227);
+    padding: 6px;
+    border-radius: 6px;
+}
+
+img{
+    width : 95%;
+}

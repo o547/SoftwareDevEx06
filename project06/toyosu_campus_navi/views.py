@@ -4,16 +4,18 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .navi import navi
 from .map import map
+# from django.contrib.auth.mixins import LoginRequiredMixin
+# from django.contrib.auth.models import User
 
 
-class IndexView(View):
+class DemoIndexView(View):
 
     def get(self, request):
         nodes = list(navi.nodes.keys())
         nodes[:] = [x for x in nodes if not x.startswith("中継_")]
         return render(
             request,
-            "toyosu_campus_navi/index.html",
+            "toyosu_campus_navi/demo_index.html",
             {
                 "nodes": nodes,
                 "map_image_file": "map4F.png",
@@ -49,7 +51,7 @@ class IndexView(View):
         nodes[:] = [x for x in nodes if not x.startswith("中継_")]
         return render(
             request,
-            "toyosu_campus_navi/index.html",
+            "toyosu_campus_navi/demo_index.html",
             {
                 "start": start,
                 "goal": goal,
@@ -60,5 +62,16 @@ class IndexView(View):
             },
         )
 
+class IndexView(View):
+    def get(self, request):
+        return render(
+            request,
+            "toyosu_campus_navi/index.html"
+        )
 
+
+
+
+demo_index = DemoIndexView.as_view()
 index = IndexView.as_view()
+

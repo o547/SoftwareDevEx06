@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>豊洲キャンパスナビ</title>
+    
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" crossorigin="anonymous"></script>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/demo_style.css' %}">
+</head>
+<body>
+    <form method="POST",enctype="multipart/form-data">
+        {% csrf_token %}
+    <p>
+        出発地点：
+        <select name="form_start" id="form_start" onchange="this.form.submit()">
+            <option value="">--選択してください--</option>
+            {% for node in nodes %}
+            <option value="{{node}}" {% if start == node %}selected{% endif %} >{{node}}</option>
+            {% endfor %}
+            </select>
+    </p>
+    <p>
+        目標地点：
+        <select name="form_goal" id="form_goal" onchange="this.form.submit()">
+            <option value="">--選択してください--</option>
+            {% for node in nodes %}
+            <option value="{{node}}" {% if goal == node %}selected{% endif %} >{{node}}</option>
+            {% endfor %}
+        </select>
+    </p>
+    </form>
+    
+    <div class="message_area">
+        <h5>[{{start}}] から [{{goal}}] のルート 
+        {% if estimated_time %}
+        (約{{estimated_time}}秒)
+        {% endif %}
+        </h5>
+        {% if shortest_path_string %}
+        <p>{{shortest_path_string}}</p>
+        {% else %}
+        <p>出発地点と目標地点を選択してください</p>
+        {% endif %}
+    </div>
+    
+    {% load static %}
+    <img src="{% static 'toyosu_campus_navi/image/' %}{{ map_image_file }}">
+
+
+
+
+
+</body>
+</html>
