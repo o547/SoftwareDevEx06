@@ -87,6 +87,13 @@
   align-items: center;
 }
 
+#sidebar-buttons{
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+}
+
 .sidebar-account button {
   margin: 5px 0;
   width: 100px;

@@ -19,33 +19,59 @@
             {% load static %}
             <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px;">
           </div>
-          <div class="sidebar-button square"  onclick="openMenu('search-menu', 'language-menu');openModal()">言語切替</div>
+          <div class="sidebar-button square"  onclick="toggleMenu('search-menu', 'language-menu', 'contents');openModal()">言語切替</div>
         </div>
-        <!-- <div class="sidebar-button" onclick="openModal()">検索</div>
-        <div class="sidebar-button">ログイン</div>
-        <div class="sidebar-button">チャットボット</div>
-        <div class="sidebar-notice">お知らせ</div> -->
-        <div class="sidebar-account">
+
+        <div id="sidebar-buttons" style="display: contents;">
+          <div class="sidebar-button" onclick="openModal()">検索</div>
+          {% if user_id == "AnonymousUser" %}
+          <div class="sidebar-button" onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')">ログイン</div>
+          {% else %}
+          <div class="sidebar-button">履歴 ({{ user_id }})</div>
+          {% endif %}
+          <div class="sidebar-button">チャットボット</div>
+          <div class="sidebar-notice">お知らせ</div>
+        </div>
+
+        <div class="sidebar-account" id="sidebar-login" style="display: none;">
           <p style="font-size: 20px;">履歴の閲覧には<br>ログインが必要です</p>
           <form type="submit" method="post">
           <div class="account-row">
               {% csrf_token %}
               <label for="login-id">ログインID</label>
-              <input id="login-id" id="login-id"  required>
+              <input id="login-id" name="login-id"  required>
               <label for="login-password">パスワード</label>
-              <input id="login-password" id="login-password" type="password" required>
-              <button type="submit" formaction="/submit1">ログイン</button>
-              <button>キャンセル</button>
-
+              <input id="login-password" name="login-password" type="password" required>
+              <input type="hidden" id="login-method" name="login-method" value="login" required>
+              <button type="submit" formaction="/user/login">ログイン</button>
+              <button type="button" onclick="toggleMenu('sidebar-login', 'sidebar-buttons', 'contents')">キャンセル</button>
             </div>
           </form>
           <div class="account-row">
             <p>アカウントがない方</p>
-            <div class="link-text">新規登録</div>
+            <div class="link-text" onclick="toggleMenu('sidebar-login', 'sidebar-create', '')">新規登録</div>
           </div>
-          
         </div>
+
+        <div class="sidebar-account" id="sidebar-create" style="display: none">
+          <p style="font-size: 20px;">アカウント新規作成</p>
+          <form type="submit" method="post">
+          <div class="account-row">
+              {% csrf_token %}
+              <label for="login-id">ログインID</label>
+              <input id="login-id" name="login-id"  required>
+              <label for="login-password">パスワード</label>
+              <input id="login-password" name="login-password" type="password" required>
+              <input type="hidden" id="login-method" name="login-method" value="create" required>
+              <button type="submit" formaction="/user/login">登録</button>
+              <button type="button" onclick="toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')">キャンセル</button>
+            </div>
+          </form>
+          <div class="account-row"></div>
+        </div>
+
       </div>
+      
     </div>
     <!-- モーダルウィンドウ開始 -->
     <div id="modal" class="modal">
@@ -57,10 +83,10 @@
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
-              <div class="sidebar-button" onclick="openMenu('search-menu', 'start-point-menu')">出発地</div>
+              <div class="sidebar-button" onclick="toggleMenu('search-menu', 'start-point-menu', 'contents')">出発地</div>
             </div>
             <div class="modal-row">
-              <div class="sidebar-button" onclick="openMenu('search-menu', 'goal-point-menu')">目的地</div>
+              <div class="sidebar-button" onclick="toggleMenu('search-menu', 'goal-point-menu', 'contents')">目的地</div>
             </div>
           </div>
         </div>
@@ -68,7 +94,7 @@
         <div id="start-point-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">出発地点入力</h2>
-            <h2 onclick="closeModal();openMenu('start-point-menu', 'search-menu')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal();toggleMenu('start-point-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -85,14 +111,14 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" onclick="openMenu('start-point-menu', 'search-menu')">決定</div>
+            <div class="sidebar-button square" onclick="toggleMenu('start-point-menu', 'search-menu', 'contents')">決定</div>
           </div>
         </div>
 
         <div id="goal-point-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">目的地点入力</h2>
-            <h2 onclick="closeModal();openMenu('goal-point-menu', 'search-menu')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal();toggleMenu('goal-point-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -109,14 +135,14 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" onclick="openMenu('goal-point-menu', 'search-menu')">決定</div>
+            <div class="sidebar-button square" onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')">決定</div>
           </div>
         </div>
 
         <div id="language-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">言語選択</h2>
-            <h2 onclick="closeModal();openMenu('language-menu', 'search-menu')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal();toggleMenu('language-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body" style="padding: 4vh 0">
             <div class="modal-row">

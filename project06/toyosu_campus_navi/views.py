@@ -1,11 +1,13 @@
 from django.shortcuts import render, redirect, get_object_or_404
 
-# Create your views here.
 from django.views import View
 from .navi import navi
 from .map import map
-# from django.contrib.auth.mixins import LoginRequiredMixin
-# from django.contrib.auth.models import User
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
+from django.contrib.auth import authenticate, login
+from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth.models import User
 
 
 class DemoIndexView(View):
@@ -64,14 +66,36 @@ class DemoIndexView(View):
 
 class IndexView(View):
     def get(self, request):
+        user_id = str(request.user)
+        login_button_text = "ログイン"
+        if(user_id != "AnonymousUser"):
+            login_button_text = "履歴"
+            
         return render(
             request,
-            "toyosu_campus_navi/index.html"
+            "toyosu_campus_navi/index.html",
+            {"user_id":user_id}
         )
+        
+class UserLoginView(View):
+    def post(self, request):
+        login_id = request.POST["login-id"]
+        login_password = request.POST["login-password"]
+        login_method = request.POST["login-method"]
+        if(login_method == "login"):
+            user = authenticate(request,username=login_id, password=login_password)
+            login(request, user)
+        elif(login_method == "create"):
+            print("id:"+login_id+" pass"+login_password)
+            User.objects.create_user(login_id,"",login_password)
+            user = authenticate(request,username=login_id, password=login_password)
+            login(request, user)
+        
+        return redirect("toyosu_campus_navi:index")
 
 
 
 
 demo_index = DemoIndexView.as_view()
 index = IndexView.as_view()
-
+user_login = UserLoginView.as_view()
