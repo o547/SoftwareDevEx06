@@ -13,9 +13,16 @@
         {% load static %}
         <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}">
       </div>
-      <div class="sidebar">
+
+    <div class="sidebar-button square" id="sidebar-open-button" onclick="openSidebar('index-sidebar','sidebar-open-button')" style="margin-right: 20px; width: 0;">
+      {% load static %}
+      <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px;">
+    </div>
+      
+
+      <div class="sidebar" id="index-sidebar">
         <div class="sidebar-square-group">
-          <div class="sidebar-button square">
+          <div class="sidebar-button square" onclick="closeSidebar('index-sidebar','sidebar-open-button')">
             {% load static %}
             <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px;">
           </div>
