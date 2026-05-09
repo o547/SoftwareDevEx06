@@ -23,7 +23,8 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-6b)j5h)cp7*)=wq@j9i*b5kt2z(un43i5)prhk&c^h8s3j%ngm'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
+#Falseにする場合、python manage.py collectstaticを実行する
 
 ALLOWED_HOSTS = ['.localhost', '127.0.0.1', '[::1]', "o574.pythonanywhere.com"]
 
@@ -119,3 +120,5 @@ STATIC_URL = 'static/'
 STATICFILES_DIRS=[
     BASE_DIR / "static",
 ]
+
+STATIC_ROOT = BASE_DIR / 'staticfiles'

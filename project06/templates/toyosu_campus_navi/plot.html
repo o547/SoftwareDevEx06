@@ -1,4 +1,4 @@
-<!-- # 画像座標取得アプリ（HTML + JavaScript）
+<!-- # 画像座標取得アプリ
 
 ## 機能
 
@@ -11,11 +11,10 @@
 
 ## 使用方法
 
-    1. 以下のコードを `index.html` として保存
-    2. ダブルクリックでブラウザ起動
-    3. 「画像を選択」から画像アップロード
-    4. 画像をクリックすると座標コピー＆点追加
-    5. 「画像をダウンロード」で保存
+    1. 本ファイルをブラウザで起動
+    2. 「画像を選択」から画像アップロード
+    3. 画像をクリックすると座標コピー＆点追加
+    4. 「画像をダウンロード」で保存
 
 --- -->
 
@@ -24,7 +23,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>画像座標取得アプリ</title>
+    <title>画像座標取得</title>
 
     <style>
       body {
@@ -42,7 +41,7 @@
       }
 
       button {
-        padding: 8px 14px;
+        padding: 5px 12px;
         margin-right: 10px;
         cursor: pointer;
         border: none;
@@ -58,7 +57,7 @@
       #canvas {
         border: 1px solid #ccc;
         background-color: white;
-        max-width: 100%;
+        max-width: 80%;
         cursor: crosshair;
       }
 
@@ -70,7 +69,8 @@
     </style>
   </head>
   <body>
-    <h2>座標プロット</h2>
+    <h2>画像座標取得</h2>
+    <p>画像の任意の場所をクリックすると、そのx,y座標をコピーします</p>
 
     <div class="controls">
       <input type="file" id="imageInput" accept="image/*" />
@@ -81,7 +81,7 @@
 
     <div id="status">座標: 未選択</div>
     <div>ログ</div>
-    <textarea style="width: 100%; height: 200px;" id="logArea"></textarea>
+    <textarea style="width: 80%; height: 200px;" id="logArea"></textarea>
 
     <script>
       const imageInput = document.getElementById("imageInput");

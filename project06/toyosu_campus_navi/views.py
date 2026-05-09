@@ -63,6 +63,14 @@ class DemoIndexView(View):
                 "estimated_time": estimated_time,
             },
         )
+        
+class PlotView(View):
+    def get(self, request):
+
+        return render(
+            request,
+            "toyosu_campus_navi/plot.html",
+        )
 
 class IndexView(View):
     def get(self, request):
@@ -99,3 +107,4 @@ class UserLoginView(View):
 demo_index = DemoIndexView.as_view()
 index = IndexView.as_view()
 user_login = UserLoginView.as_view()
+plot = PlotView.as_view()
