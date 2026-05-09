@@ -9,9 +9,8 @@ from django.contrib.auth import authenticate, login
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 
-
+#経路案内のデモ画面
 class DemoIndexView(View):
-
     def get(self, request):
         nodes = list(navi.nodes.keys())
         nodes[:] = [x for x in nodes if not x.startswith("中継_")]
@@ -63,28 +62,34 @@ class DemoIndexView(View):
                 "estimated_time": estimated_time,
             },
         )
-        
+
+#地図データ作成用の画像座標取得アプリ
 class PlotView(View):
     def get(self, request):
-
         return render(
             request,
             "toyosu_campus_navi/plot.html",
         )
 
+#メイン画面
 class IndexView(View):
     def get(self, request):
         user_id = str(request.user)
         login_button_text = "ログイン"
         if(user_id != "AnonymousUser"):
             login_button_text = "履歴"
-            
+        alert_message = request.session.get("alert_message")
+        if(alert_message):            
+            print(alert_message)
+            del request.session["alert_message"]
         return render(
             request,
             "toyosu_campus_navi/index.html",
-            {"user_id":user_id}
+            {"user_id":user_id,
+             "alert_message":alert_message}
         )
-        
+
+#ユーザーのログイン及び新規作成
 class UserLoginView(View):
     def post(self, request):
         login_id = request.POST["login-id"]
@@ -92,13 +97,21 @@ class UserLoginView(View):
         login_method = request.POST["login-method"]
         if(login_method == "login"):
             user = authenticate(request,username=login_id, password=login_password)
-            login(request, user)
+            if user is not None:
+                #ログイン成功
+                login(request, user)
+            else:
+                request.session["alert_message"] = "ログインできませんでした"
         elif(login_method == "create"):
-            print("id:"+login_id+" pass"+login_password)
-            User.objects.create_user(login_id,"",login_password)
-            user = authenticate(request,username=login_id, password=login_password)
-            login(request, user)
-        
+            if User.objects.filter(username=login_id).exists():
+                #ユーザーIDが既に存在している
+                request.session["alert_message"] = "そのIDは存在しています"
+                None
+            else:
+                #アカウントを新規作成する
+                User.objects.create_user(login_id,"",login_password)
+                user = authenticate(request,username=login_id, password=login_password)
+                login(request, user)
         return redirect("toyosu_campus_navi:index")
 
 

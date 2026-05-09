@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>デザイン原案</title>
+    <title>豊洲キャンパスナビ</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}">
   </head>
@@ -13,7 +13,7 @@
         {% load static %}
         <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}">
       </div>
-      <span style="margin: auto 0 8px auto;"><a href="/demo">案内デモ</a> / <a href="/plot">座標取得アプリ</a></span>
+      <span style="margin: auto 0 8px auto; text-align: right;"><a href="/demo">経路案内デモ</a><br><a href="/plot">座標取得アプリ</a></span>
 
     <div class="sidebar-button square" id="sidebar-open-button" onclick="openSidebar('index-sidebar','sidebar-open-button')" style="margin-right: 20px; width: 0;">
       {% load static %}
@@ -37,7 +37,7 @@
           {% else %}
           <div class="sidebar-button">履歴 ({{ user_id }})</div>
           {% endif %}
-          <div class="sidebar-button">チャットボット</div>
+          <div class="sidebar-button" onclick="toggleMenu('search-menu', 'chatbot-menu', 'contents');openModal()">チャットボット</div>
           <div class="sidebar-notice">お知らせ</div>
         </div>
 
@@ -121,6 +121,7 @@
           </div>
         </div>
 
+        
         <div id="goal-point-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">目的地点入力</h2>
@@ -145,6 +146,7 @@
           </div>
         </div>
 
+        <!-- 言語選択メニュー -->
         <div id="language-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">言語選択</h2>
@@ -163,10 +165,34 @@
           </div>
         </div>
 
+        <!-- チャットボットメニュー -->
+        <div id="chatbot-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">チャットボット</h2>
+            <h2 onclick="closeModal();toggleMenu('chatbot-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
+          </div>
+          <div class="modal-body" style="padding: 2vh 0">
+            <div class="chatbot-conversation">
+              <div class="chatbot-message">聞きたい内容を入力してください</div>
+              <div class="chatbot-message user-message">(ユーザーの入力)</div>
+              <div class="chatbot-message">(ボットの返答)</div>
+
+            </div>
+          </div>
+          <div class="modal-row modal-footer">
+            <textarea class="chatbot-input" placeholder="質問内容(開発中につき送信はできません)"></textarea>
+            <button class="chatbot-submit">送信</button>
+          </div>
+        </div>
+
+
       </div>
     </div>
     <!-- モーダルウィンドウ終了 -->
   </body>
+
+  {{ alert_message|json_script:"alert_message" }}
+  
   {% load static %}
   <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
 </html>

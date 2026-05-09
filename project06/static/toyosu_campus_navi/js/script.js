@@ -32,3 +32,12 @@ function openSidebar(sidebarId,buttonId) {
   openButton.style.width = "0";
   openButton.classList.remove("active");
 }
+
+//サーバーから変数を受け取る
+const alert_message = JSON.parse(
+  document.getElementById("alert_message").textContent
+);
+
+if(alert_message){
+  alert(alert_message);
+}
