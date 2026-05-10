@@ -74,6 +74,8 @@
 
       let currentImage = new Image();
       let imageLoaded = false;
+      let lastX = -1;
+      let lastY = -1;
       
 
       imageInput.addEventListener("change", (event) => {
@@ -112,8 +114,21 @@
         const scaleX = canvas.width / rect.width;
         const scaleY = canvas.height / rect.height;
 
-        const x = Math.round((event.clientX - rect.left) * scaleX);
-        const y = Math.round((event.clientY - rect.top) * scaleY);
+        let x = Math.round((event.clientX - rect.left) * scaleX);
+        let y = Math.round((event.clientY - rect.top) * scaleY);
+
+
+        if (event.shiftKey) {
+          //シフトを押しながらクリックされると
+          //前回の座標とx,y座標のどちらか近い方を合わせる
+          if(lastX != -1){
+            if(Math.abs(lastX - x) < Math.abs(lastY - y)){
+              x = lastX;
+            }else{
+              y = lastY;
+            }
+          }
+        }
 
         // 薄い赤色の点
         ctx.beginPath();
@@ -124,7 +139,9 @@
         // 座標をクリップボードへコピー
         const text = `${x},${y}`;
         logTextArea.value  += `${x},${y}\n`
-        
+
+        lastX = x;
+        lastY = y;
 
         try {
           await navigator.clipboard.writeText(text);
