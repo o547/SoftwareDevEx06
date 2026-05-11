@@ -11,8 +11,8 @@
 }
 
 .main {
+  position: relative;
   flex: 1;
-  height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -257,4 +257,37 @@
 .user-message{
   background-color: rgb(91, 200, 236);
   margin-left: auto;
+}
+
+.dimention-switch{
+  position: absolute;
+  left: 40px;
+  bottom: 40px;
+
+  width: 80px;
+  height: 80px;
+  border-radius: 5px;
+
+  font-size : medium;
+}
+
+
+.wing-switch{
+  position: absolute;
+  left: 40px;
+  top: 40px;
+
+  min-width: 120px;
+  
+  text-align: left;
+  padding: 10px;
+  
+  background-color: #eaeaea;
+  border-radius: 2px;
+  border: 2px solid #252525;
+}
+
+.wing-switch-title{
+  font-size: 1.1em;
+  margin-bottom: 3px;
 }

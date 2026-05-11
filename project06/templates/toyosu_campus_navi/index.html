@@ -11,7 +11,18 @@
     <div class="app">
       <div class="main">
         {% load static %}
-        <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}">
+        <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}" style="margin-left: 90px;">
+        <div class="sidebar-button dimention-switch">立体平面<br>切り替え</div>
+        <div class="wing-switch">
+          <div class="wing-switch-title">建物表示</div>
+          <div><label><input type="checkbox" checked> 本部棟</label></div>
+          <div><label><input type="checkbox"> 教室棟</label></div>
+          <div><label></label><input type="checkbox"> 交流棟</label></div>
+          <div><label></label><input type="checkbox"> 研究棟</label></div>
+          <div><label></label><input type="checkbox"> 屋外</label></div>
+          <div><u>GPSから取得</u></div>
+        </div>
+
       </div>
       <span style="margin: auto 0 8px auto; text-align: right;"><a href="/demo">経路案内デモ</a><br><a href="/plot">座標取得アプリ</a></span>
 
