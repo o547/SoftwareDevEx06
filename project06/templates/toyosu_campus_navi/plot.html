@@ -11,7 +11,7 @@
     <style>
       body {
         font-family: Arial, sans-serif;
-        margin: 20px;
+        margin: 10px 15px;
         background-color: #f5f5f5;
       }
 
@@ -23,7 +23,7 @@
         margin-bottom: 10px;
       }
 
-      button {
+      #downloadBtn {
         padding: 5px 12px;
         margin-right: 10px;
         cursor: pointer;
@@ -33,14 +33,14 @@
         border-radius: 5px;
       }
 
-      button:hover {
+      #downloadBtn:hover {
         background-color: #005fa3;
       }
 
       /* 変更: viewer追加 */
       #viewer {
-        width: 80vw;
-        height: 60vh;
+        width: 75vw;
+        height: 55vh;
 
         overflow: hidden;
         position: relative;
@@ -65,15 +65,54 @@
         font-size: 14px;
         color: #333;
       }
+
+      th,
+      td {
+        width: 80px;
+        height: 1.5rem;
+        padding-left: 10px;
+      }
+
+      #log-table {
+        border-collapse: collapse;
+        text-align: left;
+        padding: 10px;
+        font-weight: 400;
+        margin-top: 10px;
+      }
+
+      #edge-table{
+        border-collapse: collapse;
+        text-align: left;
+        padding: 10px;
+        font-weight: 400;
+        margin-top: 10px;
+      }
+
+      .table-title {
+        background-color: rgb(220, 220, 220);
+        text-align: center;
+      }
+
+      .wide-column {
+        width: 400px;
+      }
+
+      #log-table td:last-child,
+      #edge-table td:last-child {
+        user-select: none;
+        -webkit-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+      }
     </style>
   </head>
 
   <body>
-    <h2>画像座標取得</h2>
-    <p>
-      画像の任意の場所をクリックすると、そのx,y座標をコピーします
-    </p>
-
+    <h2 style="margin: 10px 0">画像座標取得</h2>
+    <div style="margin: 10px 0">
+      画像の任意の場所をクリックすると、そのx,y座標をコピーします。 edgeを二個選ぶと、二点間に線を引きます。
+    </div>
     <div class="controls">
       <input type="file" id="imageInput" accept="image/*" />
       <button id="downloadBtn">画像をダウンロード</button>
@@ -85,31 +124,201 @@
       <canvas id="canvas"></canvas>
     </div>
 
-    <div>ログ</div>
-    <textarea
+    <!-- <div>ログ</div> -->
+    <!-- <textarea
       style="width: 80%; height: 200px"
       id="logArea"
-    ></textarea>
+    ></textarea> -->
+
+    <table id="log-table" border="1">
+      <tr class="table-title">
+        <th>X</th>
+        <th>Y</th>
+        <th class="wide-column">区画名</th>
+        <th style="width: 150px;"></th>
+      </tr>
+    </table>
+
+    <table id="edge-table" border="1">
+      <tr class="table-title">
+        <th class="wide-column">区画名1</th>
+        <th class="wide-column">区画名2</th>
+        <th>X1</th>
+        <th>Y1</th>
+        <th>X2</th>
+        <th>Y2</th>
+        <th style="width: 150px;"></th>
+
+      </tr>
+    </table>
 
     <p><a href="/">トップ画面に戻る</a></p>
 
     <script>
+      let edgeStartX = -1;
+      let edgeStartY = -1;
+      let edgeStartSectionName = "";
+      function addEdge(button) {
+        const tr = button.closest("tr");
+        if(edgeStartX == -1){
+          edgeStartX = tr.querySelector(".x").textContent;
+          edgeStartY = tr.querySelector(".y").textContent;          
+          edgeStartSectionName = tr.querySelector(".section-name").textContent;          
+        }else{
+          const edgeEndX = tr.querySelector(".x").textContent;
+          const edgeEndY = tr.querySelector(".y").textContent;
+          const edgeEndSectionName = tr.querySelector(".section-name").textContent;          
+          drawLine(edgeStartX, edgeStartY, edgeEndX, edgeEndY);
+          addEdgeRow(edgeStartSectionName, edgeEndSectionName, edgeStartX, edgeStartY, edgeEndX, edgeEndY);
+          edgeStartX = -1;
+          edgeStartY = -1;
+          edgeStartSectionName = "";          
+        }        
+      }
+
+      //removePointを呼び出す
+      function callRemovePoint(button){
+        const tr = button.closest("tr");
+        const x = tr.querySelector(".x").textContent;
+        const y = tr.querySelector(".y").textContent;
+        removePoint(x,y);
+        tr.remove();
+      }
+
+      //表にノードを保存
+      function addLogRow(x,y) {
+        const table = document.getElementById("log-table");
+        const titleRow = document.querySelector("#log-table .table-title");
+        const tr = document.createElement("tr");
+        tr.className = "table-body"
+        tr.innerHTML = `
+        <td class="x">${x}</td>
+        <td class="y">${y}</td>
+        <td class="section-name" contenteditable="true"></td>
+        <td><button onclick="callRemovePoint(this)">remove</button>
+        <button onclick="addEdge(this)">edge</button></td>`;
+
+        titleRow.insertAdjacentElement("afterend", tr);
+      }
+
+      //表にエッジを保存
+      function addEdgeRow(sectionName1, sectionName2, x1, y1, x2, y2) {
+        const table = document.getElementById("edge-table");
+        const titleRow = document.querySelector("#edge-table .table-title");
+        const tr = document.createElement("tr");
+        tr.className = "table-body"
+        tr.innerHTML = `
+        <td class="section-name" contenteditable="true">${sectionName1}</td>
+        <td class="section-name" contenteditable="true">${sectionName2}</td>
+        <td>${x1}</td>
+        <td>${y1}</td>
+        <td>${x2}</td>
+        <td>${y2}</td>
+        <td><button onclick="callRemoveEdge(this)">remove</button>
+        </td>`;
+
+        titleRow.insertAdjacentElement("afterend", tr);
+      }
+
+      // キャンバス全体の再描画を行う共通関数
+      function redrawCanvas() {
+        // if (!imageLoaded) return;
+
+        // キャンバスのクリアと元画像の描画
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        ctx.drawImage(currentImage, 0, 0);
+
+        // 保存されているすべての線を描画
+        for (const line of window.lines) {
+          ctx.beginPath();
+          ctx.moveTo(line.x1, line.y1);
+          ctx.lineTo(line.x2, line.y2);
+          ctx.strokeStyle = "rgba(255, 0, 0, 0.20)";
+          ctx.lineWidth = 2;       // 線の太さ
+          ctx.stroke();
+        }
+
+        // 保存されているすべての点を描画
+        for (const point of window.points) {
+          ctx.beginPath();
+          ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
+          ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
+          ctx.fill();
+        }
+      }
+
+
+       // 指定された座標 (x, y) に一致する点を削除する関数
+      function removePoint(x, y) {
+        // 座標が一致しない点だけを残す（＝一致する点を削除）
+        window.points = window.points.filter(point => !(point.x == x && point.y == y));
+        
+        // 画面を再描画
+        redrawCanvas();
+      }
+
+
+
+       // 指定された座標間に線を引く関数
+      function drawLine(x1, y1, x2, y2) {
+        // 配列に線のデータを保存
+        window.lines.push({ x1, y1, x2, y2 });
+        
+        // 画面を再描画
+        redrawCanvas();
+      }
+
+      // 指定された座標に一致するエッジ（線）を削除する関数
+      function removeEdge(x1, y1, x2, y2) {
+        // 数値として比較して削除（文字列でも動作するように Number() を使用）
+        window.lines = window.lines.filter(line => {
+          return !(Number(line.x1) === Number(x1) && Number(line.y1) === Number(y1) && Number(line.x2) === Number(x2) && Number(line.y2) === Number(y2));
+        });
+        // 再描画
+        redrawCanvas();
+      }
+
+      // エッジテーブルの行から呼び出される削除ハンドラ
+      function callRemoveEdge(button) {
+        const tr = button.closest('tr');
+        if (!tr) return;
+
+        // テーブル列の構成に合わせて座標を取得
+        const cells = tr.children;
+        const x1 = cells[2] ? cells[2].textContent.trim() : '';
+        const y1 = cells[3] ? cells[3].textContent.trim() : '';
+        const x2 = cells[4] ? cells[4].textContent.trim() : '';
+        const y2 = cells[5] ? cells[5].textContent.trim() : '';
+
+        if (x1 !== '' && y1 !== '' && x2 !== '' && y2 !== '') {
+          removeEdge(x1, y1, x2, y2);
+        }
+
+        tr.remove();
+      }
+
+
       const imageInput = document.getElementById("imageInput");
       const canvas = document.getElementById("canvas");
       const ctx = canvas.getContext("2d");
 
       const viewer = document.getElementById("viewer");
-
       const downloadBtn = document.getElementById("downloadBtn");
       const statusText = document.getElementById("status");
       const logTextArea = document.getElementById("logArea");
-
+      
       let currentImage = new Image();
       let imageLoaded = false;
-
+      
       let lastX = -1;
       let lastY = -1;
-
+      let isDragging = false;
+      let dragStartX = 0;
+      let dragStartY = 0;
+      
+      window.points = [];
+      window.lines = [];
+      
       //Panzoom初期化
       const panzoom = Panzoom(canvas, {
         minScale: 0.02,
@@ -120,6 +329,32 @@
 
       // ホイールズーム対応
       viewer.addEventListener("wheel", panzoom.zoomWithWheel);
+
+      canvas.addEventListener("pointerdown", (event) => {
+        if (event.pointerType === "mouse" && event.button !== 0) {
+          return;
+        }
+        dragStartX = event.clientX;
+        dragStartY = event.clientY;
+        isDragging = false;
+      });
+
+      canvas.addEventListener("pointermove", (event) => {
+        if (event.pressure === 0) {
+          return;
+        }
+        const moveX = Math.abs(event.clientX - dragStartX);
+        const moveY = Math.abs(event.clientY - dragStartY);
+        if (moveX > 5 || moveY > 5) {
+          isDragging = true;
+        }
+      });
+
+      canvas.addEventListener("pointerup", () => {
+        setTimeout(() => {
+          isDragging = false;
+        }, 0);
+      });
 
       imageInput.addEventListener("change", (event) => {
         const file = event.target.files[0];
@@ -135,11 +370,16 @@
             canvas.width = currentImage.width;
             canvas.height = currentImage.height;
 
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            window.points = [];
+            window.lines = [];
 
-            ctx.drawImage(currentImage, 0, 0);
-
+            redrawCanvas();
             imageLoaded = true;
+            
+            const tableBodys = document.querySelectorAll(".table-body");
+            for(const tableBody of tableBodys){
+              tableBody.remove();
+            }
 
             // 読み込み時にズームリセット
             panzoom.reset();
@@ -156,6 +396,10 @@
           return;
         }
 
+        if (isDragging) {
+          return;
+        }
+
         // transform後の位置取得
         const rect = canvas.getBoundingClientRect();
 
@@ -163,23 +407,16 @@
         const scale = panzoom.getScale();
 
         // transform後座標 → 元画像座標へ変換
-        let x = Math.round(
-          (event.clientX - rect.left) / scale
-        );
+        let x = Math.round((event.clientX - rect.left) / scale);
 
-        let y = Math.round(
-          (event.clientY - rect.top) / scale
-        );
+        let y = Math.round((event.clientY - rect.top) / scale);
 
         if (event.shiftKey) {
-          //シフトを押しながらクリックされると
+          //シフトを押しながらのクリックでないと、
           //前回の座標とx,y座標のどちらか近い方を合わせる
 
           if (lastX != -1) {
-            if (
-              Math.abs(lastX - x) <
-              Math.abs(lastY - y)
-            ) {
+            if (Math.abs(lastX - x) < Math.abs(lastY - y)) {
               x = lastX;
             } else {
               y = lastY;
@@ -187,52 +424,16 @@
           }
         }
 
-        // 点描画前に画像再描画
-        ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-        ctx.drawImage(currentImage, 0, 0);
-
-        // 既存点保持用配列
-        if (!window.points) {
-          window.points = [];
-        }
-
         window.points.push({ x, y });
-
-        // 全点再描画
-        for (const point of window.points) {
-          ctx.beginPath();
-
-          ctx.arc(
-            point.x,
-            point.y,
-            3,
-            0,
-            Math.PI * 2
-          );
-
-          ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
-
-          ctx.fill();
-        }
+        redrawCanvas();
 
         // 座標をクリップボードへコピー
         const text = `${x},${y}`;
 
-        logTextArea.value += `${x},${y}\n`;
+        addLogRow(x,y)
 
         lastX = x;
         lastY = y;
-
-        try {
-          await navigator.clipboard.writeText(text);
-
-          statusText.textContent =
-            `座標: ${text} （クリップボードへコピー済み）`;
-        } catch (error) {
-          statusText.textContent =
-            `座標: ${text} （コピー失敗）`;
-        }
       });
 
       downloadBtn.addEventListener("click", () => {
