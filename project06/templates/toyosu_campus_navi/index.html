@@ -17,9 +17,9 @@
           <div class="wing-switch-title">建物表示</div>
           <div><label><input type="checkbox" checked> 本部棟</label></div>
           <div><label><input type="checkbox"> 教室棟</label></div>
-          <div><label></label><input type="checkbox"> 交流棟</label></div>
-          <div><label></label><input type="checkbox"> 研究棟</label></div>
-          <div><label></label><input type="checkbox"> 屋外</label></div>
+          <div><label><input type="checkbox"> 交流棟</label></div>
+          <div><label><input type="checkbox"> 研究棟</label></div>
+          <div><label><input type="checkbox"> 屋外</label></div>
           <div><u>GPSから取得</u></div>
         </div>
 
@@ -185,14 +185,11 @@
           <div class="modal-body" style="padding: 2vh 0">
             <div class="chatbot-conversation">
               <div class="chatbot-message">聞きたい内容を入力してください</div>
-              <div class="chatbot-message user-message">(ユーザーの入力)</div>
-              <div class="chatbot-message">(ボットの返答)</div>
-
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" placeholder="質問内容(開発中につき送信はできません)"></textarea>
-            <button class="chatbot-submit">送信</button>
+            <textarea class="chatbot-input" placeholder="質問内容(開発中につき返答はできません)"></textarea>
+            <button class="chatbot-submit" onclick="chatbotSubmit()">送信</button>
           </div>
         </div>
 
