@@ -3,9 +3,8 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>画像座標取得</title>
+    <title>Plotter</title>
 
-    <!-- 変更: Panzoomライブラリ追加 -->
     <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
 
     <style>
@@ -23,24 +22,29 @@
         margin-bottom: 10px;
       }
 
-      #downloadBtn {
+
+      button {
         padding: 5px 12px;
-        margin-right: 10px;
+        margin-right: 6px;
         cursor: pointer;
         border: none;
         background-color: #0078d7;
         color: white;
         border-radius: 5px;
+        margin-top: 1px;
+        margin-bottom: 1px;
       }
 
-      #downloadBtn:hover {
+      button:hover {
         background-color: #005fa3;
       }
 
-      /* 変更: viewer追加 */
       #viewer {
-        width: 75vw;
+        width: 80vw;
+        
         height: 55vh;
+        width : 100vh;
+        max-width: 95vw;
 
         overflow: hidden;
         position: relative;
@@ -51,11 +55,9 @@
         touch-action: none;
       }
 
-      /* 変更: canvasのmax-width削除 */
       #canvas {
         cursor: crosshair;
         display: block;
-
         transform-origin: top left;
       }
 
@@ -104,21 +106,22 @@
         -webkit-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
+        text-align: center;
       }
     </style>
   </head>
 
   <body>
-    <h2 style="margin: 10px 0">画像座標取得</h2>
-    <div style="margin: 10px 0">
-      画像の任意の場所をクリックすると、そのx,y座標をコピーします。 edgeを二個選ぶと、二点間に線を引きます。
+    <h2 style="margin: 8px 0">Plotter</h2>
+    <div style="margin: 5px 0">
+      クリック：プロット / シフトクリック：平行, 垂直にプロット / edgeを二個選ぶ：二点間に線を引く。
     </div>
     <div class="controls">
       <input type="file" id="imageInput" accept="image/*" />
       <button id="downloadBtn">画像をダウンロード</button>
     </div>
 
-    <div id="status">座標: 未選択</div>
+    <!-- <div id="status">座標: 未選択</div> -->
 
     <div id="viewer">
       <canvas id="canvas"></canvas>
@@ -135,7 +138,7 @@
         <th>X</th>
         <th>Y</th>
         <th class="wide-column">区画名</th>
-        <th style="width: 150px;"></th>
+        <th style="width: 250px;">操作</th>
       </tr>
     </table>
 
@@ -147,7 +150,7 @@
         <th>Y1</th>
         <th>X2</th>
         <th>Y2</th>
-        <th style="width: 150px;"></th>
+        <th style="width: 150px;">操作</th>
 
       </tr>
     </table>
@@ -168,6 +171,13 @@
           const edgeEndX = tr.querySelector(".x").textContent;
           const edgeEndY = tr.querySelector(".y").textContent;
           const edgeEndSectionName = tr.querySelector(".section-name").textContent;          
+          if(edgeStartSectionName == "" || edgeEndSectionName == ""){
+            alert("先に区画名を入力してください");
+            edgeStartX = -1;
+            edgeStartY = -1;
+            edgeStartSectionName = "";   
+            return;
+          }
           drawLine(edgeStartX, edgeStartY, edgeEndX, edgeEndY);
           addEdgeRow(edgeStartSectionName, edgeEndSectionName, edgeStartX, edgeStartY, edgeEndX, edgeEndY);
           edgeStartX = -1;
@@ -195,8 +205,11 @@
         <td class="x">${x}</td>
         <td class="y">${y}</td>
         <td class="section-name" contenteditable="true"></td>
-        <td><button onclick="callRemovePoint(this)">remove</button>
-        <button onclick="addEdge(this)">edge</button></td>`;
+        <td>
+        <button onclick="callRemovePoint(this)">remove</button>
+        <button onclick="addEdge(this)">edge</button>
+        <button onclick="temporarilyEnlargePoint(this)">light up</button>
+        </td>`;
 
         titleRow.insertAdjacentElement("afterend", tr);
       }
@@ -220,6 +233,25 @@
         titleRow.insertAdjacentElement("afterend", tr);
       }
 
+      let temporaryEnlargedPoint = null;
+
+      // 指定した点を次のredrawCanvas呼び出しまで大きくする関数
+      function temporarilyEnlargePoint(button) {
+
+        const tr = button.closest("tr");
+        const x = tr.querySelector(".x").textContent;
+        const y = tr.querySelector(".y").textContent;
+        const pointX = Number(x);
+        const pointY = Number(y);
+
+        if (Number.isNaN(pointX) || Number.isNaN(pointY)) {
+          return;
+        }
+
+        temporaryEnlargedPoint = { x: pointX, y: pointY};
+        redrawCanvas();
+      }
+
       // キャンバス全体の再描画を行う共通関数
       function redrawCanvas() {
         // if (!imageLoaded) return;
@@ -240,11 +272,23 @@
 
         // 保存されているすべての点を描画
         for (const point of window.points) {
+          const isTemporary =
+            temporaryEnlargedPoint &&
+            Number(point.x) == temporaryEnlargedPoint.x &&
+            Number(point.y) == temporaryEnlargedPoint.y;
+
           ctx.beginPath();
-          ctx.arc(point.x, point.y, 3, 0, Math.PI * 2);
-          ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
+          if(isTemporary){
+            ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(0, 255, 0, 0.50)";
+          }else{
+            ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
+            ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
+          }
           ctx.fill();
         }
+
+        temporaryEnlargedPoint = null;
       }
 
 
@@ -318,6 +362,7 @@
       
       window.points = [];
       window.lines = [];
+      temporaryEnlargedPoint = null;
       
       //Panzoom初期化
       const panzoom = Panzoom(canvas, {
@@ -373,6 +418,9 @@
             window.points = [];
             window.lines = [];
 
+            edgeStartX = -1;
+            edgeStartY = -1;
+
             redrawCanvas();
             imageLoaded = true;
             
@@ -413,18 +461,20 @@
 
         if (event.shiftKey) {
           //シフトを押しながらのクリックでないと、
-          //前回の座標とx,y座標のどちらか近い方を合わせる
-
-          if (lastX != -1) {
-            if (Math.abs(lastX - x) < Math.abs(lastY - y)) {
-              x = lastX;
+          //最も近い座標の、x,y座標のどちらか近い方を合わせる
+          const nearestPoint = snapToNearestPoint(x, y);
+          nearestX = nearestPoint.x;
+          nearestY = nearestPoint.y;
+          console.log(x,y,nearestX,nearestY)
+            if (Math.abs(nearestX - x) < Math.abs(nearestY - y)) {
+              x = nearestX;
             } else {
-              y = lastY;
+              y = nearestY;
             }
-          }
         }
 
         window.points.push({ x, y });
+        // temporarilyEnlargePoint(x, y);
         redrawCanvas();
 
         // 座標をクリップボードへコピー
@@ -439,7 +489,6 @@
       downloadBtn.addEventListener("click", () => {
         if (!imageLoaded) {
           alert("先に画像をアップロードしてください");
-
           return;
         }
 
@@ -451,6 +500,26 @@
 
         link.click();
       });
+
+      function snapToNearestPoint(x, y) {
+        if (!window.points.length) {
+          return { x, y };
+        }
+
+        let nearestPoint = window.points[0];
+        let nearestDistance = Math.hypot(x - nearestPoint.x, y - nearestPoint.y);
+
+        for (const point of window.points.slice(1)) {
+          const distance = Math.hypot(x - point.x, y - point.y);
+
+          if (distance < nearestDistance) {
+            nearestPoint = point;
+            nearestDistance = distance;
+          }
+        }
+
+        return { x: nearestPoint.x, y: nearestPoint.y };
+      }
     </script>
   </body>
 </html>
