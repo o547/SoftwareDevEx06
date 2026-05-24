@@ -22,7 +22,6 @@
         margin-bottom: 10px;
       }
 
-
       button {
         padding: 5px 12px;
         margin-right: 6px;
@@ -39,11 +38,19 @@
         background-color: #005fa3;
       }
 
+      .remove-btn{
+        background-color: #d70000;
+      }
+
+      .remove-btn:hover{
+        background-color: #a30000;
+      }
+
       #viewer {
         width: 80vw;
-        
+
         height: 55vh;
-        width : 100vh;
+        width: 100vh;
         max-width: 95vw;
 
         overflow: hidden;
@@ -83,7 +90,7 @@
         margin-top: 10px;
       }
 
-      #edge-table{
+      #edge-table {
         border-collapse: collapse;
         text-align: left;
         padding: 10px;
@@ -101,7 +108,9 @@
       }
 
       #log-table td:last-child,
-      #edge-table td:last-child {
+      #edge-table td:last-child,
+      #log-table th:last-child,
+      #edge-table th:last-child {
         user-select: none;
         -webkit-user-select: none;
         -moz-user-select: none;
@@ -114,7 +123,8 @@
   <body>
     <h2 style="margin: 8px 0">Plotter</h2>
     <div style="margin: 5px 0">
-      クリック：プロット / シフトクリック：平行, 垂直にプロット / edgeを二個選ぶ：二点間に線を引く。
+      クリック：プロット / シフトクリック：平行, 垂直にプロット /
+      edgeを二個選ぶ：二点間に線を引く。
     </div>
     <div class="controls">
       <input type="file" id="imageInput" accept="image/*" />
@@ -135,10 +145,10 @@
 
     <table id="log-table" border="1">
       <tr class="table-title">
+        <th class="wide-column">区画名</th>
         <th>X</th>
         <th>Y</th>
-        <th class="wide-column">区画名</th>
-        <th style="width: 250px;">操作</th>
+        <th style="width: 250px">操作</th>
       </tr>
     </table>
 
@@ -150,8 +160,7 @@
         <th>Y1</th>
         <th>X2</th>
         <th>Y2</th>
-        <th style="width: 150px;">操作</th>
-
+        <th style="width: 150px">操作</th>
       </tr>
     </table>
 
@@ -163,50 +172,58 @@
       let edgeStartSectionName = "";
       function addEdge(button) {
         const tr = button.closest("tr");
-        if(edgeStartX == -1){
+        if (edgeStartX == -1) {
           edgeStartX = tr.querySelector(".x").textContent;
-          edgeStartY = tr.querySelector(".y").textContent;          
-          edgeStartSectionName = tr.querySelector(".section-name").textContent;          
-        }else{
+          edgeStartY = tr.querySelector(".y").textContent;
+          edgeStartSectionName = tr.querySelector(".section-name").textContent;
+        } else {
           const edgeEndX = tr.querySelector(".x").textContent;
           const edgeEndY = tr.querySelector(".y").textContent;
-          const edgeEndSectionName = tr.querySelector(".section-name").textContent;          
-          if(edgeStartSectionName == "" || edgeEndSectionName == ""){
+          const edgeEndSectionName =
+            tr.querySelector(".section-name").textContent;
+          if (edgeStartSectionName == "" || edgeEndSectionName == "") {
             alert("先に区画名を入力してください");
             edgeStartX = -1;
             edgeStartY = -1;
-            edgeStartSectionName = "";   
+            edgeStartSectionName = "";
             return;
           }
           drawLine(edgeStartX, edgeStartY, edgeEndX, edgeEndY);
-          addEdgeRow(edgeStartSectionName, edgeEndSectionName, edgeStartX, edgeStartY, edgeEndX, edgeEndY);
+          addEdgeRow(
+            edgeStartSectionName,
+            edgeEndSectionName,
+            edgeStartX,
+            edgeStartY,
+            edgeEndX,
+            edgeEndY,
+          );
           edgeStartX = -1;
           edgeStartY = -1;
-          edgeStartSectionName = "";          
-        }        
+          edgeStartSectionName = "";
+        }
       }
 
       //removePointを呼び出す
-      function callRemovePoint(button){
+      function callRemovePoint(button) {
         const tr = button.closest("tr");
         const x = tr.querySelector(".x").textContent;
         const y = tr.querySelector(".y").textContent;
-        removePoint(x,y);
+        removePoint(x, y);
         tr.remove();
       }
 
       //表にノードを保存
-      function addLogRow(x,y) {
+      function addLogRow(x, y) {
         const table = document.getElementById("log-table");
         const titleRow = document.querySelector("#log-table .table-title");
         const tr = document.createElement("tr");
-        tr.className = "table-body"
+        tr.className = "table-body";
         tr.innerHTML = `
+        <td class="section-name" contenteditable="true"></td>
         <td class="x">${x}</td>
         <td class="y">${y}</td>
-        <td class="section-name" contenteditable="true"></td>
         <td>
-        <button onclick="callRemovePoint(this)">remove</button>
+        <button onclick="callRemovePoint(this)" class="remove-btn">remove</button>
         <button onclick="addEdge(this)">edge</button>
         <button onclick="temporarilyEnlargePoint(this)">light up</button>
         </td>`;
@@ -219,7 +236,7 @@
         const table = document.getElementById("edge-table");
         const titleRow = document.querySelector("#edge-table .table-title");
         const tr = document.createElement("tr");
-        tr.className = "table-body"
+        tr.className = "table-body";
         tr.innerHTML = `
         <td class="section-name" contenteditable="true">${sectionName1}</td>
         <td class="section-name" contenteditable="true">${sectionName2}</td>
@@ -227,7 +244,7 @@
         <td>${y1}</td>
         <td>${x2}</td>
         <td>${y2}</td>
-        <td><button onclick="callRemoveEdge(this)">remove</button>
+        <td><button onclick="callRemoveEdge(this)" remove-btn>remove</button>
         </td>`;
 
         titleRow.insertAdjacentElement("afterend", tr);
@@ -237,7 +254,6 @@
 
       // 指定した点を次のredrawCanvas呼び出しまで大きくする関数
       function temporarilyEnlargePoint(button) {
-
         const tr = button.closest("tr");
         const x = tr.querySelector(".x").textContent;
         const y = tr.querySelector(".y").textContent;
@@ -248,7 +264,7 @@
           return;
         }
 
-        temporaryEnlargedPoint = { x: pointX, y: pointY};
+        temporaryEnlargedPoint = { x: pointX, y: pointY };
         redrawCanvas();
       }
 
@@ -266,7 +282,7 @@
           ctx.moveTo(line.x1, line.y1);
           ctx.lineTo(line.x2, line.y2);
           ctx.strokeStyle = "rgba(255, 0, 0, 0.20)";
-          ctx.lineWidth = 2;       // 線の太さ
+          ctx.lineWidth = 2; // 線の太さ
           ctx.stroke();
         }
 
@@ -278,10 +294,10 @@
             Number(point.y) == temporaryEnlargedPoint.y;
 
           ctx.beginPath();
-          if(isTemporary){
+          if (isTemporary) {
             ctx.arc(point.x, point.y, 5, 0, Math.PI * 2);
             ctx.fillStyle = "rgba(0, 255, 0, 0.50)";
-          }else{
+          } else {
             ctx.arc(point.x, point.y, 2, 0, Math.PI * 2);
             ctx.fillStyle = "rgba(0, 0, 0, 0.20)";
           }
@@ -291,56 +307,89 @@
         temporaryEnlargedPoint = null;
       }
 
-
-       // 指定された座標 (x, y) に一致する点を削除する関数
+      // 指定された座標 (x, y) に一致する点を削除する関数
       function removePoint(x, y) {
         // 座標が一致しない点だけを残す（＝一致する点を削除）
-        window.points = window.points.filter(point => !(point.x == x && point.y == y));
-        
+        window.points = window.points.filter(
+          (point) => !(point.x == x && point.y == y),
+        );
+
+        for(const line of window.lines){
+          if(x == line.x1 && y == line.y1 || x == line.x2 && y == line.y2){
+            removeEdge(line.x1, line.y1, line.x2, line.y2);
+          }
+        }
+
         // 画面を再描画
         redrawCanvas();
       }
 
-
-
-       // 指定された座標間に線を引く関数
+      // 指定された座標間に線を引く関数
       function drawLine(x1, y1, x2, y2) {
         // 配列に線のデータを保存
         window.lines.push({ x1, y1, x2, y2 });
-        
+
         // 画面を再描画
         redrawCanvas();
+      }
+
+      function removeEdgeRow(x1, y1, x2, y2) {
+        const edgeRows = document.querySelectorAll("#edge-table .table-body");
+
+        for (const tr of edgeRows) {
+          const cells = tr.children;
+          const rowX1 = cells[2] ? cells[2].textContent.trim() : "";
+          const rowY1 = cells[3] ? cells[3].textContent.trim() : "";
+          const rowX2 = cells[4] ? cells[4].textContent.trim() : "";
+          const rowY2 = cells[5] ? cells[5].textContent.trim() : "";
+
+          if (
+            Number(rowX1) == Number(x1) &&
+            Number(rowY1) == Number(y1) &&
+            Number(rowX2) == Number(x2) &&
+            Number(rowY2) == Number(y2)
+          ) {
+            tr.remove();
+            return;
+          }
+        }
       }
 
       // 指定された座標に一致するエッジ（線）を削除する関数
       function removeEdge(x1, y1, x2, y2) {
         // 数値として比較して削除（文字列でも動作するように Number() を使用）
-        window.lines = window.lines.filter(line => {
-          return !(Number(line.x1) === Number(x1) && Number(line.y1) === Number(y1) && Number(line.x2) === Number(x2) && Number(line.y2) === Number(y2));
+        window.lines = window.lines.filter((line) => {
+          return !(
+            Number(line.x1) == Number(x1) &&
+            Number(line.y1) == Number(y1) &&
+            Number(line.x2) == Number(x2) &&
+            Number(line.y2) == Number(y2)
+          );
         });
+        removeEdgeRow(x1, y1, x2, y2);
+
         // 再描画
         redrawCanvas();
       }
 
       // エッジテーブルの行から呼び出される削除ハンドラ
       function callRemoveEdge(button) {
-        const tr = button.closest('tr');
+        const tr = button.closest("tr");
         if (!tr) return;
 
         // テーブル列の構成に合わせて座標を取得
         const cells = tr.children;
-        const x1 = cells[2] ? cells[2].textContent.trim() : '';
-        const y1 = cells[3] ? cells[3].textContent.trim() : '';
-        const x2 = cells[4] ? cells[4].textContent.trim() : '';
-        const y2 = cells[5] ? cells[5].textContent.trim() : '';
+        const x1 = cells[2] ? cells[2].textContent.trim() : "";
+        const y1 = cells[3] ? cells[3].textContent.trim() : "";
+        const x2 = cells[4] ? cells[4].textContent.trim() : "";
+        const y2 = cells[5] ? cells[5].textContent.trim() : "";
 
-        if (x1 !== '' && y1 !== '' && x2 !== '' && y2 !== '') {
+        if (x1 !== "" && y1 !== "" && x2 !== "" && y2 !== "") {
           removeEdge(x1, y1, x2, y2);
         }
 
-        tr.remove();
+        // tr.remove();
       }
-
 
       const imageInput = document.getElementById("imageInput");
       const canvas = document.getElementById("canvas");
@@ -350,20 +399,20 @@
       const downloadBtn = document.getElementById("downloadBtn");
       const statusText = document.getElementById("status");
       const logTextArea = document.getElementById("logArea");
-      
+
       let currentImage = new Image();
       let imageLoaded = false;
-      
+
       let lastX = -1;
       let lastY = -1;
       let isDragging = false;
       let dragStartX = 0;
       let dragStartY = 0;
-      
+
       window.points = [];
       window.lines = [];
       temporaryEnlargedPoint = null;
-      
+
       //Panzoom初期化
       const panzoom = Panzoom(canvas, {
         minScale: 0.02,
@@ -423,9 +472,9 @@
 
             redrawCanvas();
             imageLoaded = true;
-            
+
             const tableBodys = document.querySelectorAll(".table-body");
-            for(const tableBody of tableBodys){
+            for (const tableBody of tableBodys) {
               tableBody.remove();
             }
 
@@ -465,12 +514,12 @@
           const nearestPoint = snapToNearestPoint(x, y);
           nearestX = nearestPoint.x;
           nearestY = nearestPoint.y;
-          console.log(x,y,nearestX,nearestY)
-            if (Math.abs(nearestX - x) < Math.abs(nearestY - y)) {
-              x = nearestX;
-            } else {
-              y = nearestY;
-            }
+          console.log(x, y, nearestX, nearestY);
+          if (Math.abs(nearestX - x) < Math.abs(nearestY - y)) {
+            x = nearestX;
+          } else {
+            y = nearestY;
+          }
         }
 
         window.points.push({ x, y });
@@ -480,7 +529,7 @@
         // 座標をクリップボードへコピー
         const text = `${x},${y}`;
 
-        addLogRow(x,y)
+        addLogRow(x, y);
 
         lastX = x;
         lastY = y;
@@ -507,7 +556,10 @@
         }
 
         let nearestPoint = window.points[0];
-        let nearestDistance = Math.hypot(x - nearestPoint.x, y - nearestPoint.y);
+        let nearestDistance = Math.hypot(
+          x - nearestPoint.x,
+          y - nearestPoint.y,
+        );
 
         for (const point of window.points.slice(1)) {
           const distance = Math.hypot(x - point.x, y - point.y);

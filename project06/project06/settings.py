@@ -37,6 +37,7 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+    'toyosu_campus_navi.apps.ToyosuCampusMapConfig'
 ]
 
 MIDDLEWARE = [
@@ -68,6 +69,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'project06.wsgi.application'
 
+AUTH_USER_MODEL = "toyosu_campus_navi.UserInfo"
 
 # Database
 # https://docs.djangoproject.com/en/6.0/ref/settings/#databases

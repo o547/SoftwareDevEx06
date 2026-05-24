@@ -1,0 +1,51 @@
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="UTF-8">
+  <title>位置情報取得</title>
+</head>
+<body>
+
+  <button id="getLocationBtn">位置情報を取得</button>
+
+  <p id="result"></p>
+
+  <script>
+    const button = document.getElementById("getLocationBtn");
+    const result = document.getElementById("result");
+
+    button.addEventListener("click", () => {
+
+      // Geolocation API に対応しているか確認
+      if (!navigator.geolocation) {
+        result.textContent = "Geolocation API に対応していません";
+        return;
+      }
+
+      // 現在位置を取得
+      navigator.geolocation.getCurrentPosition(
+
+        // 成功時
+        (position) => {
+          const latitude = position.coords.latitude;
+          const longitude = position.coords.longitude;
+
+          result.innerHTML = `
+            緯度: ${latitude}<br>
+            経度: ${longitude}
+          `;
+        },
+
+        // 失敗時
+        (error) => {
+          result.textContent = "位置情報を取得できませんでした";
+          console.log(error);
+        }
+
+      );
+
+    });
+  </script>
+
+</body>
+</html>

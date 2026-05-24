@@ -11,20 +11,18 @@
     <div class="app">
       <div class="main">
         {% load static %}
-        <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}" style="margin-left: 90px;">
+        <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}" style="width: 50%; margin-left: 50px;">
         <div class="sidebar-button dimention-switch">立体平面<br>切り替え</div>
         <div class="wing-switch">
-          <div class="wing-switch-title">建物表示</div>
+          <div class="wing-switch-title">表示させたい棟をクリック</div>
           <div><label><input type="checkbox" checked> 本部棟</label></div>
           <div><label><input type="checkbox"> 教室棟</label></div>
           <div><label><input type="checkbox"> 交流棟</label></div>
           <div><label><input type="checkbox"> 研究棟</label></div>
-          <div><label><input type="checkbox"> 屋外</label></div>
           <div><u>GPSから取得</u></div>
         </div>
-
+        <div class="util_links"><a href="/demo/guide">経路案内デモ</a><br><a href="/plot">座標取得アプリ</a></div>
       </div>
-      <span style="margin: auto 0 8px auto; text-align: right;"><a href="/demo">経路案内デモ</a><br><a href="/plot">座標取得アプリ</a></span>
 
     <div class="sidebar-button square" id="sidebar-open-button" onclick="openSidebar('index-sidebar','sidebar-open-button')" style="margin-right: 20px; width: 0;">
       {% load static %}
@@ -38,18 +36,21 @@
             {% load static %}
             <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px;">
           </div>
-          <div class="sidebar-button square"  onclick="toggleMenu('search-menu', 'language-menu', 'contents');openModal()">言語切替</div>
+          <div class="sidebar-button square"  onclick="openModal('language-menu')">言語切替</div>
         </div>
 
         <div id="sidebar-buttons" style="display: contents;">
-          <div class="sidebar-button" onclick="openModal()">検索</div>
-          {% if user_id == "AnonymousUser" %}
+          <div class="sidebar-button" onclick="openModal('search-menu')">検索</div>
+          {% if username == "AnonymousUser" %}
           <div class="sidebar-button" onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')">ログイン</div>
           {% else %}
-          <div class="sidebar-button">履歴 ({{ user_id }})</div>
+          <div class="sidebar-button">履歴 ({{ username }})</div>
           {% endif %}
-          <div class="sidebar-button" onclick="toggleMenu('search-menu', 'chatbot-menu', 'contents');openModal()">チャットボット</div>
-          <div class="sidebar-notice">お知らせ</div>
+          <div class="sidebar-button" onclick="openModal('chatbot-menu')">チャットボット</div>
+          <div class="sidebar-notice">
+            <h3 style="margin-bottom: auto; color: #294D3C;">お知らせ</h3>
+            <p style="margin-top: auto; display: none;" id="notice-management-button"><a href="/notice/management">お知らせ追加</a></p>
+          </div>
         </div>
 
         <div class="sidebar-account" id="sidebar-login" style="display: none;">
@@ -81,7 +82,7 @@
               <input id="login-id" name="login-id"  required>
               <label for="login-password">パスワード</label>
               <input id="login-password" name="login-password" type="password" required>
-              <input type="hidden" id="login-method" name="login-method" value="create" required>
+              <input type="hidden" id="login-method" name="login-method" value="regist" required>
               <button type="submit" formaction="/user/login">登録</button>
               <button type="button" onclick="toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')">キャンセル</button>
             </div>
@@ -91,9 +92,11 @@
       </div>
     </div>
     <!-- モーダルウィンドウ開始 -->
-    <div id="modal" class="modal">
+    <div id="modal" class="modal" onclick="if (event.target == event.currentTarget) closeModal()">
       <div class="modal-content">
-        <div id="search-menu" style="display: contents">
+
+        <!-- 検索メニュー -->
+        <div id="search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">検索</h2>
             <h2 onclick="closeModal()" class="modal-close-button">×</h2>
@@ -108,10 +111,10 @@
           </div>
         </div>
 
-        <div id="start-point-menu" style="display: none">
+        <div id="start-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">出発地点入力</h2>
-            <h2 onclick="closeModal();toggleMenu('start-point-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal()" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -133,10 +136,10 @@
         </div>
 
         
-        <div id="goal-point-menu" style="display: none">
+        <div id="goal-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">目的地点入力</h2>
-            <h2 onclick="closeModal();toggleMenu('goal-point-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal()" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -158,29 +161,29 @@
         </div>
 
         <!-- 言語選択メニュー -->
-        <div id="language-menu" style="display: none">
+        <div id="language-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">言語選択</h2>
-            <h2 onclick="closeModal();toggleMenu('language-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal()" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body" style="padding: 4vh 0">
             <div class="modal-row">
-              <div class="sidebar-button">日本語</div>
+              <div class="sidebar-button" onclick="selectLanguage('JA')">日本語</div>
             </div>
             <div class="modal-row">
-              <div class="sidebar-button">English</div>
+              <div class="sidebar-button" onclick="selectLanguage('EN')">English</div>
             </div>
             <div class="modal-row">
-              <div class="sidebar-button">中文</div>
+              <div class="sidebar-button" onclick="selectLanguage('CN')">中文</div>
             </div>
           </div>
         </div>
 
         <!-- チャットボットメニュー -->
-        <div id="chatbot-menu" style="display: none">
+        <div id="chatbot-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">チャットボット</h2>
-            <h2 onclick="closeModal();toggleMenu('chatbot-menu', 'search-menu', 'contents')" class="modal-close-button">×</h2>
+            <h2 onclick="closeModal();" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body" style="padding: 2vh 0">
             <div class="chatbot-conversation">
@@ -192,15 +195,17 @@
             <button class="chatbot-submit" onclick="chatbotSubmit()">送信</button>
           </div>
         </div>
-
-
       </div>
     </div>
     <!-- モーダルウィンドウ終了 -->
   </body>
 
   {{ alert_message|json_script:"alert_message" }}
-  
+  {{ username|json_script:"username" }}
+  {{ is_superuser|json_script:"is_superuser" }}
+  {{ language|json_script:"language" }}
+
+
   {% load static %}
   <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
 </html>

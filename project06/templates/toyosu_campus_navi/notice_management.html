@@ -1,0 +1,24 @@
+<!doctype html>
+<html lang="ja">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>豊洲キャンパスナビ</title>
+    {% load static %}
+    <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}">
+  </head>
+  <body>
+    {% csrf_token %}
+    <h1>お知らせ管理画面</h1>
+  </body>
+
+  {{ alert_message|json_script:"alert_message" }}
+  {{ username|json_script:"username" }}
+  {{ is_superuser|json_script:"is_superuser" }}
+  {{ language|json_script:"language" }}
+  {{ user_id|json_script:"user_id" }}
+
+
+  {% load static %}
+  <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+</html>
