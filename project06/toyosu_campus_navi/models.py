@@ -60,7 +60,7 @@ class Section(models.Model):
     bottom_right_y = models.BigIntegerField(null=True, verbose_name="区画の右下y座標")
     usage = models.CharField(null=True, max_length=1023, verbose_name="使用用途")
     capacity = models.BigIntegerField(null=True, verbose_name="収容人数")
-    business_hour = models.CharField(
+    business_hours = models.CharField(
         null=True, max_length=1023, verbose_name="営業時間"
     )
 
