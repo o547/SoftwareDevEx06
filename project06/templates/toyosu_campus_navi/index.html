@@ -58,9 +58,10 @@
           <p style="font-size: 20px;">履歴の閲覧には<br>ログインが必要です</p>
           <form type="submit" method="post">
           <div class="account-row">
-              <label for="login-id">ログインID</label>
+              {% csrf_token %}
+              <label for="login-id">username</label>
               <input id="login-id" name="login-id"  required>
-              <label for="login-password">パスワード</label>
+              <label for="login-password">password</label>
               <input id="login-password" name="login-password" type="password" required>
               <input type="hidden" id="login-method" name="login-method" value="login" required>
               <button type="submit" formaction="/user/login">ログイン</button>
@@ -77,9 +78,10 @@
           <p style="font-size: 20px;">アカウント新規作成</p>
           <form type="submit" method="post">
           <div class="account-row">
-              <label for="login-id">ログインID</label>
+              {% csrf_token %}
+              <label for="login-id">username</label>
               <input id="login-id" name="login-id"  required>
-              <label for="login-password">パスワード</label>
+              <label for="login-password">password</label>
               <input id="login-password" name="login-password" type="password" required>
               <input type="hidden" id="login-method" name="login-method" value="regist" required>
               <button type="submit" formaction="/user/login">登録</button>
