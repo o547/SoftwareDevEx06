@@ -39,7 +39,7 @@ class History(models.Model):
     goal_section = models.ForeignKey(
         "Section",
         on_delete=models.CASCADE,
-        verbose_name="目的値",
+        verbose_name="目的地",
         related_name="goal_section",
     )
 
