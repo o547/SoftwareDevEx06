@@ -1,0 +1,30 @@
+# Python
+project06/**/__pycache__/
+*.py[cod]
+
+# Virtual Environment
+project06/venv/
+project06/.venv/
+
+# Environment variables
+project06/.env
+
+# Logs
+project06/*.log
+
+# Static build
+project06/staticfiles/
+
+# IDE
+project06/.vscode/
+project06/.idea/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Test cache
+project06/.pytest_cache/
+project06/.mypy_cache/
+project06/.coverage
+project06/htmlcov/
