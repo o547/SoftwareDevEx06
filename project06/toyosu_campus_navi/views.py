@@ -147,7 +147,7 @@ class DemoIndexView(View):
                     estimated_time = round(estimated_time)
                     map.drow_arrows(shortest_path)
                     shortest_path_string = " → ".join(shortest_path)
-                    map_image_file = "output.png"
+                    map_image_file = "demo_output/output.png"
             except:
                 shortest_path_string = "取得できませんでした"
 
