@@ -36,8 +36,10 @@ class LoginProcess:
     def save_language(self, request, language):
         user_info = self.get_user_info(request)
         if user_info["is_login"]:
-            if UserInfoManegement().save_language(
-                request, language, user_info["username"]
+            if not (
+                UserInfoManegement().save_language(
+                    request, language, user_info["username"]
+                )
             ):
                 request.session["alert_message"] = "言語情報を保存できませんでした"
         request.session["language"] = language
