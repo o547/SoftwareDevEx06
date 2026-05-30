@@ -131,7 +131,7 @@
       <button id="downloadBtn">画像をダウンロード</button>
     </div>
 
-    <!-- <div id="status">座標: 未選択</div> -->
+    <div id="status">座標: 未選択</div>
 
     <div id="viewer">
       <canvas id="canvas"></canvas>
@@ -527,7 +527,15 @@
         redrawCanvas();
 
         // 座標をクリップボードへコピー
-        const text = `${x},${y}`;
+        const text = `${x}\t${y}`;
+
+        try {
+            await navigator.clipboard.writeText(text);
+            statusText.textContent = `座標: ${text} （クリップボードへコピー済み）`;
+        }
+        catch (error) {
+            statusText.textContent = `座標: ${text} （コピー失敗）`;
+        }
 
         addLogRow(x, y);
 
