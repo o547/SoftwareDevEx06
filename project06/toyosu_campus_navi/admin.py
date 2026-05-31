@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import *
+from .models import Edge, History, Notice, Section, UserInfo
 
 admin.site.register(UserInfo)
 admin.site.register(Notice)

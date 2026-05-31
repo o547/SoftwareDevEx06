@@ -3,17 +3,23 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.views import View
 from .navi import navi
 from .map import map
-
-from .processes import *
-
+from .processes import (
+    CampusMapImageCreate,
+    ChatBotProcess,
+    HistoryInfoProcess,
+    LocationProcess,
+    LoginProcess,
+    NoticeProcess,
+    RouteSearchProcess,
+    SectionInfoProcess,
+)
+from .models import Edge, History, Notice, Section, UserInfo
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
-from .models import *
-
-import json
 from django.http import JsonResponse
+import json
 
 
 # フロントに送る情報をまとめる
@@ -187,8 +193,6 @@ class DebugView(View):
     def get(self, request):
         print("デバッグ内容")
         return redirect("toyosu_campus_navi:index")
-    
-            
 
 
 # -------------------豊洲キャンパスナビ対象外 ここまで-------------------

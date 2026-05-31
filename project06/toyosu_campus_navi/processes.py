@@ -1,5 +1,5 @@
 from django.contrib.auth import authenticate, login
-from .models import *
+from .models import Edge, History, Notice, Section, UserInfo
 from .manegements import *
 
 
