@@ -1,7 +1,12 @@
 from django.contrib.auth import authenticate, login
 from django.conf import settings
-from .models import Edge, History, Notice, Section, UserInfo
-from .manegements import *
+from .manegements import (
+    HistoryInfoManegement,
+    NoticeManegement,
+    UserInfoManegement,
+    SectionInfoManegement,
+    routeManagement,
+)
 
 
 # C3お知らせ処理部
