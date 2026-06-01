@@ -8,6 +8,7 @@ project06/.venv/
 
 # Environment variables
 project06/.env
+project06/project06/keys.py
 
 # Logs
 project06/*.log

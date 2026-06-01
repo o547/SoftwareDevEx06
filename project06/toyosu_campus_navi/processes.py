@@ -1,4 +1,5 @@
 from django.contrib.auth import authenticate, login
+from django.conf import settings
 from .models import Edge, History, Notice, Section, UserInfo
 from .manegements import *
 
@@ -92,4 +93,6 @@ class HistoryInfoProcess:
 class ChatBotProcess:
     def reply_to_chat(self, request, user_input):
         user_output = "返答文"
+        # APIキーはkeys.pyで管理している
+        api_key = settings.GEMINI_API_KEY
         return user_output

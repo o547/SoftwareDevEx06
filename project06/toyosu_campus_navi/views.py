@@ -191,7 +191,10 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        print("デバッグ内容")
+        from django.core.management.utils import get_random_secret_key
+
+        print(str(get_random_secret_key()))
+
         return redirect("toyosu_campus_navi:index")
 
 
