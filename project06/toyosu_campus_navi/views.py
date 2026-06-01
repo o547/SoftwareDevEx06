@@ -13,7 +13,6 @@ from .processes import (
     RouteSearchProcess,
     SectionInfoProcess,
 )
-from .models import Edge, History, Notice, Section, UserInfo
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
@@ -191,10 +190,7 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        from django.core.management.utils import get_random_secret_key
-
-        print(str(get_random_secret_key()))
-
+        print("実行")
         return redirect("toyosu_campus_navi:index")
 
 
