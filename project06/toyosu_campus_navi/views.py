@@ -185,12 +185,19 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        print("デバッグ内容")
+        route = [
+            "教室棟_4階_401教室",
+            "教室棟_4階_402教室"
+        ]
+        result = CampusMapImageCreate().create_map_image(
+            request,
+            route,
+            "floor_map"
+        )
+
+        print(result)
+
         return redirect("toyosu_campus_navi:index")
-    
-            
-
-
 # -------------------豊洲キャンパスナビ対象外 ここまで-------------------
 
 

@@ -70,6 +70,7 @@ class CampusMapImageCreate:
 
 
     # M5-1 構内図画像作成主処理
+
     def create_map_image(self, request, route, map_folder_name):
         try:
             output_files = self.create_floor_map(
@@ -102,7 +103,7 @@ class CampusMapImageCreate:
             floor = parts[1]
             section = parts[2]
             display_route.append(section)
-
+        #読み込む画像を決める
         input_name = (
             "static/toyosu_campus_navi/image/"
             + map_folder_name
@@ -121,13 +122,14 @@ class CampusMapImageCreate:
             print("画像を読み込めませんでした")
             return output_files
 
-        nodes = navi.nodes
-
+        nodes = navi.nodes  #後ほど座標に変更
+        
+        #線の設定
         color = (0, 0, 255)
         thickness = 2
         line_type = cv2.LINE_AA
         tipLength = 0.1
-
+        #矢印を描く
         for i in range(len(display_route) - 1):
             start = nodes[display_route[i]]
             goal = nodes[display_route[i + 1]]
