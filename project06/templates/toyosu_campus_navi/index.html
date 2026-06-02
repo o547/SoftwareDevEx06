@@ -1,109 +1,86 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>豊洲キャンパスナビ</title>
-    {% load static %}
-    <link
-      rel="stylesheet"
-      href="{% static 'toyosu_campus_navi/css/style.css' %}"
-    />
-  </head>
-  <body>
-    {% csrf_token %}
-    <div class="app">
-      <div class="main">
-        {% load static %}
-        <img
-          src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}"
-          style="width: 50%; margin-left: 50px"
-        />
-        <div class="sidebar-button dimention-switch">
-          立体平面<br />切り替え
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>豊洲キャンパスナビ</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}" />
+</head>
+
+<body>
+  {% csrf_token %}
+  <div class="app">
+    <div class="main">
+      {% load static %}
+      <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}" style="width: 50%; margin-left: 50px" />
+      <div class="sidebar-button dimention-switch">
+        立体平面<br />切り替え
+      </div>
+      <div class="wing-switch">
+        <div class="wing-switch-title">表示させたい棟をクリック</div>
+        <div>
+          <label><input type="checkbox" checked /> 本部棟</label>
         </div>
-        <div class="wing-switch">
-          <div class="wing-switch-title">表示させたい棟をクリック</div>
-          <div>
-            <label><input type="checkbox" checked /> 本部棟</label>
-          </div>
-          <div>
-            <label><input type="checkbox" /> 教室棟</label>
-          </div>
-          <div>
-            <label><input type="checkbox" /> 交流棟</label>
-          </div>
-          <div>
-            <label><input type="checkbox" /> 研究棟</label>
-          </div>
-          <div><u>GPSから取得</u></div>
+        <div>
+          <label><input type="checkbox" /> 教室棟</label>
         </div>
-        <div class="util_links">
-          <a href="/demo/guide">経路案内デモ</a><br /><a href="/plot"
-            >座標取得アプリ</a
-          >
+        <div>
+          <label><input type="checkbox" /> 交流棟</label>
+        </div>
+        <div>
+          <label><input type="checkbox" /> 研究棟</label>
+        </div>
+        <div><u>GPSから取得</u></div>
+      </div>
+      <div class="util_links">
+        <a href="/demo/guide">経路案内デモ</a><br /><a href="/plot">座標取得アプリ</a>
+      </div>
+    </div>
+
+    <div class="sidebar-button square" id="sidebar-open-button"
+      onclick="openSidebar('index-sidebar', 'sidebar-open-button')" style="margin-right: 20px; width: 0">
+      {% load static %}
+      <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
+    </div>
+
+    <div class="sidebar" id="index-sidebar">
+      <div class="sidebar-square-group">
+        <div class="sidebar-button square" onclick="closeSidebar('index-sidebar', 'sidebar-open-button')">
+          {% load static %}
+          <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
+        </div>
+        <div class="sidebar-button square" onclick="openModal('language-menu')">
+          言語切替
         </div>
       </div>
 
-      <div
-        class="sidebar-button square"
-        id="sidebar-open-button"
-        onclick="openSidebar('index-sidebar', 'sidebar-open-button')"
-        style="margin-right: 20px; width: 0"
-      >
-        {% load static %}
-        <img
-          src="{% static 'toyosu_campus_navi/image/bars_24.png' %}"
-          style="width: 45px"
-        />
-      </div>
-
-      <div class="sidebar" id="index-sidebar">
-        <div class="sidebar-square-group">
-          <div
-            class="sidebar-button square"
-            onclick="closeSidebar('index-sidebar', 'sidebar-open-button')"
-          >
-            {% load static %}
-            <img
-              src="{% static 'toyosu_campus_navi/image/bars_24.png' %}"
-              style="width: 45px"
-            />
-          </div>
-          <div
-            class="sidebar-button square"
-            onclick="openModal('language-menu')"
-          >
-            言語切替
-          </div>
+      <div id="sidebar-buttons" style="display: contents">
+        <div class="sidebar-button" onclick="openModal('search-menu')">
+          検索
         </div>
+        {% if username == "AnonymousUser" %}
+        <div class="sidebar-button" onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')">
+          ログイン
+        </div>
+        {% else %}
+        <div class="sidebar-button">履歴 ({{ username }})</div>
+        {% endif %}
+        <div class="sidebar-button" onclick="openModal('chatbot-menu')">
+          チャットボット
+        </div>
+        <div class="sidebar-notice">
+          <h3 class="notice-title">お知らせ</h3>
 
-        <div id="sidebar-buttons" style="display: contents">
-          <div class="sidebar-button" onclick="openModal('search-menu')">
-            検索
-          </div>
-          {% if username == "AnonymousUser" %}
-          <div
-            class="sidebar-button"
-            onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')"
-          >
-            ログイン
-          </div>
-          {% else %}
-          <div class="sidebar-button">履歴 ({{ username }})</div>
-          {% endif %}
-          <div class="sidebar-button" onclick="openModal('chatbot-menu')">
-            チャットボット
-          </div>
-          <div class="sidebar-notice">
-            <h3 style="margin-bottom: auto; color: #294d3c">お知らせ</h3>
-            <p
-              style="margin-top: auto; display: none"
-              id="notice-management-button"
-            >
-              <a href="/notice/management">お知らせ追加</a>
-            </p>
-          </div>
+          <a class="notice-link" href="/notice">お知らせタイトル1</a>
+          <a class="notice-link" href="/notice">お知らせタイトル2</a>
+          <a class="notice-link" href="/notice">お知らせタイトル3</a>
+
+          <p id="notice-management-button">
+            <a href="/notice/management">お知らせ追加
+            </a>
+          </p>
         </div>
 
         <div class="sidebar-account" id="sidebar-login" style="display: none">
@@ -114,36 +91,19 @@
               <label for="login-id">username</label>
               <input id="login-id" name="login-id" required />
               <label for="login-password">password</label>
-              <input
-                id="login-password"
-                name="login-password"
-                type="password"
-                required
-              />
-              <input
-                type="hidden"
-                id="login-method"
-                name="login-method"
-                value="login"
-                required
-              />
+              <input id="login-password" name="login-password" type="password" required />
+              <input type="hidden" id="login-method" name="login-method" value="login" required />
               <button type="submit" formaction="/user/login">ログイン</button>
-              <button
-                type="button"
-                onclick="
+              <button type="button" onclick="
                   toggleMenu('sidebar-login', 'sidebar-buttons', 'contents')
-                "
-              >
+                ">
                 キャンセル
               </button>
             </div>
           </form>
           <div class="account-row">
             <p>アカウントがない方</p>
-            <div
-              class="link-text"
-              onclick="toggleMenu('sidebar-login', 'sidebar-create', '')"
-            >
+            <div class="link-text" onclick="toggleMenu('sidebar-login', 'sidebar-create', '')">
               新規登録
             </div>
           </div>
@@ -157,26 +117,12 @@
               <label for="login-id">username</label>
               <input id="login-id" name="login-id" required />
               <label for="login-password">password</label>
-              <input
-                id="login-password"
-                name="login-password"
-                type="password"
-                required
-              />
-              <input
-                type="hidden"
-                id="login-method"
-                name="login-method"
-                value="regist"
-                required
-              />
+              <input id="login-password" name="login-password" type="password" required />
+              <input type="hidden" id="login-method" name="login-method" value="regist" required />
               <button type="submit" formaction="/user/login">登録</button>
-              <button
-                type="button"
-                onclick="
+              <button type="button" onclick="
                   toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')
-                "
-              >
+                ">
                 キャンセル
               </button>
             </div>
@@ -186,11 +132,7 @@
       </div>
     </div>
     <!-- モーダルウィンドウ開始 -->
-    <div
-      id="modal"
-      class="modal"
-      onclick="if (event.target == event.currentTarget) closeModal();"
-    >
+    <div id="modal" class="modal" onclick="if (event.target == event.currentTarget) closeModal();">
       <div class="modal-content">
         <!-- 検索メニュー -->
         <div id="search-menu" class="modal-menu" style="display: none">
@@ -200,22 +142,16 @@
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
-              <div
-                class="sidebar-button"
-                onclick="
+              <div class="sidebar-button" onclick="
                   toggleMenu('search-menu', 'start-point-menu', 'contents')
-                "
-              >
+                ">
                 出発地
               </div>
             </div>
             <div class="modal-row">
-              <div
-                class="sidebar-button"
-                onclick="
+              <div class="sidebar-button" onclick="
                   toggleMenu('search-menu', 'goal-point-menu', 'contents')
-                "
-              >
+                ">
                 目的地
               </div>
             </div>
@@ -242,12 +178,9 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div
-              class="sidebar-button square"
-              onclick="
+            <div class="sidebar-button square" onclick="
                 toggleMenu('start-point-menu', 'search-menu', 'contents')
-              "
-            >
+              ">
               決定
             </div>
           </div>
@@ -273,10 +206,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div
-              class="sidebar-button square"
-              onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')"
-            >
+            <div class="sidebar-button square" onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')">
               決定
             </div>
           </div>
@@ -319,10 +249,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea
-              class="chatbot-input"
-              placeholder="質問内容(開発中につき返答はできません)"
-            ></textarea>
+            <textarea class="chatbot-input" placeholder="質問内容(開発中につき返答はできません)"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>
@@ -331,12 +258,13 @@
       </div>
     </div>
     <!-- モーダルウィンドウ終了 -->
-  </body>
+</body>
 
-  {{ alert_message|json_script:"alert_message" }} 
-  {{username|json_script:"username" }} 
-  {{ is_superuser|json_script:"is_superuser"}} 
-  {{ language|json_script:"language" }} 
-  {% load static %}
-  <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+{{ alert_message|json_script:"alert_message" }}
+{{username|json_script:"username" }}
+{{ is_superuser|json_script:"is_superuser"}}
+{{ language|json_script:"language" }}
+{% load static %}
+<script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+
 </html>
