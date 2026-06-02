@@ -45,11 +45,11 @@
           {% if username == "AnonymousUser" %}
           <div class="sidebar-button" onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')">ログイン</div>
           {% else %}
-          <div class="sidebar-button">履歴 ({{ username }})</div>
+          <div class="sidebar-button" onclick="location.href='/history'">履歴 ({{ username }})</div>
           {% endif %}
           <div class="sidebar-button" onclick="openModal('chatbot-menu')">チャットボット</div>
           <div class="sidebar-notice">
-            <h3 style="margin-bottom: auto; color: #294D3C;">お知らせ</h3>
+            <h3 style="margin-bottom: auto; color: #294D3C;">お知らせ</h3> 
             <p style="margin-top: auto; display: none;" id="notice-management-button"><a href="/notice/management">お知らせ追加</a></p>
           </div>
         </div>

@@ -6,10 +6,47 @@
     <title>豊洲キャンパスナビ</title>
     {% load static %}
     <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}">
+    <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/history.css' %}">
   </head>
   <body>
-    {% csrf_token %}
-    <h1>履歴一覧画面</h1>
+    <div class ="history-app">
+      <div class="history-header">
+        <h1>検索履歴</h1>
+        <button class="history-backbutton" onclick="location.href='/'">
+        地図画面に戻る
+      </button>
+      </div>
+
+      <!--履歴エリア-->
+      <div class="history-container">
+        <div class="history-list">
+          <div class="history-item">
+            <div class="history-route">
+              ○○○ → ×××
+            </div>
+
+            <button class="research-button">
+              再検索
+            </button>
+          </div>
+           <div class="history-item">
+            <div class="history-route">
+              ☐☐☐ → △△△
+            </div>
+
+            <button class="research-button">
+              再検索
+            </button>
+          </div>
+        </div>
+      </div>
+      <div class="new-search-area">
+        <button class="new-search-button"
+                onclick="location.href='/'">
+          新規検索
+        </button>
+      </div>
+    </div>
   </body>
 
   {{ alert_message|json_script:"alert_message" }}
