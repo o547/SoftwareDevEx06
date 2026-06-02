@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: sans-serif;
 }
 
 .app {
@@ -63,20 +64,54 @@
 }
 
 .sidebar-notice {
+  width: 90%;
+  max-width: 300px;
+
+  flex: 1;
+  min-height: 0;
+
+  background: white;
+  border-radius: 30px;
+
+  padding: 25px 35px;
+
+  color: #294d3c;
+  box-sizing: border-box;
+
   display: flex;
   flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  background-color: #ffffff;
-  border: 2px solid #d7dfdb;
-  width: 260px;
-  flex: 1;
-  font-size: large;
+  align-items: flex-start;
   margin-top: 20px;
   margin-bottom: 20px;
-  border-radius: 20px;
-  padding: 20px 5px;
-  color: rgb(0, 0, 0);
+}
+
+.notice-title {
+  font-size: 1.7rem;
+  color: #294d3c;
+  margin-bottom: 25px;
+}
+
+.notice-link {
+  font-size: 0.95rem;
+  color: black;
+  text-decoration: none;
+  margin-bottom: 20px;
+}
+
+.notice-link:hover {
+  text-decoration: underline;
+}
+
+#notice-management-button {
+  margin-top: auto;
+  width: 100%;
+  text-align: center;
+}
+
+#notice-management-button a {
+  color: #294d3c;
+  text-decoration: none;
+  font-weight: bold;
 }
 
 .sidebar-account {
