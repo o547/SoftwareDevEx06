@@ -82,4 +82,6 @@ class Edge(models.Model):
         verbose_name="区画B",
         related_name="section_b",
     )
-    estimated_travel_time = models.BigIntegerField(null=True, verbose_name="推定移動時間(ミリ秒)")
+    estimated_travel_time = models.BigIntegerField(
+        null=True, verbose_name="推定移動時間(ミリ秒)"
+    )

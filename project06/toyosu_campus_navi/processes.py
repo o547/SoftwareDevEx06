@@ -1,6 +1,12 @@
 from django.contrib.auth import authenticate, login
-from .models import *
-from .manegements import *
+from django.conf import settings
+from .manegements import (
+    HistoryInfoManegement,
+    NoticeManegement,
+    UserInfoManegement,
+    SectionInfoManegement,
+    routeManagement,
+)
 
 
 # C3お知らせ処理部
@@ -36,8 +42,10 @@ class LoginProcess:
     def save_language(self, request, language):
         user_info = self.get_user_info(request)
         if user_info["is_login"]:
-            if UserInfoManegement().save_language(
-                request, language, user_info["username"]
+            if not (
+                UserInfoManegement().save_language(
+                    request, language, user_info["username"]
+                )
             ):
                 request.session["alert_message"] = "言語情報を保存できませんでした"
         request.session["language"] = language
@@ -90,4 +98,6 @@ class HistoryInfoProcess:
 class ChatBotProcess:
     def reply_to_chat(self, request, user_input):
         user_output = "返答文"
+        # APIキーはkeys.pyで管理している
+        api_key = settings.GEMINI_API_KEY
         return user_output
