@@ -1,6 +1,7 @@
 # Python
 project06/**/__pycache__/
 *.py[cod]
+*.pyc
 
 # Virtual Environment
 project06/venv/
