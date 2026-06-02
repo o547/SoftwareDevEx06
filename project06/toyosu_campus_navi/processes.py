@@ -23,21 +23,21 @@ class LoginProcess:
         if user is not None:
             # ログイン成功
             login(request, user)
-            return True
+            return ""
         else:
             request.session["alert_message"] = "ログインできませんでした"
-            return False
+            return "ログインできませんでした"
 
     def user_regist(self, request, username, password):
         if UserInfoManegement().check_existence(request, username):
             # ユーザーIDが既に存在している
             request.session["alert_message"] = "そのIDは存在しています"
-            return False
+            return "そのIDは存在しています"
         else:
             # アカウントを新規作成する
             user = UserInfoManegement().user_regist(request, username, password)
             login(request, user)
-            return True
+            return ""
 
     def save_language(self, request, language):
         user_info = self.get_user_info(request)
@@ -49,6 +49,7 @@ class LoginProcess:
             ):
                 request.session["alert_message"] = "言語情報を保存できませんでした"
         request.session["language"] = language
+        return "言語情報を保存できませんでした"
 
     def get_user_info(self, request):
         if request.user.is_authenticated:
