@@ -1,6 +1,9 @@
 from django.contrib.auth import authenticate, login
 from .models import *
 from .manegements import *
+import cv2
+from .navi import navi
+import numpy as np
 
 
 # C3お知らせ処理部
@@ -63,7 +66,89 @@ class LoginProcess:
 
 # C5構内図画像作成部
 class CampusMapImageCreate:
-    pass
+    
+
+
+    # M5-1 構内図画像作成主処理
+    def create_map_image(self, request, route, map_folder_name):
+        try:
+            output_files = self.create_floor_map(
+                request,
+                route,
+                map_folder_name
+            )
+
+            return {
+                "output_files": output_files,
+                "alert_message": ""
+            }
+
+        except Exception as e:
+            print("C5エラー:", e)
+            return {
+                "output_files": [],
+                "alert_message": "構内図画像を作成できませんでした"
+            }   
+
+    # M5-2 平面地図作成処理
+    def create_floor_map(self, request, route, map_folder_name):
+        output_files = []
+
+        display_route = []
+
+        for section_name in route:
+            parts = section_name.split("_", 2)
+            building = parts[0]
+            floor = parts[1]
+            section = parts[2]
+            display_route.append(section)
+
+        input_name = (
+            "static/toyosu_campus_navi/image/"
+            + map_folder_name
+            + "/"
+            + building
+            + "_"
+            + floor
+            + ".jpg"
+        )
+        print("入力画像:", input_name)
+        output_name = "static/toyosu_campus_navi/image/output/test_output_from_c5.jpg"
+
+        img = cv2.imdecode(np.fromfile(input_name, dtype=np.uint8), cv2.IMREAD_COLOR)
+
+        if img is None:
+            print("画像を読み込めませんでした")
+            return output_files
+
+        nodes = navi.nodes
+
+        color = (0, 0, 255)
+        thickness = 2
+        line_type = cv2.LINE_AA
+        tipLength = 0.1
+
+        for i in range(len(display_route) - 1):
+            start = nodes[display_route[i]]
+            goal = nodes[display_route[i + 1]]
+
+            cv2.arrowedLine(
+                img,
+                start,
+                goal,
+                color,
+                thickness=thickness,
+                line_type=line_type,
+                tipLength=tipLength,
+            )
+
+        cv2.imencode(".jpg", img)[1].tofile(output_name)
+
+        print("C5で画像を保存しました:", output_name)
+
+        output_files.append("test_output_from_c5.jpg")
+
+        return output_files
 
 
 # C6位置情報処理部
