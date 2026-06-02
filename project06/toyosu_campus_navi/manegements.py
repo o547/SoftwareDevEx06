@@ -1,7 +1,7 @@
 from django.contrib.auth import authenticate, get_user_model
-from .models import *
-User = get_user_model()
+from .models import Edge, History, Notice, Section, UserInfo
 
+User = get_user_model()
 
 
 # C8履歴管理部
@@ -16,7 +16,6 @@ class NoticeManegement:
 
 # C10ユーザ情報管理部
 class UserInfoManegement:
-
     def check_existence(self, request, username):
         if User.objects.filter(username=username).exists():
             return True
@@ -45,7 +44,7 @@ class routeManagement:
     def get_node_coodinate(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
-        except:
+        except ValueError:
             return {"section_id": None, "node_x": -1, "node_y": -1}
 
         section_object = Section.objects.filter(
