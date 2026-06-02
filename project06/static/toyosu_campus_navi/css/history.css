@@ -32,6 +32,8 @@ body{
     font-size:28px;
 
     cursor:pointer;
+
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .history-container{
     width:80%;
@@ -81,6 +83,7 @@ body{
     font-size:24px;
 
     cursor:pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 .new-search-area{
     display:flex;
@@ -102,5 +105,6 @@ body{
     font-size:24px;
 
     cursor:pointer;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.2);
 }
 
