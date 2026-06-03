@@ -19,31 +19,42 @@
     <div class="main">
       {% load static %}
       <div class="viewer">
-        <img id="map-img" src="{% static 'toyosu_campus_navi/image/floor_map/教室棟_1階.jpg' %}" />
+        <img id="floor-map-img" class="other-floor-map"
+          src="{% static 'toyosu_campus_navi/image/floor_map/教室棟_1階.jpg' %}" />
       </div>
 
-      <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
-        onclick="toggleDimention(this)" />
+      <!-- <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
+        onclick="toggleDimention(this)" /> -->
+      <div class="map-switches-area">
+        <div class="dimention-switch">
+          <div class="dimention-switch-label">平面<br />地図</div>
+          <div class="dimention-switch-switch" onclick="toggleDimention(this)">
+            <div class="dimention-switch-thumb left"></div>
+          </div>
+          <div class="dimention-switch-label">立体<br />地図</div>
+        </div>
 
-      <div id="floor-select-menu">
-        <div onclick="changeFloor('B1')" class="floor-select">B1</div>
-        <div onclick="changeFloor('1')" class="floor-select">1</div>
-        <div onclick="changeFloor('2')" class="floor-select">2</div>
-        <div onclick="changeFloor('3')" class="floor-select">3</div>
-        <div onclick="changeFloor('4')" class="floor-select">4</div>
-        <div onclick="changeFloor('5')" class="floor-select">5</div>
-        <div onclick="changeFloor('6')" class="floor-select">6</div>
-        <div onclick="changeFloor('7')" class="floor-select">7</div>
-        <div onclick="changeFloor('8')" class="floor-select">8</div>
-        <div onclick="changeFloor('9')" class="floor-select">9</div>
-        <div onclick="changeFloor('10')" class="floor-select">10</div>
-        <div onclick="changeFloor('11')" class="floor-select">11</div>
-        <div onclick="changeFloor('12')" class="floor-select">12</div>
-        <div onclick="changeFloor('13')" class="floor-select">13</div>
-        <div onclick="changeFloor('14')" class="floor-select">14</div>
+        <div id="floor-select-menu">
+          <div onclick="changeFloor('B1')" class="floor-select">B1</div>
+          <div onclick="changeFloor('1')" class="floor-select">1</div>
+          <div onclick="changeFloor('2')" class="floor-select">2</div>
+          <div onclick="changeFloor('3')" class="floor-select">3</div>
+          <div onclick="changeFloor('4')" class="floor-select">4</div>
+          <div onclick="changeFloor('5')" class="floor-select">5</div>
+          <div onclick="changeFloor('6')" class="floor-select">6</div>
+          <div onclick="changeFloor('7')" class="floor-select">7</div>
+          <div onclick="changeFloor('8')" class="floor-select">8</div>
+          <div onclick="changeFloor('9')" class="floor-select">9</div>
+          <div onclick="changeFloor('10')" class="floor-select">10</div>
+          <div onclick="changeFloor('11')" class="floor-select">11</div>
+          <div onclick="changeFloor('12')" class="floor-select">12</div>
+          <div onclick="changeFloor('13')" class="floor-select">13</div>
+          <div onclick="changeFloor('14')" class="floor-select">14</div>
+        </div>
       </div>
+
       <div class="wing-switch-menu">
-        <div class="wing-switch-title">表示させたい棟をクリック</div>
+        <div class="wing-switch-title">表示させたい棟</div>
         <div>
           <label><input type="radio" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
               checked />本部棟</label>

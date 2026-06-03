@@ -107,7 +107,7 @@ let isFloorMapMode = true;
 
 const wingFloors = {
   教室棟: ["1", "2", "3", "4", "5", "6", "7"],
-  交流棟: ["1", "2", "3", "4", "5", "6", "7"],
+  交流棟: ["1", "2", "3", "4", "5"],
   研究棟: [
     "1",
     "2",
@@ -146,7 +146,7 @@ const wingFloors = {
 //表示階を変更
 function changeFloor(floorNumber) {
   currentFloorNumber = floorNumber;
-  const floorMapImg = document.getElementById("map-img");
+  const floorMapImg = document.getElementById("floor-map-img");
 
   floorMapImg.src = floorMapImg.src.replace(
     /floor_map\/.*/,
@@ -166,18 +166,15 @@ function changeFloor(floorNumber) {
 }
 
 //平面立体を変更
-function toggleDimention(buttonImg) {
+function toggleDimention(switchElement) {
   isFloorMapMode = !isFloorMapMode;
+  const thumbElement = switchElement.querySelector(".dimention-switch-thumb");
   if (isFloorMapMode) {
-    buttonImg.src = buttonImg.src.replace(
-      /image\/.*/,
-      `image/切り替え_平面.png`,
-    );
+    thumbElement.classList.remove("right");
+    thumbElement.classList.add("left");
   } else {
-    buttonImg.src = buttonImg.src.replace(
-      /image\/.*/,
-      `image/切り替え_立体.png`,
-    );
+    thumbElement.classList.remove("left");
+    thumbElement.classList.add("right");
   }
 }
 
@@ -185,6 +182,10 @@ function toggleDimention(buttonImg) {
 function changeWing(wingName, inputElement) {
   // console.log(wingName, inputElement.checked);
   if (isFloorMapMode) {
+    if (currentWing == wingName) {
+      return;
+    }
+
     currentWing = wingName;
     //階選択メニューを変更
     const floorSelectElements = document.querySelectorAll(".floor-select");
@@ -201,6 +202,25 @@ function changeWing(wingName, inputElement) {
     } else {
       //選択されていた階が存在しなければ1階にする
       changeFloor(1);
+    }
+    panzoom.reset();
+    const mapImgElement = document.getElementById("floor-map-img");
+    if (wingName == "研究棟") {
+      // mapImgElement.style.width =
+      //   mapImgElement.parentElement.clientWidth * 0.82 + "px";
+      // mapImgElement.style.height = "auto";
+      // mapImgElement.style.marginTop = "7vh";
+      // mapImgElement.style.marginLeft = "15vw";
+      mapImgElement.classList.remove("other-floor-map");
+      mapImgElement.classList.add("research-building-floor-map");
+    } else {
+      mapImgElement.style.height =
+        //   mapImgElement.parentElement.clientHeight * 0.75 + "px";
+        // mapImgElement.style.width = "auto";
+        // mapImgElement.style.marginTop = "3vh";
+        // mapImgElement.style.marginLeft = "20vw";
+        mapImgElement.classList.remove("research-building-floor-map");
+      mapImgElement.classList.add("other-floor-map");
     }
   }
 }
@@ -234,7 +254,7 @@ if (is_superuser == true) {
 const language = JSON.parse(document.getElementById("language").textContent);
 
 //panzoom
-const panzoom = Panzoom($("#map-img")[0], {
+const panzoom = Panzoom($("#floor-map-img")[0], {
   maxScale: 5,
   minScale: 0.05,
 
@@ -257,6 +277,14 @@ function Initializer() {
   if (language != "JA") {
     changeLanguage(language);
   }
-
+  changeLayoutForResponsive();
   changeFloor(1);
+}
+
+window.addEventListener("resize", changeLayoutForResponsive);
+
+function changeLayoutForResponsive() {
+  if (window.innerWidth < 800) {
+    closeSidebar("index-sidebar", "sidebar-open-button");
+  }
 }
