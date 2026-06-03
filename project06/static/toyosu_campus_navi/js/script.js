@@ -99,18 +99,126 @@ async function selectLanguage(language) {
   }
 }
 
+//---------------地図切り替え処理 開始---------------
+
+let currentWing = "本部棟";
+let currentFloorNumber = 1;
+let isFloorMapMode = true;
+
+const wingFloors = {
+  教室棟: ["1", "2", "3", "4", "5", "6", "7"],
+  交流棟: ["1", "2", "3", "4", "5", "6", "7"],
+  研究棟: [
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+  ],
+  本部棟: [
+    "B1",
+    "1",
+    "2",
+    "3",
+    "4",
+    "5",
+    "6",
+    "7",
+    "8",
+    "9",
+    "10",
+    "11",
+    "12",
+    "13",
+    "14",
+  ],
+};
+
+//表示階を変更
+function changeFloor(floorNumber) {
+  currentFloorNumber = floorNumber;
+  const floorMapImg = document.getElementById("map-img");
+
+  floorMapImg.src = floorMapImg.src.replace(
+    /floor_map\/.*/,
+    `floor_map/${currentWing}_${floorNumber}階.jpg`,
+  );
+
+  const floorSelectElements = document.querySelectorAll(".floor-select");
+  for (const floorSelectElement of floorSelectElements) {
+    if (floorSelectElement.innerText == floorNumber) {
+      floorSelectElement.style.color = "rgb(0, 0, 0)";
+      floorSelectElement.style.fontWeight = "bold";
+    } else {
+      floorSelectElement.style.color = "rgb(90, 90, 90)";
+      floorSelectElement.style.fontWeight = "normal";
+    }
+  }
+}
+
+//平面立体を変更
+function toggleDimention(buttonImg) {
+  isFloorMapMode = !isFloorMapMode;
+  if (isFloorMapMode) {
+    buttonImg.src = buttonImg.src.replace(
+      /image\/.*/,
+      `image/切り替え_平面.png`,
+    );
+  } else {
+    buttonImg.src = buttonImg.src.replace(
+      /image\/.*/,
+      `image/切り替え_立体.png`,
+    );
+  }
+}
+
+//棟を変更
+function changeWing(wingName, inputElement) {
+  // console.log(wingName, inputElement.checked);
+  if (isFloorMapMode) {
+    currentWing = wingName;
+    //階選択メニューを変更
+    const floorSelectElements = document.querySelectorAll(".floor-select");
+    for (const floorSelectElement of floorSelectElements) {
+      if (wingFloors[wingName].includes(floorSelectElement.innerText)) {
+        floorSelectElement.style.display = "";
+      } else {
+        floorSelectElement.style.display = "none";
+      }
+    }
+    if (wingFloors[wingName].includes(currentFloorNumber)) {
+      //選択されていた階に切り替える
+      changeFloor(currentFloorNumber);
+    } else {
+      //選択されていた階が存在しなければ1階にする
+      changeFloor(1);
+    }
+  }
+}
+
+//---------------地図切り替え処理 終了---------------
+
 //html等を書き換える
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
 }
 
 //サーバーから変数を受け取る
-const alert_message = JSON.parse(
+const alertMessage = JSON.parse(
   document.getElementById("alert_message").textContent,
 );
 
-if (alert_message) {
-  alert(alert_message);
+if (alertMessage) {
+  alert(alertMessage);
 }
 
 const username = JSON.parse(document.getElementById("username").textContent);
@@ -125,6 +233,19 @@ if (is_superuser == true) {
 
 const language = JSON.parse(document.getElementById("language").textContent);
 
+//panzoom
+const panzoom = Panzoom($("#map-img")[0], {
+  maxScale: 5,
+  minScale: 0.05,
+
+  contain: null,
+});
+
+// ホイールズーム
+document
+  .querySelector(".viewer")
+  .addEventListener("wheel", panzoom.zoomWithWheel);
+
 //初期化処理
 Initializer();
 
@@ -136,4 +257,6 @@ function Initializer() {
   if (language != "JA") {
     changeLanguage(language);
   }
+
+  changeFloor(1);
 }

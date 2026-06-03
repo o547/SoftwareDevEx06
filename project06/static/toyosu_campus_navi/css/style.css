@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }
 
 .app {
@@ -14,6 +13,7 @@
 
 .main {
   position: relative;
+  padding: 10px;
   flex: 1 1 0;
   min-width: 0;
   display: flex;
@@ -22,11 +22,18 @@
   overflow: hidden;
 }
 
-.main img {
-  width: auto;
-  max-width: 100%;
+.viewer {
+  width: 100%;
+  height: 100%;
+}
+
+#map-img {
+  width: 60%;
+  max-width: 90%;
   height: auto;
-  margin-left: 0;
+  max-height: 80%;
+  margin-top: 5vw;
+  margin-left: 20vw;
 }
 
 .sidebar {
@@ -80,7 +87,7 @@
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -181,16 +188,18 @@
 }
 
 #sidebar-open-button {
+  position: absolute;
   width: 0 !important;
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transition:
-    width 0.5s ease,
-    opacity 0.3s ease;
+  transition: width 0.5s ease;
 }
 
 #sidebar-open-button.active {
+  position: absolute;
+  right: 20px;
+  top: 10px;
   width: 100px !important;
   pointer-events: auto;
   opacity: 1;
@@ -308,19 +317,17 @@
   margin-left: auto;
 }
 
-.dimention-switch {
+#dimention-switch {
   position: absolute;
-  left: 40px;
-  bottom: 40px;
-
-  width: 80px;
-  height: 80px;
+  left: 30px;
+  bottom: 10px;
+  height: 60px;
   border-radius: 5px;
 
   font-size: medium;
 }
 
-.wing-switch {
+.wing-switch-menu {
   position: absolute;
   left: 40px;
   top: 40px;
@@ -340,8 +347,29 @@
   margin-bottom: 3px;
 }
 
+.wing-switch {
+  appearance: checkbox;
+}
+
 .util_links {
   position: absolute;
   right: 5px;
   bottom: 10px;
+}
+
+#floor-select-menu {
+  position: absolute;
+  left: 250px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  padding: 5px;
+}
+
+.floor-select {
+  color: rgb(90, 90, 90);
+  text-decoration: underline;
+  font-size: large;
+  cursor: pointer;
 }

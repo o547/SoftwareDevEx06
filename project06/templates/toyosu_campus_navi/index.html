@@ -7,6 +7,10 @@
   <title>豊洲キャンパスナビ</title>
   {% load static %}
   <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}" />
+
+  <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+
 </head>
 
 <body>
@@ -14,36 +18,63 @@
   <div class="app">
     <div class="main">
       {% load static %}
-      <img src="{% static 'toyosu_campus_navi/image/OverallMapImage.png' %}" style="width: 50%; margin-left: 50px" />
-      <div class="sidebar-button dimention-switch">
-        立体平面<br />切り替え
+      <div class="viewer">
+        <img id="map-img" src="{% static 'toyosu_campus_navi/image/floor_map/教室棟_1階.jpg' %}" />
       </div>
-      <div class="wing-switch">
+
+      <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
+        onclick="toggleDimention(this)" />
+
+      <div id="floor-select-menu">
+        <div onclick="changeFloor('B1')" class="floor-select">B1</div>
+        <div onclick="changeFloor('1')" class="floor-select">1</div>
+        <div onclick="changeFloor('2')" class="floor-select">2</div>
+        <div onclick="changeFloor('3')" class="floor-select">3</div>
+        <div onclick="changeFloor('4')" class="floor-select">4</div>
+        <div onclick="changeFloor('5')" class="floor-select">5</div>
+        <div onclick="changeFloor('6')" class="floor-select">6</div>
+        <div onclick="changeFloor('7')" class="floor-select">7</div>
+        <div onclick="changeFloor('8')" class="floor-select">8</div>
+        <div onclick="changeFloor('9')" class="floor-select">9</div>
+        <div onclick="changeFloor('10')" class="floor-select">10</div>
+        <div onclick="changeFloor('11')" class="floor-select">11</div>
+        <div onclick="changeFloor('12')" class="floor-select">12</div>
+        <div onclick="changeFloor('13')" class="floor-select">13</div>
+        <div onclick="changeFloor('14')" class="floor-select">14</div>
+      </div>
+      <div class="wing-switch-menu">
         <div class="wing-switch-title">表示させたい棟をクリック</div>
         <div>
-          <label><input type="checkbox" checked /> 本部棟</label>
+          <label><input type="radio" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
+              checked />本部棟</label>
         </div>
         <div>
-          <label><input type="checkbox" /> 教室棟</label>
+          <label><input type="radio" onchange="changeWing('教室棟',this)" class="wing-switch" name="wing-switch" />
+            教室棟</label>
         </div>
         <div>
-          <label><input type="checkbox" /> 交流棟</label>
+          <label><input type="radio" onchange="changeWing('交流棟',this)" class="wing-switch" name="wing-switch" />
+            交流棟</label>
         </div>
         <div>
-          <label><input type="checkbox" /> 研究棟</label>
+          <label><input type="radio" onchange="changeWing('研究棟',this)" class="wing-switch" name="wing-switch" />
+            研究棟</label>
         </div>
         <div><u>GPSから取得</u></div>
       </div>
-      <div class="util_links">
+      <!-- <div class="util_links">
         <a href="/demo/guide">経路案内デモ</a><br /><a href="/plot">座標取得アプリ</a>
+      </div> -->
+
+      <div class="sidebar-button square" id="sidebar-open-button"
+        onclick="openSidebar('index-sidebar', 'sidebar-open-button')" style="width: 0">
+        {% load static %}
+        <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
       </div>
+
+
     </div>
 
-    <div class="sidebar-button square" id="sidebar-open-button"
-      onclick="openSidebar('index-sidebar', 'sidebar-open-button')" style="margin-right: 20px; width: 0">
-      {% load static %}
-      <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
-    </div>
 
     <div class="sidebar" id="index-sidebar">
       <div class="sidebar-square-group">
@@ -65,7 +96,7 @@
           ログイン
         </div>
         {% else %}
-        <div class="sidebar-button">履歴 ({{ username }})</div>
+        <div class="sidebar-button" onclick="location.href='./history'">履歴 ({{ username }})</div>
         {% endif %}
         <div class="sidebar-button" onclick="openModal('chatbot-menu')">
           チャットボット
@@ -82,53 +113,52 @@
             </a>
           </p>
         </div>
-
-        <div class="sidebar-account" id="sidebar-login" style="display: none">
-          <p style="font-size: 20px">履歴の閲覧には<br />ログインが必要です</p>
-          <form type="submit" method="post">
-            <div class="account-row">
-              {% csrf_token %}
-              <label for="login-id">username</label>
-              <input id="login-id" name="login-id" required />
-              <label for="login-password">password</label>
-              <input id="login-password" name="login-password" type="password" required />
-              <input type="hidden" id="login-method" name="login-method" value="login" required />
-              <button type="submit" formaction="/user/login">ログイン</button>
-              <button type="button" onclick="
-                  toggleMenu('sidebar-login', 'sidebar-buttons', 'contents')
-                ">
-                キャンセル
-              </button>
-            </div>
-          </form>
+      </div>
+      <div class="sidebar-account" id="sidebar-login" style="display: none">
+        <p style="font-size: 20px">履歴の閲覧には<br />ログインが必要です</p>
+        <form type="submit" method="post">
           <div class="account-row">
-            <p>アカウントがない方</p>
-            <div class="link-text" onclick="toggleMenu('sidebar-login', 'sidebar-create', '')">
-              新規登録
-            </div>
+            {% csrf_token %}
+            <label for="login-id">username</label>
+            <input id="login-id" name="login-id" required />
+            <label for="login-password">password</label>
+            <input id="login-password" name="login-password" type="password" required />
+            <input type="hidden" id="login-method" name="login-method" value="login" required />
+            <button type="submit" formaction="/user/login">ログイン</button>
+            <button type="button" onclick="
+                toggleMenu('sidebar-login', 'sidebar-buttons', 'contents')
+              ">
+              キャンセル
+            </button>
+          </div>
+        </form>
+        <div class="account-row">
+          <p>アカウントがない方</p>
+          <div class="link-text" onclick="toggleMenu('sidebar-login', 'sidebar-create', '')">
+            新規登録
           </div>
         </div>
+      </div>
 
-        <div class="sidebar-account" id="sidebar-create" style="display: none">
-          <p style="font-size: 20px">アカウント新規作成</p>
-          <form type="submit" method="post">
-            <div class="account-row">
-              {% csrf_token %}
-              <label for="login-id">username</label>
-              <input id="login-id" name="login-id" required />
-              <label for="login-password">password</label>
-              <input id="login-password" name="login-password" type="password" required />
-              <input type="hidden" id="login-method" name="login-method" value="regist" required />
-              <button type="submit" formaction="/user/login">登録</button>
-              <button type="button" onclick="
-                  toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')
-                ">
-                キャンセル
-              </button>
-            </div>
-          </form>
-          <div class="account-row"></div>
-        </div>
+      <div class="sidebar-account" id="sidebar-create" style="display: none">
+        <p style="font-size: 20px">アカウント新規作成</p>
+        <form type="submit" method="post">
+          <div class="account-row">
+            {% csrf_token %}
+            <label for="login-id">username</label>
+            <input id="login-id" name="login-id" required />
+            <label for="login-password">password</label>
+            <input id="login-password" name="login-password" type="password" required />
+            <input type="hidden" id="login-method" name="login-method" value="regist" required />
+            <button type="submit" formaction="/user/login">登録</button>
+            <button type="button" onclick="
+                toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')
+              ">
+              キャンセル
+            </button>
+          </div>
+        </form>
+        <div class="account-row"></div>
       </div>
     </div>
     <!-- モーダルウィンドウ開始 -->
