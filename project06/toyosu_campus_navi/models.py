@@ -23,7 +23,7 @@ class Notice(models.Model):
 
 # F3 履歴情報
 class History(models.Model):
-    History_ID = models.UUIDField(
+    history_ID = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, verbose_name="ID"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
