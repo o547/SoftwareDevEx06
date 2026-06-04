@@ -1,11 +1,11 @@
 from django.contrib.auth import authenticate, login
 from django.conf import settings
-from .manegements import (
-    HistoryInfoManegement,
-    NoticeManegement,
-    UserInfoManegement,
-    SectionInfoManegement,
-    routeManagement,
+from .managements import (
+    HistoryInfoManagement,
+    NoticeManagement,
+    UserInfoManagement,
+    SectionInfoManagement,
+    RouteManagement,
 )
 
 
@@ -17,7 +17,7 @@ class NoticeProcess:
 # C4ログイン処理部
 class LoginProcess:
     def user_login(self, request, username, password):
-        user = UserInfoManegement().certification(
+        user = UserInfoManagement().certification(
             request, username=username, password=password
         )
         if user is not None:
@@ -29,13 +29,13 @@ class LoginProcess:
             return "ログインできませんでした"
 
     def user_regist(self, request, username, password):
-        if UserInfoManegement().check_existence(request, username):
+        if UserInfoManagement().check_existence(request, username):
             # ユーザーIDが既に存在している
             request.session["alert_message"] = "そのIDは存在しています"
             return "そのIDは存在しています"
         else:
             # アカウントを新規作成する
-            user = UserInfoManegement().user_regist(request, username, password)
+            user = UserInfoManagement().user_regist(request, username, password)
             login(request, user)
             return ""
 
@@ -43,7 +43,7 @@ class LoginProcess:
         user_info = self.get_user_info(request)
         if user_info["is_login"]:
             if not (
-                UserInfoManegement().save_language(
+                UserInfoManagement().save_language(
                     request, language, user_info["username"]
                 )
             ):
@@ -87,7 +87,17 @@ class RouteSearchProcess:
 
 # C13区画情報処理部
 class SectionInfoProcess:
-    pass
+    def get_all_sections(self, request):
+        nodes = RouteManagement().get_all_node_coordinates(request)
+        sections = []
+        for node in nodes:
+            sections.append(
+                {
+                    "section_id": node["section_id"],
+                    "section_name": node["section_name"],
+                }
+            )
+        return sections
 
 
 # C15履歴情報処理部
