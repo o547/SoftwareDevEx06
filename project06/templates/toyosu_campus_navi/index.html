@@ -17,10 +17,26 @@
   {% csrf_token %}
   <div class="app">
     <div class="main">
-      {% load static %}
-      <div class="viewer">
+      <div class="viewer" id="floor-map-image-area" style="display: none;">
+        {% load static %}
         <img id="floor-map-img" class="other-floor-map"
           src="{% static 'toyosu_campus_navi/image/floor_map/教室棟_1階.jpg' %}" />
+      </div>
+      <div id="whole-map-image-area">
+        {% load static %}
+        <div class="map-scroll" style="width: 60%; display: none;" data-wing="本部棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/本部棟.jpg' %}" />
+        </div>
+        <div class="map-scroll" style="width: 40%; display:block;" data-wing="教室棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/教室棟.jpg' %}" />
+        </div>
+        <div class="map-scroll" style="width: 40%; display:none;" data-wing="交流棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/交流棟.jpg' %}" />
+        </div>
+        <div class="map-scroll" style="width: 80%; display:none;" data-wing="研究棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/研究棟.jpg' %}" />
+        </div>
+
       </div>
 
       <!-- <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
@@ -29,7 +45,7 @@
         <div class="dimention-switch">
           <div class="dimention-switch-label">平面<br />地図</div>
           <div class="dimention-switch-switch" onclick="toggleDimention(this)">
-            <div class="dimention-switch-thumb left"></div>
+            <div class="dimention-switch-thumb right"></div>
           </div>
           <div class="dimention-switch-label">立体<br />地図</div>
         </div>
@@ -56,20 +72,20 @@
       <div class="wing-switch-menu">
         <div class="wing-switch-title">表示させたい棟</div>
         <div>
-          <label><input type="radio" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
-              checked />本部棟</label>
+          <label><input type="checkbox" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
+              value="本部棟" />本部棟</label>
         </div>
         <div>
-          <label><input type="radio" onchange="changeWing('教室棟',this)" class="wing-switch" name="wing-switch" />
-            教室棟</label>
+          <label><input type="checkbox" onchange="changeWing('教室棟',this)" class="wing-switch" value="教室棟"
+              name="wing-switch" checked />教室棟</label>
         </div>
         <div>
-          <label><input type="radio" onchange="changeWing('交流棟',this)" class="wing-switch" name="wing-switch" />
-            交流棟</label>
+          <label><input type="checkbox" onchange="changeWing('交流棟',this)" class="wing-switch" value="交流棟"
+              name="wing-switch" />交流棟</label>
         </div>
         <div>
-          <label><input type="radio" onchange="changeWing('研究棟',this)" class="wing-switch" name="wing-switch" />
-            研究棟</label>
+          <label><input type="checkbox" onchange="changeWing('研究棟',this)" class="wing-switch" value="研究棟"
+              name="wing-switch" />研究棟</label>
         </div>
         <div><u>GPSから取得</u></div>
       </div>
@@ -183,14 +199,14 @@
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
-              <div class="sidebar-button" onclick="
+              <div class="search-menu-button" onclick="
                   toggleMenu('search-menu', 'start-point-menu', 'contents')
                 ">
                 出発地
               </div>
             </div>
             <div class="modal-row">
-              <div class="sidebar-button" onclick="
+              <div class="search-menu-button" onclick="
                   toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
                 目的地
@@ -207,20 +223,45 @@
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
             <div class="modal-row">
-              <div class="sidebar-button">GPSから推定</div>
-              <div class="sidebar-button">地図から選択</div>
-              <div class="sidebar-button" style="visibility: hidden"></div>
+              <div class="search-menu-button">GPSから推定</div>
+              <div class="search-menu-button">地図から選択</div>
+              <div class="search-menu-button" style="visibility: hidden"></div>
             </div>
             <div class="modal-body-title">手動入力</div>
             <div class="modal-row">
-              <div class="sidebar-button">--棟を選択--</div>
-              <div class="sidebar-button">--階を選択--</div>
-              <div class="sidebar-button">--部屋を選択--</div>
+              <select class="search-menu-button" id="start-wing-select">
+                <option value="">棟を選択</option>
+                <option value="本部棟">本部棟</option>
+                <option value="教室棟">教室棟</option>
+                <option value="交流棟">交流棟</option>
+                <option value="研究棟">研究棟</option>
+              </select>
+              <select class="search-menu-button" id="start-floor-select">
+                <option value="">階を選択</option>
+                <option value="B1階">B1</option>
+                <option value="1階">1</option>
+                <option value="2階">2</option>
+                <option value="3階">3</option>
+                <option value="4階">4</option>
+                <option value="5階">5</option>
+                <option value="6階">6</option>
+                <option value="7階">7</option>
+                <option value="8階">8</option>
+                <option value="9階">9</option>
+                <option value="10階">10</option>
+                <option value="11階">11</option>
+                <option value="12階">12</option>
+                <option value="13階">13</option>
+                <option value="14階">14</option>
+              </select>
+              <select class="search-menu-section search-menu-button" id="start-section-select">
+                <option value="">区画を選択</option>
+              </select>
             </div>
           </div>
           <div class="modal-row modal-footer">
             <div class="sidebar-button square" onclick="
-                toggleMenu('start-point-menu', 'search-menu', 'contents')
+                submitSearch(); toggleMenu('start-point-menu', 'search-menu', 'contents')
               ">
               決定
             </div>
@@ -235,19 +276,19 @@
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
             <div class="modal-row">
-              <div class="sidebar-button">地図から選択</div>
-              <div class="sidebar-button" style="visibility: hidden"></div>
-              <div class="sidebar-button" style="visibility: hidden"></div>
+              <div class="search-menu-button">地図から選択</div>
+              <div class="search-menu-button" style="visibility: hidden"></div>
+              <div class="search-menu-button" style="visibility: hidden"></div>
             </div>
             <div class="modal-body-title">手動入力</div>
             <div class="modal-row">
-              <div class="sidebar-button">--棟を選択--</div>
-              <div class="sidebar-button">--階を選択--</div>
-              <div class="sidebar-button">--部屋を選択--</div>
+              <select class="search-menu-button" id="goal-wing-select"></select>
+              <select class="search-menu-button" id="goal-floor-select"></select>
+              <select class="search-menu-section search-menu-button" id="goal-section-select"></select>
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')">
+            <div class="sidebar-button square" onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
               決定
             </div>
           </div>
@@ -305,6 +346,7 @@
 {{username|json_script:"username" }}
 {{ is_superuser|json_script:"is_superuser"}}
 {{ language|json_script:"language" }}
+{{ section_names|json_script:"section_names" }}
 {% load static %}
 <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
 
