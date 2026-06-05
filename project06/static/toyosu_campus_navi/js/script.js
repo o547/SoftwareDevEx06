@@ -40,7 +40,6 @@ function openSidebar(sidebarId, buttonId) {
 
 //チャットボットに質問をする
 async function chatbotSubmit() {
-
   const div = document.querySelector(".chatbot-conversation");
   const chatbotInput = document.querySelector(".chatbot-input");
 
@@ -49,22 +48,28 @@ async function chatbotSubmit() {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
     },
     body: JSON.stringify({
-      question: chatbotInput.value
-    })
+      question: chatbotInput.value,
+    }),
   });
   const data = await response.json();
 
   //ユーザの質問文を描画
-  div.insertAdjacentHTML("beforeend", `<div class="chatbot-message user-message">${chatbotInput.value}</div>`);
+  div.insertAdjacentHTML(
+    "beforeend",
+    `<div class="chatbot-message user-message">${chatbotInput.value}</div>`,
+  );
 
   //テキストボックスをクリア
   chatbotInput.value = "";
 
   //返答文を描画
-  div.insertAdjacentHTML("beforeend", `<div class="chatbot-message">${data.chatbot_response}</div>`);
+  div.insertAdjacentHTML(
+    "beforeend",
+    `<div class="chatbot-message">${data.chatbot_response}</div>`,
+  );
   // console.log(data.chatbot_response);
 }
 
@@ -73,19 +78,21 @@ function createPostJson(key, value) {
     method: "POST",
     headers: {
       "Content-Type": "application/json",
-      "X-CSRFToken": document.querySelector('[name=csrfmiddlewaretoken]').value,
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
     },
     body: JSON.stringify({
-      [key]: value
-    })
-  }
+      [key]: value,
+    }),
+  };
 }
 
 //言語設定を変更して保存する
 async function selectLanguage(language) {
-
   //Ajax通信で返答を取得
-  const response = await fetch("/language/submit", createPostJson("language", language));
+  const response = await fetch(
+    "/language/submit",
+    createPostJson("language", language),
+  );
   const data = await response.json();
   if (data.alert_message) {
     alert(data.alert_message);
@@ -97,42 +104,36 @@ function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
 }
 
-
 //サーバーから変数を受け取る
 const alert_message = JSON.parse(
-  document.getElementById("alert_message").textContent
+  document.getElementById("alert_message").textContent,
 );
 
 if (alert_message) {
   alert(alert_message);
 }
 
-const username = JSON.parse(
-  document.getElementById("username").textContent
-);
+const username = JSON.parse(document.getElementById("username").textContent);
 
 const is_superuser = JSON.parse(
-  document.getElementById("is_superuser").textContent
+  document.getElementById("is_superuser").textContent,
 );
 
 if (is_superuser == true) {
-  console.log("aa")
+  console.log("aa");
 }
 
-const language = JSON.parse(
-  document.getElementById("language").textContent
-);
-
+const language = JSON.parse(document.getElementById("language").textContent);
 
 //初期化処理
-Initializer()
+Initializer();
 
 function Initializer() {
   if (is_superuser == true) {
-    document.getElementById("notice-management-button").style.display = ""
+    document.getElementById("notice-management-button").style.display = "";
   }
 
-  if (language != "JA"){
+  if (language != "JA") {
     changeLanguage(language);
   }
 }

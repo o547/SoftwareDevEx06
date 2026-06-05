@@ -4,6 +4,14 @@ from .manegements import *
 import cv2
 from .navi import navi
 import numpy as np
+from django.conf import settings
+from .manegements import (
+    HistoryInfoManegement,
+    NoticeManegement,
+    UserInfoManegement,
+    SectionInfoManegement,
+    routeManagement,
+)
 
 
 # C3お知らせ処理部
@@ -20,30 +28,33 @@ class LoginProcess:
         if user is not None:
             # ログイン成功
             login(request, user)
-            return True
+            return ""
         else:
             request.session["alert_message"] = "ログインできませんでした"
-            return False
+            return "ログインできませんでした"
 
     def user_regist(self, request, username, password):
         if UserInfoManegement().check_existence(request, username):
             # ユーザーIDが既に存在している
             request.session["alert_message"] = "そのIDは存在しています"
-            return False
+            return "そのIDは存在しています"
         else:
             # アカウントを新規作成する
             user = UserInfoManegement().user_regist(request, username, password)
             login(request, user)
-            return True
+            return ""
 
     def save_language(self, request, language):
         user_info = self.get_user_info(request)
         if user_info["is_login"]:
-            if UserInfoManegement().save_language(
-                request, language, user_info["username"]
+            if not (
+                UserInfoManegement().save_language(
+                    request, language, user_info["username"]
+                )
             ):
                 request.session["alert_message"] = "言語情報を保存できませんでした"
         request.session["language"] = language
+        return "言語情報を保存できませんでした"
 
     def get_user_info(self, request):
         if request.user.is_authenticated:
@@ -66,30 +77,20 @@ class LoginProcess:
 
 # C5構内図画像作成部
 class CampusMapImageCreate:
-    
-
-
     # M5-1 構内図画像作成主処理
 
     def create_map_image(self, request, route, map_folder_name):
         try:
-            output_files = self.create_floor_map(
-                request,
-                route,
-                map_folder_name
-            )
+            output_files = self.create_floor_map(request, route, map_folder_name)
 
-            return {
-                "output_files": output_files,
-                "alert_message": ""
-            }
+            return {"output_files": output_files, "alert_message": ""}
 
         except Exception as e:
             print("C5エラー:", e)
             return {
                 "output_files": [],
-                "alert_message": "構内図画像を作成できませんでした"
-            }   
+                "alert_message": "構内図画像を作成できませんでした",
+            }
 
     # M5-2 平面地図作成処理
     def create_floor_map(self, request, route, map_folder_name):
@@ -103,7 +104,7 @@ class CampusMapImageCreate:
             floor = parts[1]
             section = parts[2]
             display_route.append(section)
-        #読み込む画像を決める
+        # 読み込む画像を決める
         input_name = (
             "static/toyosu_campus_navi/image/"
             + map_folder_name
@@ -122,14 +123,14 @@ class CampusMapImageCreate:
             print("画像を読み込めませんでした")
             return output_files
 
-        nodes = navi.nodes  #後ほど座標に変更
-        
-        #線の設定
+        nodes = navi.nodes  # 後ほど座標に変更
+
+        # 線の設定
         color = (0, 0, 255)
         thickness = 2
         line_type = cv2.LINE_AA
         tipLength = 0.1
-        #矢印を描く
+        # 矢印を描く
         for i in range(len(display_route) - 1):
             start = nodes[display_route[i]]
             goal = nodes[display_route[i + 1]]
@@ -177,4 +178,6 @@ class HistoryInfoProcess:
 class ChatBotProcess:
     def reply_to_chat(self, request, user_input):
         user_output = "返答文"
+        # APIキーはkeys.pyで管理している
+        api_key = settings.GEMINI_API_KEY
         return user_output
