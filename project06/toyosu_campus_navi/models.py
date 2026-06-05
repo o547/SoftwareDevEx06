@@ -23,7 +23,7 @@ class Notice(models.Model):
 
 # F3 履歴情報
 class History(models.Model):
-    History_ID = models.UUIDField(
+    history_ID = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, verbose_name="ID"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
@@ -82,4 +82,6 @@ class Edge(models.Model):
         verbose_name="区画B",
         related_name="section_b",
     )
-    estimated_travel_time = models.BigIntegerField(null=True, verbose_name="推定移動時間(ミリ秒)")
+    estimated_travel_time = models.BigIntegerField(
+        null=True, verbose_name="推定移動時間(ミリ秒)"
+    )

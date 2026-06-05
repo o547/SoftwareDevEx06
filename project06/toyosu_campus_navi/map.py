@@ -1,4 +1,6 @@
 import cv2
+import os
+
 from .navi import navi
 
 class map:
@@ -7,7 +9,7 @@ class map:
     @classmethod
     def drow_arrows(cls,path):
         input_name = "static/toyosu_campus_navi/image/map4F.png"
-        output_name = "static/toyosu_campus_navi/image/output.png"
+        output_name = "static/toyosu_campus_navi/image/demo_output/output.png"
         nodes= navi.nodes
         color = (0, 0, 255)
         thickness = 2
@@ -28,4 +30,5 @@ class map:
                 tipLength=tipLength,
             )
         
+        os.makedirs(os.path.dirname(output_name), exist_ok=True)
         cv2.imwrite(output_name, img)
