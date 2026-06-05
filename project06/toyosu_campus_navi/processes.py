@@ -5,7 +5,32 @@ from .manegements import *
 
 # C3お知らせ処理部
 class NoticeProcess:
-    pass
+    def create_notice(self, request, title, body):
+        if not request.user.is_superuser:
+            return "お知らせを保存できませんでした"
+        else:
+            if NoticeManegement().create_notice(request, title, body):
+                return ""
+            else:
+                return "お知らせを保存できませんでした"
+            
+    def update_notice(self, request, id, title, body):
+        if not request.user.is_superuser:
+            return "お知らせを保存できませんでした"
+        else:
+            if NoticeManegement().update_notice(request, id, title, body):
+                return ""
+            else:
+                return "お知らせを保存できませんでした"
+    def notice_delete(self, request, id):
+        if not request.user.is_superuser:
+            return "お知らせを削除できませんでした"
+        else:
+            if NoticeManegement().delete_notice(request, id):
+                return ""
+            else:
+                return "お知らせを削除できませんでした"
+
 
 
 # C4ログイン処理部
@@ -68,7 +93,37 @@ class CampusMapImageCreate:
 
 # C6位置情報処理部
 class LocationProcess:
-    pass
+    #測定する
+    research_building_x_max    = 100
+    research_building_x_min    = 100
+    research_building_y_max    = 100
+    research_building_y_min    = 100
+    admin_building_x_max       = 100
+    admin_building_x_min       = 100
+    admin_building_y_max       = 100
+    admin_building_y_min       = 100
+    interaction_building_x_max = 100
+    interaction_building_x_min = 100
+    interaction_building_y_max = 100
+    interaction_building_y_min = 100
+    classroom_building_x_max   = 100
+    classroom_building_x_min   = 100
+    classroom_building_y_max   = 100
+    classroom_building_y_min   = 100
+    #測定する
+    def identify_wing(self, request, latitude, longitude):
+        if (LocationProcess.research_building_x_min < longitude < LocationProcess.research_building_x_max and LocationProcess.research_building_y_min < latitude < LocationProcess.research_building_y_max):#研究棟の範囲内
+            return "研究棟"
+        elif (LocationProcess.admin_building_x_min < longitude < LocationProcess.admin_building_x_max and LocationProcess.admin_building_y_min < latitude < LocationProcess.admin_building_y_max):#本部棟の範囲内
+            return "本部棟"
+        elif (LocationProcess.interaction_building_x_min < longitude < LocationProcess.interaction_building_x_max and LocationProcess.interaction_building_y_min < latitude < LocationProcess.interaction_building_y_max):#交流棟の範囲内
+            return "交流棟"
+        elif (LocationProcess.classroom_building_x_min < longitude < LocationProcess.classroom_building_x_max and LocationProcess.classroom_building_y_min < latitude < LocationProcess.classroom_building_y_max):#教室棟の範囲内
+            return "教室棟"
+        else:#すべての棟の範囲外
+            return ""
+
+
 
 
 # C11経路検索部
