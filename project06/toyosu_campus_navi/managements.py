@@ -174,7 +174,7 @@ class SectionInfoManagement:
 
 # C16経路管理部
 class RouteManagement:
-    def get_node_coodinate(self, request, section_name):
+    def get_node_coordinate(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
         except ValueError:
