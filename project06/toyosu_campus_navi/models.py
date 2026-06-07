@@ -64,6 +64,9 @@ class Section(models.Model):
         null=True, max_length=1023, verbose_name="営業時間"
     )
 
+    def __str__(self):
+        return f"{self.building}_{self.floor}_{self.section}"
+
 
 # F5 エッジ情報
 class Edge(models.Model):
