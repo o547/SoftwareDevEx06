@@ -1,7 +1,6 @@
 * {
   margin: 0;
   padding: 0;
-  font-family: sans-serif;
 }
 
 .app {
@@ -14,6 +13,7 @@
 
 .main {
   position: relative;
+  padding: 10px;
   flex: 1 1 0;
   min-width: 0;
   display: flex;
@@ -22,11 +22,49 @@
   overflow: hidden;
 }
 
-.main img {
-  width: auto;
-  max-width: 100%;
+.viewer {
+  width: 100%;
+  height: 100%;
+}
+
+#whole-map-image-area {
+  width: 100%;
+  height: 100%;
+  display: flex;
+  overflow-y: hidden;
+  overflow-x: auto;
+  flex-shrink: 0;
+}
+
+.map-scroll {
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: flex-start;
+  flex-shrink: 0;
+  margin: 0 auto;
+}
+
+.research-building-floor-map {
+  width: 82%;
   height: auto;
-  margin-left: 0;
+  margin-top: 7vw;
+  margin-left: 15vw;
+}
+
+.other-floor-map {
+  height: 75%;
+  width: auto;
+  margin-top: 3vw;
+  margin-left: 20vw;
+}
+
+.whole-map-img {
+  display: block;
+  margin-top: 15vh;
+  margin-bottom: 15vh;
+  width: 100%;
+  flex-shrink: 0;
 }
 
 .sidebar {
@@ -63,6 +101,49 @@
   cursor: pointer;
 }
 
+select.search-menu-button {
+  font-size: normal;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+
+  padding-left: 5px;
+}
+
+select.search-menu-button:hover {
+  background-color: #ffffff;
+}
+
+select.search-menu-section {
+  font-size: small;
+}
+
+.search-menu-button option:not(:first-child) {
+  text-align: start;
+  font-size: 0.85em;
+  padding-left: 0;
+}
+
+.search-menu-button {
+  background-color: #ffffff;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+
+  width: 300px;
+  height: 50px;
+  font-size: large;
+  color: black;
+  margin: 5px;
+  cursor: pointer;
+  border-radius: 10px;
+}
+
+.search-menu-button:hover {
+  background-color: #d6d6d6;
+}
+
 .sidebar-notice {
   width: 90%;
   max-width: 300px;
@@ -80,7 +161,7 @@
 
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
+  align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
 }
@@ -181,16 +262,18 @@
 }
 
 #sidebar-open-button {
+  position: absolute;
   width: 0 !important;
   opacity: 0;
   overflow: hidden;
   pointer-events: none;
-  transition:
-    width 0.5s ease,
-    opacity 0.3s ease;
+  transition: width 0.5s ease;
 }
 
 #sidebar-open-button.active {
+  position: absolute;
+  right: 20px;
+  top: 10px;
   width: 100px !important;
   pointer-events: auto;
   opacity: 1;
@@ -308,22 +391,82 @@
   margin-left: auto;
 }
 
-.dimention-switch {
+.map-switches-area {
   position: absolute;
-  left: 40px;
-  bottom: 40px;
-
-  width: 80px;
-  height: 80px;
-  border-radius: 5px;
-
-  font-size: medium;
+  left: 20px;
+  bottom: 10px;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-end;
 }
 
-.wing-switch {
+.dimention-switch {
+  height: 60px;
+  width: 200px;
+  background: #418281;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: space-around;
+  padding: 0 3px;
+  margin-right: 20px;
+}
+
+.dimention-switch-label {
+  color: white;
+  line-height: 1.15;
+  letter-spacing: 1px;
+}
+
+.dimention-switch-switch {
+  width: 82px;
+  height: 32px;
+  background: white;
+  border: 3px solid #ddd;
+  border-radius: 4px;
+
+  position: relative;
+  box-sizing: border-box;
+}
+
+.dimention-switch-thumb {
+  width: 25px;
+  height: 25px;
+  background: #438985;
+  border-radius: 4px;
+
   position: absolute;
-  left: 40px;
-  top: 40px;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.left {
+  left: 7px;
+}
+
+.right {
+  right: 7px;
+}
+
+#floor-select-menu {
+  display: flex;
+  flex-direction: row;
+  gap: 10px 15px;
+  padding: 5px;
+  flex-wrap: wrap;
+}
+
+.floor-select {
+  color: rgb(90, 90, 90);
+  text-decoration: underline;
+  font-size: large;
+  cursor: pointer;
+}
+
+.wing-switch-menu {
+  position: absolute;
+  left: 30px;
+  top: 30px;
 
   min-width: 120px;
 
@@ -336,12 +479,56 @@
 }
 
 .wing-switch-title {
-  font-size: 0.8em;
+  font-size: 0.9em;
   margin-bottom: 3px;
+}
+
+.wing-switch {
+  appearance: checkbox;
 }
 
 .util_links {
   position: absolute;
   right: 5px;
   bottom: 10px;
+}
+
+@media (max-width: 800px) {
+  .map-switches-area {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .research-building-floor-map {
+    width: 95%;
+    height: auto;
+    margin-top: 50vw;
+    margin-left: 0;
+  }
+
+  .other-floor-map {
+    width: 95%;
+    height: auto;
+    margin-top: 40vw;
+    margin-left: 5vw;
+  }
+  .main {
+    padding: 5px;
+  }
+
+  #floor-select-menu {
+    gap: 10px 25px;
+    margin-right: 10px;
+  }
+
+  .wing-switch-menu {
+    position: absolute;
+    left: 10px;
+    top: 10px;
+  }
+
+  #sidebar-open-button.active {
+    right: 10px;
+    top: 10px;
+  }
 }
