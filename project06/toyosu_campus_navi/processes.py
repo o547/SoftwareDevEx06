@@ -102,7 +102,16 @@ class SectionInfoProcess:
 
 # C15履歴情報処理部
 class HistoryInfoProcess:
-    pass
+    def save_history(self, request, username, start, goal):
+        result = HistoryInfoManagement().save_history(request, username, start, goal)
+        if result:
+            return ""
+        else:
+            return "履歴が保存できませんでした"
+
+    def get_all_histories(self, request, username):
+        histories = HistoryInfoManagement().get_all_histories(request, username)
+        return histories
 
 
 # C14チャットボット処理部
