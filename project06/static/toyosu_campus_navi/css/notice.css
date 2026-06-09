@@ -10,7 +10,7 @@ body {
 }
 
 .notice-header {
-  min-height: 70px;
+  height: 50px;
 
   background: #294d3c;
 

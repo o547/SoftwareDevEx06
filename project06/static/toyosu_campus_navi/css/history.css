@@ -6,7 +6,7 @@ body {
 }
 .history-header {
   background: #294d3c;
-  height: 70px;
+  height: 50px;
 
   display: flex;
   justify-content: space-between;

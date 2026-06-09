@@ -20,7 +20,7 @@ body {
 -------------------- */
 
 .manage-header {
-  min-height: 70px;
+  height: 80px;
 
   background: #294d3c;
 
@@ -206,7 +206,7 @@ body {
 @media (max-width: 768px) {
   .manage-header {
     flex-direction: column;
-
+    height: auto;
     gap: 15px;
 
     padding: 20px;
