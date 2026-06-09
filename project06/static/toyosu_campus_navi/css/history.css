@@ -1,5 +1,6 @@
 body {
   background: #efefef;
+  margin: 0;
 }
 .history-app {
   min-height: 100vh;
@@ -35,6 +36,8 @@ body {
   font-size: clamp(1rem, 1.5vw, 1.5rem);
 
   cursor: pointer;
+
+  margin-left: auto;
 }
 
 .history-container {
@@ -114,6 +117,19 @@ body {
 
   cursor: pointer;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
 }
 
 /* タブレット・スマホ */
