@@ -10,11 +10,13 @@
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
+  <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
 
 </head>
 
 <body>
   {% csrf_token %}
+  <div id="google_translate_element"></div>
   <div class="app">
     <div class="main">
       <div class="viewer" id="floor-map-image-area" style="display: none;">
@@ -37,6 +39,10 @@
           <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/研究棟.jpg' %}" />
         </div>
 
+        <div class="campus-img-area" style="display: none;">
+          <img class="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
+        </div>
+
       </div>
 
       <!-- <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
@@ -56,7 +62,7 @@
           </div>
         </div>
 
-        <div id="floor-select-menu">
+        <div id="floor-select-menu" style="visibility: hidden;">
           <div onclick="changeFloor('B1')" class="floor-select">B1</div>
           <div onclick="changeFloor('1')" class="floor-select">1</div>
           <div onclick="changeFloor('2')" class="floor-select">2</div>
@@ -121,15 +127,15 @@
         <div id="sidebar-language-menu" class="language-menu">
           <div class="language-close" onclick="closeLanguageMenu()">×</div>
 
-          <div class="language-item" onclick="selectLanguage('JA')">
+          <div class="language-item" onclick="selectLanguage('ja')">
             日本語
           </div>
 
-          <div class="language-item" onclick="selectLanguage('EN')">
+          <div class="language-item" onclick="selectLanguage('en')">
             English
           </div>
 
-          <div class="language-item" onclick="selectLanguage('CN')">
+          <div class="language-item" onclick="selectLanguage('zh-CN')">
             中文
           </div>
         </div>
@@ -156,7 +162,6 @@
         <a class="notice-link" href="/notice">お知らせタイトル1</a>
         <a class="notice-link" href="/notice">お知らせタイトル2</a>
         <a class="notice-link" href="/notice">お知らせタイトル3</a>
-
 
         {% if is_superuser %}
         <p id="notice-management-button">

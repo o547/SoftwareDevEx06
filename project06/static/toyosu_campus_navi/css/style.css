@@ -39,9 +39,12 @@
 }
 
 .map-scroll {
-  width: 100% !important;
-  display: flex;
-  justify-content: center;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  align-items: flex-start;
+  flex-shrink: 0;
+  margin: 0 auto;
 }
 
 .research-building-floor-map {
@@ -61,10 +64,21 @@
 .whole-map-img {
   width: auto;
   max-width: 90%;
-  max-height: 85vh;
 
   margin: 0 auto;
 }
+
+.campus-img {
+  width: 40vw;
+  display: block;
+}
+
+.campus-img-area {
+  width: 100%;
+  margin-top: 5vh;
+  margin-left: 10vw;
+}
+
 .sidebar {
   display: flex;
   width: 300px;
@@ -272,6 +286,19 @@ select.search-menu-section {
   width: fit-content;
 }
 
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+
 #sidebar-open-button {
   position: absolute;
   width: 0 !important;
@@ -439,6 +466,8 @@ select.search-menu-section {
   font-size: 18px;
   line-height: 1.1;
   text-align: center;
+  width: 40px;
+  margin: 3px;
 }
 
 .dimention-switch-switch {
@@ -480,9 +509,6 @@ select.search-menu-section {
   flex-wrap: nowrap;
   overflow-x: auto;
 
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 15px;
-
   padding: 10px 15px;
 
   gap: 15px;
@@ -500,6 +526,9 @@ select.search-menu-section {
   position: absolute;
   top: 20px;
   left: 20px;
+  display: flex;
+  align-items: center;
+  flex-direction: column;
 
   width: 165px;
 
@@ -513,7 +542,6 @@ select.search-menu-section {
 }
 
 .wing-switch-title {
-  font-size: 12px;
   margin-bottom: 18px;
 }
 
@@ -605,7 +633,6 @@ select.search-menu-section {
 
   .whole-map-img {
     max-width: 95%;
-    max-height: 70vh;
   }
   .sidebar.closed {
     width: 0;
@@ -618,6 +645,7 @@ select.search-menu-section {
     left: 10px;
     right: 10px;
     bottom: 10px;
+    flex-direction: column;
 
     gap: 10px;
   }
@@ -649,9 +677,11 @@ select.search-menu-section {
     top: 10px;
 
     display: flex;
+    flex-direction: row;
     flex-wrap: wrap;
     justify-content: center;
     gap: 10px;
+    margin: 0 20px;
 
     padding: 10px 15px;
   }
@@ -685,5 +715,15 @@ select.search-menu-section {
 
     opacity: 1;
     pointer-events: auto;
+  }
+
+  .campus-img {
+    width: 75vw;
+    margin: 0 auto;
+  }
+
+  .campus-img-area {
+    margin-left: 0;
+    margin-top: 2vh;
   }
 }

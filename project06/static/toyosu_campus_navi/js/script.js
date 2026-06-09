@@ -97,6 +97,7 @@ async function selectLanguage(language) {
   if (data.alert_message) {
     alert(data.alert_message);
   }
+  changeLanguage(language);
 }
 
 //検索をする
@@ -155,6 +156,7 @@ const wingSwitches = document.querySelectorAll(".wing-switch");
 const floorMapImageArea = document.getElementById("floor-map-image-area");
 const wholeMapImageArea = document.getElementById("whole-map-image-area");
 const floorMapImage = document.getElementById("floor-map-img");
+const campusMapImage = document.querySelector(".campus-img-area");
 
 const wholeMapImages = {
   本部棟: document.querySelector('.map-scroll[data-wing="本部棟"]'),
@@ -231,6 +233,7 @@ function toggleDimention(switchElement) {
     thumbElement.classList.remove("right");
     thumbElement.classList.add("left");
     floorSelectMenu.style.visibility = "";
+    campusMapImage.style.display = "none";
     let firstChecked = true;
     let firstCheckedWing = "";
     for (const wingSwitch of wingSwitches) {
@@ -312,17 +315,43 @@ function changeWing(wingName, inputElement) {
       wholeMapImages[wingName].style.display = "block";
       wholeMapImages[wingName].scrollTop =
         wholeMapImages[wingName].scrollHeight;
+      campusMapImage.style.display = "none";
     } else {
       wholeMapImages[wingName].style.display = "none";
+      //全てチェックされていなければキャンパス全体を表示
+      let noChecks = true;
+      for (const wingSwitch of wingSwitches) {
+        if (wingSwitch.checked) {
+          noChecks = false;
+        }
+      }
+      if (noChecks) {
+        campusMapImage.style.display = "";
+      } else {
+        campusMapImage.style.display = "none";
+      }
     }
   }
 }
 
 //---------------地図切り替え処理 終了---------------
 
-//html等を書き換える
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    { pageLanguage: "ja" },
+    "google_translate_element",
+  );
+}
+
+//google翻訳による言語切り替え
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
+  const select = document.querySelector(".goog-te-combo");
+
+  if (select) {
+    select.value = language;
+    select.dispatchEvent(new Event("change"));
+  }
 }
 
 //サーバーから変数を受け取る
@@ -398,7 +427,7 @@ function Initializer() {
     document.getElementById("notice-management-button").style.display = "";
   }
 
-  if (language != "JA") {
+  if (language != "ja") {
     changeLanguage(language);
   }
 
