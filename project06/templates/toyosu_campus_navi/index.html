@@ -43,11 +43,17 @@
         onclick="toggleDimention(this)" /> -->
       <div class="map-switches-area">
         <div class="dimention-switch">
-          <div class="dimention-switch-label">平面<br />地図</div>
+          <div class="dimention-label left-label">
+            平面<br>地図
+          </div>
+
           <div class="dimention-switch-switch" onclick="toggleDimention(this)">
             <div class="dimention-switch-thumb right"></div>
           </div>
-          <div class="dimention-switch-label">立体<br />地図</div>
+
+          <div class="dimention-label right-label">
+            立体<br>地図
+          </div>
         </div>
 
         <div id="floor-select-menu">
@@ -109,12 +115,27 @@
           {% load static %}
           <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
         </div>
-        <div class="sidebar-button square" onclick="openModal('language-menu')">
-          言語切替
+        <div id="language-button" class="sidebar-button square" onclick="toggleLanguageMenu()">
+          Language
+        </div>
+        <div id="sidebar-language-menu" class="language-menu">
+          <div class="language-close" onclick="closeLanguageMenu()">×</div>
+
+          <div class="language-item" onclick="selectLanguage('JA')">
+            日本語
+          </div>
+
+          <div class="language-item" onclick="selectLanguage('EN')">
+            English
+          </div>
+
+          <div class="language-item" onclick="selectLanguage('CN')">
+            中文
+          </div>
         </div>
       </div>
 
-      <div id="sidebar-buttons" style="display: contents">
+      <div id="sidebar-buttons">
         <div class="sidebar-button" onclick="openModal('search-menu')">
           検索
         </div>
@@ -128,19 +149,23 @@
         <div class="sidebar-button" onclick="openModal('chatbot-menu')">
           チャットボット
         </div>
-        <div class="sidebar-notice">
-          <h3 class="notice-title">お知らせ</h3>
-
-          <a class="notice-link" href="/notice">お知らせタイトル1</a>
-          <a class="notice-link" href="/notice">お知らせタイトル2</a>
-          <a class="notice-link" href="/notice">お知らせタイトル3</a>
-
-          <p id="notice-management-button">
-            <a href="/notice/management">お知らせ追加
-            </a>
-          </p>
-        </div>
       </div>
+      <div class="sidebar-notice">
+        <h3 class="notice-title">お知らせ</h3>
+
+        <a class="notice-link" href="/notice">お知らせタイトル1</a>
+        <a class="notice-link" href="/notice">お知らせタイトル2</a>
+        <a class="notice-link" href="/notice">お知らせタイトル3</a>
+
+
+        {% if is_superuser %}
+        <p id="notice-management-button">
+          <a href="/notice/management">お知らせ追加</a>
+        </p>
+        {% endif %}
+
+      </div>
+
       <div class="sidebar-account" id="sidebar-login" style="display: none">
         <p style="font-size: 20px">履歴の閲覧には<br />ログインが必要です</p>
         <form type="submit" method="post">
@@ -288,33 +313,9 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
+            <div class="sidebar-button square"
+              onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
               決定
-            </div>
-          </div>
-        </div>
-
-        <!-- 言語選択メニュー -->
-        <div id="language-menu" class="modal-menu" style="display: none">
-          <div class="modal-row modal-header">
-            <h2 class="modal-title">言語選択</h2>
-            <h2 onclick="closeModal()" class="modal-close-button">×</h2>
-          </div>
-          <div class="modal-body" style="padding: 4vh 0">
-            <div class="modal-row">
-              <div class="sidebar-button" onclick="selectLanguage('JA')">
-                日本語
-              </div>
-            </div>
-            <div class="modal-row">
-              <div class="sidebar-button" onclick="selectLanguage('EN')">
-                English
-              </div>
-            </div>
-            <div class="modal-row">
-              <div class="sidebar-button" onclick="selectLanguage('CN')">
-                中文
-              </div>
             </div>
           </div>
         </div>
@@ -340,6 +341,7 @@
       </div>
     </div>
     <!-- モーダルウィンドウ終了 -->
+  </div>
 </body>
 
 {{ alert_message|json_script:"alert_message" }}

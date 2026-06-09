@@ -1,61 +1,64 @@
 <!doctype html>
 <html lang="ja">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>豊洲キャンパスナビ</title>
-    {% load static %}
-    <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}">
-    <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/history.css' %}">
-  </head>
-  <body>
-    <div class ="history-app">
-      <div class="history-header">
-        <h1>検索履歴</h1>
-        <button class="history-backbutton" onclick="location.href='/'">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>豊洲キャンパスナビ</title>
+  {% load static %}
+  <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}">
+  <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/history.css' %}">
+</head>
+
+<body>
+  {% csrf_token %}
+  <div class="history-app">
+    <div class="history-header">
+      <h1>検索履歴</h1>
+      <button class="history-backbutton" onclick="location.href='/'">
         地図画面に戻る
       </button>
-      </div>
+    </div>
 
-      <!--履歴エリア-->
-      <div class="history-container">
-        <div class="history-list">
-          <div class="history-item">
-            <div class="history-route">
-              ○○○ → ×××
-            </div>
-
-            <button class="research-button">
-              再検索
-            </button>
+    <!--履歴エリア-->
+    <div class="history-container">
+      <div class="history-list">
+        <div class="history-item">
+          <div class="history-route">
+            ○○○ → ×××
           </div>
-           <div class="history-item">
-            <div class="history-route">
-              ☐☐☐ → △△△
-            </div>
 
-            <button class="research-button">
-              再検索
-            </button>
+          <button class="research-button">
+            再検索
+          </button>
+        </div>
+        <div class="history-item">
+          <div class="history-route">
+            ☐☐☐ → △△△
           </div>
+
+          <button class="research-button">
+            再検索
+          </button>
         </div>
       </div>
-      <div class="new-search-area">
-        <button class="new-search-button"
-                onclick="location.href='/'">
-          新規検索
-        </button>
-      </div>
     </div>
-  </body>
+    <div class="new-search-area">
+      <button class="new-search-button" onclick="location.href='/'">
+        新規検索
+      </button>
+    </div>
+  </div>
+</body>
 
-  {{ alert_message|json_script:"alert_message" }}
-  {{ username|json_script:"username" }}
-  {{ is_superuser|json_script:"is_superuser" }}
-  {{ language|json_script:"language" }}
-  {{ user_id|json_script:"user_id" }}
+{{ alert_message|json_script:"alert_message" }}
+{{ username|json_script:"username" }}
+{{ is_superuser|json_script:"is_superuser" }}
+{{ language|json_script:"language" }}
+{{ user_id|json_script:"user_id" }}
 
 
-  {% load static %}
-  <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+{% load static %}
+<script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+
 </html>

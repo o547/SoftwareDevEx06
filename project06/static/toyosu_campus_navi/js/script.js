@@ -124,7 +124,27 @@ async function sectionCoordinateSubmit(image_x, image_y) {
   });
   const data = await response.json();
 }
+function toggleLanguageMenu() {
+  const menu = document.getElementById("sidebar-language-menu");
 
+  menu.classList.toggle("active");
+}
+
+function closeLanguageMenu() {
+  document.getElementById("sidebar-language-menu").classList.remove("active");
+}
+document.addEventListener("click", (event) => {
+  const menu = document.getElementById("sidebar-language-menu");
+
+  if (!menu) return;
+
+  const button = event.target.closest("#language-button");
+  const insideMenu = event.target.closest("#sidebar-language-menu");
+
+  if (!insideMenu && !button) {
+    menu.classList.remove("active");
+  }
+});
 //---------------地図切り替え処理 開始---------------
 
 let currentWing = "教室棟";
