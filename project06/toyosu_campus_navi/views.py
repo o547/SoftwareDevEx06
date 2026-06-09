@@ -39,7 +39,11 @@ def create_info_to_send(request):
 # /
 class IndexView(View):
     def get(self, request):
-        info_to_send = create_info_to_send(request)
+        nodes = SectionInfoProcess().get_all_sections(request)
+
+        info_to_send = create_info_to_send(request) | {
+            "section_names": [node["section_name"] for node in nodes]
+        }
         return render(request, "toyosu_campus_navi/index.html", info_to_send)
 
 
@@ -105,7 +109,7 @@ class ChatBotView(View):
 
 
 # /language/submit
-class languageView(View):
+class LanguageView(View):
     def post(self, request):
 
         body = json.loads(request.body)
@@ -115,6 +119,27 @@ class languageView(View):
         if alert_message:
             del request.session["alert_message"]
         return JsonResponse({"alert_message": alert_message})
+
+
+# /coordinate/submit
+class CoordinateSubmitView(View):
+    def post(self, request):
+        body = json.loads(request.body)
+        image_x = body["image_x"]
+        image_y = body["image_y"]
+        map_name = body["map_name"]
+        print("image_x : " + str(image_x))
+        print("image_y : " + str(image_y))
+        print("map_name : " + str(map_name))
+        return JsonResponse({"alert_message": ""})
+
+
+# /search/submit
+class SearchView(View):
+    def get(self, request, start, goal):
+        print("start : " + start)
+        print("goal : " + goal)
+        return redirect("toyosu_campus_navi:index")
 
 
 # -------------------豊洲キャンパスナビ対象外 ここから-------------------
@@ -204,7 +229,9 @@ class DebugView(View):
 index = IndexView.as_view()
 user_login = UserLoginView.as_view()
 chatbot_submit = ChatBotView.as_view()
-language_submit = languageView.as_view()
+language_submit = LanguageView.as_view()
+search_submit = SearchView.as_view()
+coordinate_submit = CoordinateSubmitView.as_view()
 notice = NoticeView.as_view()
 notice_management = NoticeManagementView.as_view()
 notice_edit = NoticeEditView.as_view()

@@ -23,7 +23,7 @@ class Notice(models.Model):
 
 # F3 履歴情報
 class History(models.Model):
-    History_ID = models.UUIDField(
+    history_ID = models.UUIDField(
         primary_key=True, default=uuid.uuid4, editable=False, verbose_name="ID"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
@@ -63,6 +63,9 @@ class Section(models.Model):
     business_hours = models.CharField(
         null=True, max_length=1023, verbose_name="営業時間"
     )
+
+    def __str__(self):
+        return f"{self.building}_{self.floor}_{self.section}"
 
 
 # F5 エッジ情報
