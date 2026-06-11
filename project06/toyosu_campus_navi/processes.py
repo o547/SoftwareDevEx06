@@ -1,6 +1,8 @@
 from django.contrib.auth import authenticate, login
 from django.conf import settings
 import datetime
+import networkx as nx
+
 from .managements import (
     HistoryInfoManagement,
     NoticeManagement,
@@ -113,12 +115,15 @@ class LocationProcess:
 
 # C11経路検索部
 class RouteSearchProcess:
+    graph_instance = None
+
     def route_search_main(self, request, start, goal):
         # 最短経路を計算
         route = self.shortest_route_search(request, start, goal)
         alert_message = ""
-        if route == []:
+        if len(route) == 0:
             alert_message = "経路を検索できませんでした"
+        print("経路 : " + str(route))
 
         # 構内図画像を作成
         map_folder_name = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
@@ -140,7 +145,34 @@ class RouteSearchProcess:
         }
 
     def shortest_route_search(self, request, start, goal):
-        pass
+        if RouteSearchProcess.graph_instance is None:
+            # グラフデータを初期化
+            edges = RouteManagement().get_all_edges(request)
+            nodes = RouteManagement().get_all_node_coordinates(request)
+
+            node_list = []
+            for node in nodes:
+                node_list.append(node["section_name"])
+
+            edge_list = []
+            for edge in edges:
+                edge_list.append(
+                    (
+                        str(edge["section_name_a"]),
+                        str(edge["section_name_b"]),
+                        edge["estimated_travel_time"],
+                    )
+                )
+            graph = nx.Graph()
+            graph.add_nodes_from(node_list)
+            graph.add_weighted_edges_from(edge_list)
+            RouteSearchProcess.graph_instance = graph
+            print("グラフデータが初期化されました")
+
+        raw_route = nx.dijkstra_path(RouteSearchProcess.graph_instance, start, goal)
+        route = [node for node in raw_route if "エレベータ調整用" not in node]
+        # estimated_time = nx.dijkstra_path_length(RouteSearchProcess.graph_instance, start, goal)
+        return route
 
 
 # C13区画情報処理部
