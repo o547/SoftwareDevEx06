@@ -139,6 +139,7 @@ class SearchView(View):
     def get(self, request, start, goal):
         print("start : " + start)
         print("goal : " + goal)
+        print(RouteSearchProcess().route_search_main(request, start, goal))
         return redirect("toyosu_campus_navi:index")
 
 
