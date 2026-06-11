@@ -288,6 +288,10 @@ class RouteManagement:
                 + edge_object.section_b.section
             )
             edges.append(
-                {"section_name_a": section_name_a, "section_name_b": section_name_b}
+                {
+                    "section_name_a": section_name_a,
+                    "section_name_b": section_name_b,
+                    "estimated_travel_time": edge_object.estimated_travel_time,
+                }
             )
         return edges
