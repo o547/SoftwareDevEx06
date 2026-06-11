@@ -215,8 +215,13 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        route = ["教室棟_4階_401教室", "教室棟_4階_402教室"]
-        result = CampusMapImageCreate().create_map_image(request, route, "floor_map")
+        route = [
+            "研究棟_14階_情報・通信工学 課程実験室13",
+            "研究棟_14階_エレベータ（左）",
+            "研究棟_13階_エレベータ（左）",
+        ]
+
+        result = CampusMapImageCreate().create_map_image(request, route, "debug")
 
         print(result)
 

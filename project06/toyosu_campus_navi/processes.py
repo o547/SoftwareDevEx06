@@ -1,6 +1,6 @@
 from django.contrib.auth import authenticate, login
 from .models import *
-from .manegements import *
+import os
 import cv2
 from .navi import navi
 import numpy as np
@@ -108,10 +108,38 @@ class LoginProcess:
 # C5構内図画像作成部
 class CampusMapImageCreate:
     # M5-1 構内図画像作成主処理
-
     def create_map_image(self, request, route, map_folder_name):
         try:
-            output_files = self.create_floor_map(request, route, map_folder_name)
+            output_files = []
+            floor_routes = {}
+
+            # routeを「棟_階」ごとに分割する
+            for section_name in route:
+                building, floor, section = section_name.split("_", 2)
+                key = building + "_" + floor
+
+                if key not in floor_routes:
+                    floor_routes[key] = []
+
+                floor_routes[key].append(section_name)
+
+            print("階ごとの経路:", floor_routes)
+
+            # 階ごとに平面地図を作成する
+            for key in floor_routes:
+                floor_output_files = self.create_floor_map(
+                    request, floor_routes[key], map_folder_name
+                )
+                output_files.extend(floor_output_files)
+
+            # 複数階層の場合のみ、通った階層画像だけで全体地図を作成する
+            if len(output_files) >= 2:
+                whole_map_file = self.create_whole_map(
+                    request, output_files, map_folder_name
+                )
+
+                if whole_map_file != "":
+                    output_files.append(whole_map_file)
 
             return {"output_files": output_files, "alert_message": ""}
 
@@ -126,44 +154,53 @@ class CampusMapImageCreate:
     def create_floor_map(self, request, route, map_folder_name):
         output_files = []
 
-        display_route = []
+        # routeの先頭から、描画対象の棟・階を取得する
+        building, floor, section = route[0].split("_", 2)
 
-        for section_name in route:
-            parts = section_name.split("_", 2)
-            building = parts[0]
-            floor = parts[1]
-            section = parts[2]
-            display_route.append(section)
-        # 読み込む画像を決める
         input_name = (
-            "static/toyosu_campus_navi/image/"
-            + map_folder_name
-            + "/"
+            "static/toyosu_campus_navi/image/floor_map/"
             + building
             + "_"
             + floor
             + ".jpg"
         )
         print("入力画像:", input_name)
-        output_name = "static/toyosu_campus_navi/image/output/test_output_from_c5.jpg"
+
+        output_folder = os.path.join(
+            "static",
+            "toyosu_campus_navi",
+            "image",
+            "floor_maps",
+            "created_maps",
+            map_folder_name,
+        )
+
+        os.makedirs(output_folder, exist_ok=True)
+
+        output_file_name = building + "_" + floor + "_route.jpg"
+        output_name = os.path.join(output_folder, output_file_name)
 
         img = cv2.imdecode(np.fromfile(input_name, dtype=np.uint8), cv2.IMREAD_COLOR)
 
         if img is None:
-            print("画像を読み込めませんでした")
+            print("画像を読み込めませんでした:", input_name)
             return output_files
 
-        nodes = navi.nodes  # 後ほど座標に変更
-
-        # 線の設定
         color = (0, 0, 255)
         thickness = 2
         line_type = cv2.LINE_AA
         tipLength = 0.1
-        # 矢印を描く
-        for i in range(len(display_route) - 1):
-            start = nodes[display_route[i]]
-            goal = nodes[display_route[i + 1]]
+
+        # 経路に沿って矢印を描画する
+        for i in range(len(route) - 1):
+            start_node = RouteManagement().get_node_coordinate(request, route[i])
+            goal_node = RouteManagement().get_node_coordinate(request, route[i + 1])
+
+            if start_node["node_x"] == -1 or goal_node["node_x"] == -1:
+                continue
+
+            start = (start_node["node_x"], start_node["node_y"])
+            goal = (goal_node["node_x"], goal_node["node_y"])
 
             cv2.arrowedLine(
                 img,
@@ -179,9 +216,138 @@ class CampusMapImageCreate:
 
         print("C5で画像を保存しました:", output_name)
 
-        output_files.append("test_output_from_c5.jpg")
+        output_files.append(
+            "floor_maps/created_maps/" + map_folder_name + "/" + output_file_name
+        )
 
         return output_files
+
+    # M5-3 全体地図作成処理
+    def create_whole_map(self, request, floor_map_files, map_folder_name):
+        images = []
+
+        # 通った階層の_route画像だけを読み込む
+        for file_name in floor_map_files:
+            input_name = os.path.join(
+                "static", "toyosu_campus_navi", "image", file_name
+            )
+
+            img = cv2.imdecode(
+                np.fromfile(input_name, dtype=np.uint8), cv2.IMREAD_COLOR
+            )
+
+            if img is not None:
+                images.append((file_name, img))
+            else:
+                print("画像を読み込めませんでした:", input_name)
+
+        if len(images) == 0:
+            return ""
+
+        offset_x = 220
+        offset_y = 380
+
+        positions = []
+        canvas_height = 0
+        canvas_width = 0
+
+        # 画像サイズを考慮してキャンバスサイズを決める
+        for i, (file_name, img) in enumerate(images):
+            h, w = img.shape[:2]
+
+            x = offset_x * i
+            y = offset_y * i
+
+            positions.append((x, y))
+
+            canvas_width = max(canvas_width, x + w)
+            canvas_height = max(canvas_height, y + h)
+
+        canvas_height += 100
+        canvas_width += 100
+
+        canvas = np.full((canvas_height, canvas_width, 3), 255, dtype=np.uint8)
+
+        for i, (file_name, img) in enumerate(images):
+            h, w = img.shape[:2]
+
+            # 平面地図を平行四辺形に変形する
+            shift = w // 5
+
+            src = np.float32(
+                [
+                    [0, 0],
+                    [w, 0],
+                    [0, h],
+                    [w, h],
+                ]
+            )
+
+            dst = np.float32(
+                [
+                    [shift, 0],
+                    [w, 0],
+                    [0, h],
+                    [w - shift, h],
+                ]
+            )
+
+            matrix = cv2.getPerspectiveTransform(src, dst)
+
+            skewed_img = cv2.warpPerspective(
+                img,
+                matrix,
+                (w, h),
+                flags=cv2.INTER_NEAREST,
+                borderMode=cv2.BORDER_CONSTANT,
+                borderValue=(255, 255, 255),
+            )
+
+            x, y = positions[i]
+
+            # 白背景以外だけを貼り付ける
+            mask = np.any(skewed_img < 245, axis=2)
+
+            roi = canvas[y : y + h, x : x + w]
+            roi[mask] = skewed_img[mask]
+            canvas[y : y + h, x : x + w] = roi
+
+            # 階層ラベルを表示する
+            floor_text = file_name.split("/")[-1]
+            floor_text = floor_text.replace("_route.jpg", "")
+            floor_text = floor_text.split("_")[-1]
+            floor_text = floor_text.replace("階", "F")
+
+            cv2.putText(
+                canvas,
+                floor_text,
+                (x + 30, y + h - 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1.5,
+                (0, 0, 255),
+                4,
+                cv2.LINE_AA,
+            )
+
+        output_folder = os.path.join(
+            "static",
+            "toyosu_campus_navi",
+            "image",
+            "floor_maps",
+            "created_maps",
+            map_folder_name,
+        )
+
+        os.makedirs(output_folder, exist_ok=True)
+
+        output_file_name = "whole_map_route.jpg"
+        output_name = os.path.join(output_folder, output_file_name)
+
+        cv2.imencode(".jpg", canvas)[1].tofile(output_name)
+
+        print("全体地図を保存しました:", output_name)
+
+        return "floor_maps/created_maps/" + map_folder_name + "/" + output_file_name
 
 
 # C6位置情報処理部
