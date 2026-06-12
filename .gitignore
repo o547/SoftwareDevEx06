@@ -36,3 +36,8 @@ node_modules/
 
 # npm logs
 npm-debug.log*
+
+# Generated map images
+project06/static/toyosu_campus_navi/image/floor_maps/created_maps/
+project06/static/toyosu_campus_navi/image/demo_output/
+project06/static/toyosu_campus_navi/image/output/
