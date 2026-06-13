@@ -119,9 +119,11 @@
       <div class="sidebar-square-group">
         <div class="sidebar-button square" onclick="closeSidebar('index-sidebar', 'sidebar-open-button')">
           {% load static %}
-          <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
+          <img src="{% static 'toyosu_campus_navi/image/cross.png' %}" style="width: 45px" />
         </div>
         <div id="language-button" class="sidebar-button square" onclick="toggleLanguageMenu()">
+
+          <img src="{% static 'toyosu_campus_navi/image/globe.png' %}" class="language-icon">
           Language
         </div>
         <div id="sidebar-language-menu" class="language-menu">
@@ -143,20 +145,26 @@
 
       <div id="sidebar-buttons">
         <div class="sidebar-button" onclick="openModal('search-menu')">
-          検索
+          <img src="{%static 'toyosu_campus_navi/image/search.png' %}" class="menu-icon">
+          <span>検索</span>
         </div>
         {% if username == "AnonymousUser" %}
         <div class="sidebar-button" onclick="toggleMenu('sidebar-buttons', 'sidebar-login', '')">
-          ログイン
+          <img src="{% static 'toyosu_campus_navi/image/human.png' %}" class="menu-icon">
+          <span>ログイン</span>
         </div>
         {% else %}
-        <div class="sidebar-button" onclick="location.href='./history'">履歴 ({{ username }})</div>
+        <div class="sidebar-button" onclick="location.href='./history'">
+          <img src="{%static 'toyosu_campus_navi/image/history.png' %}" class="menu-icon">
+          <span>履歴 ({{ username }})</span>
+        </div>
         {% endif %}
         <div class="sidebar-button" onclick="openModal('chatbot-menu')">
-          チャットボット
+          <img src="{% static 'toyosu_campus_navi/image/chat.png' %}" class="menu-icon">
+          <span>チャットボット</span>
         </div>
       </div>
-      <div class="sidebar-notice">
+      <div class="sidebar-notice" id="sidebar-notice">
         <h3 class="notice-title">お知らせ</h3>
 
         <a class="notice-link" href="/notice">お知らせタイトル1</a>
@@ -234,8 +242,7 @@
                 ">
                 出発地
               </div>
-            </div>
-            <div class="modal-row">
+              <div class="search-arrow">▶▶▶</div>
               <div class="search-menu-button" onclick="
                   toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
@@ -326,14 +333,30 @@
         </div>
 
         <!-- チャットボットメニュー -->
-        <div id="chatbot-menu" class="modal-menu" style="display: none">
+        <div id="chatbot-menu" class="modal-menu chatbot-layout" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">チャットボット</h2>
             <h2 onclick="closeModal()" class="modal-close-button">×</h2>
           </div>
           <div class="modal-body" style="padding: 2vh 0">
             <div class="chatbot-conversation">
-              <div class="chatbot-message">聞きたい内容を入力してください</div>
+
+              <div class="chat-row user-row">
+                <div class="chatbot-message user-message">
+                  食堂はどこ？
+                </div>
+              </div>
+
+              <div class="chat-row bot-row">
+                <img src="{%static 'toyosu_campus_navi/image/bot.png' %}" class="bot-icon">
+
+                <div class="chatbot-message bot-message">
+                  食堂は交流棟の3Fです。
+                </div>
+              </div>
+
+
+
             </div>
           </div>
           <div class="modal-row modal-footer">

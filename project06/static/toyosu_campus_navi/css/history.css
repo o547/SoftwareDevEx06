@@ -94,6 +94,15 @@ body {
   border-radius: 10px;
 
   font-size: clamp(0.9rem, 1.5vw, 1.3rem);
+  transition: all 0.15s ease;
+}
+.research-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+.research-button:active {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
 }
 
 .new-search-area {
@@ -116,9 +125,18 @@ body {
   font-size: 24px;
 
   cursor: pointer;
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
 }
 
+.new-search-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+.new-search-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+}
 /* google翻訳用 */
 .goog-te-banner-frame {
   display: none !important;

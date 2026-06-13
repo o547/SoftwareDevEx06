@@ -2,7 +2,18 @@ body {
   margin: 0;
   background: #efefef;
 }
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
 
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
 .notice-app {
   min-height: 100vh;
   display: flex;

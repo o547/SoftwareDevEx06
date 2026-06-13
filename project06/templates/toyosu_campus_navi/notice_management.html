@@ -13,6 +13,7 @@
 
 <body>
   {% csrf_token %}
+  <div id="google_translate_element"></div>
   <div class="manage-app">
     <div class="manage-header">
       <h1>お知らせ管理</h1>
@@ -26,13 +27,13 @@
         <div class="manage-title">記事タイトル1</div>
 
         <div class="manage-buttons">
-          <button class="edit-button">
-            <span class="icon">✏️</span>
+          <button class="edit-button" onclick="location.href='/notice/edit'">
+            <img src="{%static 'toyosu_campus_navi/image/pen.png' %}" class="icon">
             <span class="label">編集</span>
           </button>
 
           <button class="delete-button">
-            <span class="icon">🗑️</span>
+            <img src="{%static 'toyosu_campus_navi/image/bin.png' %}" class="icon">
             <span class="label">削除</span>
           </button>
         </div>
@@ -41,13 +42,13 @@
         <div class="manage-title">記事タイトル2</div>
 
         <div class="manage-buttons">
-          <button class="edit-button">
-            <span class="icon">✏️</span>
+          <button class="edit-button" onclick="location.href='/notice/edit'">
+            <img src="{%static 'toyosu_campus_navi/image/pen.png' %}" class="icon">
             <span class="label">編集</span>
           </button>
 
           <button class="delete-button">
-            <span class="icon">🗑️</span>
+            <img src="{%static 'toyosu_campus_navi/image/bin.png' %}" class="icon">
             <span class="label">削除</span>
           </button>
         </div>

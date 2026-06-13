@@ -17,6 +17,16 @@ function closeModal() {
 function toggleMenu(currentMenuId, targetMenuId, displayMethod) {
   document.getElementById(currentMenuId).style.display = "none";
   document.getElementById(targetMenuId).style.display = displayMethod;
+
+  const notice = document.getElementById("sidebar-notice");
+
+  if (targetMenuId === "sidebar-login") {
+    notice.style.display = "none";
+  }
+
+  if (targetMenuId === "sidebar-buttons") {
+    notice.style.display = "flex";
+  }
 }
 
 //サイドバーを閉じる

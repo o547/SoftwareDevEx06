@@ -14,7 +14,18 @@ body {
   display: flex;
   flex-direction: column;
 }
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
 
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
 /* --------------------
    ヘッダー
 -------------------- */
@@ -94,7 +105,6 @@ body {
 /* --------------------
    ボタン群
 -------------------- */
-
 .manage-buttons {
   display: flex;
   gap: 15px;
@@ -127,7 +137,8 @@ body {
 
 .manage-buttons button .icon {
   position: absolute;
-
+  width: 20px;
+  height: 20px;
   left: 50%;
   transform: translateX(-50%);
 
@@ -196,7 +207,17 @@ body {
 
   cursor: pointer;
 
-  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
+}
+.new-create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.new-create-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 /* ==========================

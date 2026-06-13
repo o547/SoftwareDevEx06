@@ -8,7 +8,18 @@ body {
   margin: 0;
   background: #efefef;
 }
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
 
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
 /* --- 全体 --- */
 .edit-app {
   min-height: 100vh;
@@ -143,6 +154,17 @@ body {
   font-size: 1.3rem;
 
   cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+.edit-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.edit-submit:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
 }
 
 .edit-cancel {
