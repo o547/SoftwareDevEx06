@@ -362,6 +362,38 @@ function changeLanguage(language) {
     select.value = language;
     select.dispatchEvent(new Event("change"));
   }
+  setTimeout(() => {
+    translateWingNames(language);
+  }, 1000);
+}
+const wingTranslations = {
+  en: {
+    本部棟: "Centennial Main Building",
+    教室棟: "Classroom & Administration Building",
+    交流棟: "Multi-Activity Building",
+    研究棟: "Research Building",
+  },
+  "zh-CN": {
+    本部棟: "总部楼",
+    教室棟: "教学楼",
+    交流棟: "交流楼",
+    研究棟: "研究楼",
+  },
+  ja: {
+    本部棟: "本部棟",
+    教室棟: "教室棟",
+    交流棟: "交流棟",
+    研究棟: "研究棟",
+  },
+};
+function translateWingNames(language) {
+  const names = document.querySelectorAll(".wing-name");
+
+  names.forEach((element) => {
+    const wing = element.dataset.wing;
+
+    element.textContent = wingTranslations[language][wing];
+  });
 }
 
 //サーバーから変数を受け取る
