@@ -46,6 +46,7 @@ class NoticeProcess:
                 return ""
             else:
                 return "お知らせを削除できませんでした"
+
     def get_notice(self, request, id):
         notice_object = NoticeManagement().get_notice(request, id)
         if notice_object and notice_object.get("title") != "":
@@ -217,7 +218,7 @@ class CampusMapImageCreate:
                 "static",
                 "toyosu_campus_navi",
                 "image",
-                "floor_maps",
+                "floor_map",
                 "created_maps",
                 map_folder_name,
             )
@@ -410,7 +411,7 @@ class CampusMapImageCreate:
                         "static",
                         "toyosu_campus_navi",
                         "image",
-                        "floor_maps",
+                        "floor_map",
                         "created_maps",
                         map_folder_name,
                         route_file_name,
@@ -607,7 +608,7 @@ class CampusMapImageCreate:
                 "static",
                 "toyosu_campus_navi",
                 "image",
-                "floor_maps",
+                "floor_map",
                 "created_maps",
                 map_folder_name,
             )
