@@ -1,0 +1,16 @@
+{
+  "ExpandedNodes": [
+    "",
+    "\\.github",
+    "\\project06",
+    "\\project06\\static",
+    "\\project06\\static\\toyosu_campus_navi",
+    "\\project06\\static\\toyosu_campus_navi\\css",
+    "\\project06\\static\\toyosu_campus_navi\\image",
+    "\\project06\\templates",
+    "\\project06\\templates\\toyosu_campus_navi",
+    "\\project06\\toyosu_campus_navi"
+  ],
+  "SelectedNode": "\\project06\\templates\\toyosu_campus_navi\\index.html",
+  "PreviewInSolutionExplorer": false
+}

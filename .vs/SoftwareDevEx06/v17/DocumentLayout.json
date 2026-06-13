@@ -1,0 +1,150 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\history.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\history.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_management.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\notice_management.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_edit.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\notice_edit.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\notice.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\static\\toyosu_campus_navi\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\static\\toyosu_campus_navi\\css\\style.css||{A5401142-F49D-43DB-90B1-F57BA349E55C}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\demo_index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\demo_index.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\plot.html||{40D31677-CBC0-4297-A9EF-89D907823A98}",
+      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:project06\\templates\\toyosu_campus_navi\\plot.html||{40D31677-CBC0-4297-A9EF-89D907823A98}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 1,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedHeight": 200,
+          "SelectedChildIndex": 6,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 7,
+              "Title": "plot.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\plot.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\plot.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\plot.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\plot.html",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:16:34.967Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "notice_management.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_management.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\notice_management.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_management.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\notice_management.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:16:31.667Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "notice_edit.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_edit.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\notice_edit.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice_edit.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\notice_edit.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:16:28.387Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "history.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\history.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\history.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\history.html*",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\history.html*",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAABMAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:13:07.017Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 5,
+              "Title": "style.css",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\static\\toyosu_campus_navi\\css\\style.css",
+              "RelativeDocumentMoniker": "project06\\static\\toyosu_campus_navi\\css\\style.css",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\static\\toyosu_campus_navi\\css\\style.css",
+              "RelativeToolTip": "project06\\static\\toyosu_campus_navi\\css\\style.css",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003000|",
+              "WhenOpened": "2026-06-02T02:20:34.532Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 4,
+              "Title": "notice.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\notice.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\notice.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\notice.html",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:16:25.541Z"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "index.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\index.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\index.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\index.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\index.html",
+              "ViewState": "AgIAABgAAAAAAAAAAAAAAC8AAABiAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:13:20.521Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 6,
+              "Title": "demo_index.html",
+              "DocumentMoniker": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\demo_index.html",
+              "RelativeDocumentMoniker": "project06\\templates\\toyosu_campus_navi\\demo_index.html",
+              "ToolTip": "C:\\Users\\yonda\\github\\SoftwareDevEx06\\project06\\templates\\toyosu_campus_navi\\demo_index.html",
+              "RelativeToolTip": "project06\\templates\\toyosu_campus_navi\\demo_index.html",
+              "ViewState": "AgIAAAYAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001512|",
+              "WhenOpened": "2026-06-02T02:13:14.382Z"
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
