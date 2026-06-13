@@ -17,6 +17,16 @@ function closeModal() {
 function toggleMenu(currentMenuId, targetMenuId, displayMethod) {
   document.getElementById(currentMenuId).style.display = "none";
   document.getElementById(targetMenuId).style.display = displayMethod;
+
+  const notice = document.getElementById("sidebar-notice");
+
+  if (targetMenuId === "sidebar-login") {
+    notice.style.display = "none";
+  }
+
+  if (targetMenuId === "sidebar-buttons") {
+    notice.style.display = "flex";
+  }
 }
 
 //サイドバーを閉じる
@@ -97,6 +107,7 @@ async function selectLanguage(language) {
   if (data.alert_message) {
     alert(data.alert_message);
   }
+  changeLanguage(language);
 }
 
 //検索をする
@@ -124,7 +135,27 @@ async function sectionCoordinateSubmit(image_x, image_y) {
   });
   const data = await response.json();
 }
+function toggleLanguageMenu() {
+  const menu = document.getElementById("sidebar-language-menu");
 
+  menu.classList.toggle("active");
+}
+
+function closeLanguageMenu() {
+  document.getElementById("sidebar-language-menu").classList.remove("active");
+}
+document.addEventListener("click", (event) => {
+  const menu = document.getElementById("sidebar-language-menu");
+
+  if (!menu) return;
+
+  const button = event.target.closest("#language-button");
+  const insideMenu = event.target.closest("#sidebar-language-menu");
+
+  if (!insideMenu && !button) {
+    menu.classList.remove("active");
+  }
+});
 //---------------地図切り替え処理 開始---------------
 
 let currentWing = "教室棟";
@@ -135,6 +166,7 @@ const wingSwitches = document.querySelectorAll(".wing-switch");
 const floorMapImageArea = document.getElementById("floor-map-image-area");
 const wholeMapImageArea = document.getElementById("whole-map-image-area");
 const floorMapImage = document.getElementById("floor-map-img");
+const campusMapImage = document.querySelector(".campus-img-area");
 
 const wholeMapImages = {
   本部棟: document.querySelector('.map-scroll[data-wing="本部棟"]'),
@@ -211,6 +243,7 @@ function toggleDimention(switchElement) {
     thumbElement.classList.remove("right");
     thumbElement.classList.add("left");
     floorSelectMenu.style.visibility = "";
+    campusMapImage.style.display = "none";
     let firstChecked = true;
     let firstCheckedWing = "";
     for (const wingSwitch of wingSwitches) {
@@ -292,17 +325,75 @@ function changeWing(wingName, inputElement) {
       wholeMapImages[wingName].style.display = "block";
       wholeMapImages[wingName].scrollTop =
         wholeMapImages[wingName].scrollHeight;
+      campusMapImage.style.display = "none";
     } else {
       wholeMapImages[wingName].style.display = "none";
+      //全てチェックされていなければキャンパス全体を表示
+      let noChecks = true;
+      for (const wingSwitch of wingSwitches) {
+        if (wingSwitch.checked) {
+          noChecks = false;
+        }
+      }
+      if (noChecks) {
+        campusMapImage.style.display = "";
+      } else {
+        campusMapImage.style.display = "none";
+      }
     }
   }
 }
 
 //---------------地図切り替え処理 終了---------------
 
-//html等を書き換える
+function googleTranslateElementInit() {
+  new google.translate.TranslateElement(
+    { pageLanguage: "ja" },
+    "google_translate_element",
+  );
+}
+
+//google翻訳による言語切り替え
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
+  const select = document.querySelector(".goog-te-combo");
+
+  if (select) {
+    select.value = language;
+    select.dispatchEvent(new Event("change"));
+  }
+  setTimeout(() => {
+    translateWingNames(language);
+  }, 1000);
+}
+const wingTranslations = {
+  en: {
+    本部棟: "Centennial Main Building",
+    教室棟: "Classroom & Administration Building",
+    交流棟: "Multi-Activity Building",
+    研究棟: "Research Building",
+  },
+  "zh-CN": {
+    本部棟: "总部楼",
+    教室棟: "教学楼",
+    交流棟: "交流楼",
+    研究棟: "研究楼",
+  },
+  ja: {
+    本部棟: "本部棟",
+    教室棟: "教室棟",
+    交流棟: "交流棟",
+    研究棟: "研究棟",
+  },
+};
+function translateWingNames(language) {
+  const names = document.querySelectorAll(".wing-name");
+
+  names.forEach((element) => {
+    const wing = element.dataset.wing;
+
+    element.textContent = wingTranslations[language][wing];
+  });
 }
 
 //サーバーから変数を受け取る
@@ -378,7 +469,7 @@ function Initializer() {
     document.getElementById("notice-management-button").style.display = "";
   }
 
-  if (language != "JA") {
+  if (language != "ja") {
     changeLanguage(language);
   }
 

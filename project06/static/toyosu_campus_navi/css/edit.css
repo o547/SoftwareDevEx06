@@ -1,0 +1,267 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #efefef;
+}
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+/* --- 全体 --- */
+.edit-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+/* --- ヘッダー --- */
+.edit-header {
+  height: 80px;
+
+  background: #294d3c;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 4vw;
+}
+
+.edit-header h1 {
+  margin: 0;
+
+  color: white;
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: normal;
+}
+
+.edit-backbutton {
+  padding: 1rem 2rem;
+
+  min-width: 180px;
+
+  background: white;
+  color: #294d3c;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+
+  cursor: pointer;
+}
+
+/* --- コンテナ --- */
+.edit-container {
+  width: min(90%, 1200px);
+
+  margin: 40px auto;
+
+  background: white;
+
+  border-radius: 30px;
+
+  padding: 40px 50px;
+
+  position: relative;
+}
+
+.edit-container::before {
+  content: "";
+
+  position: absolute;
+
+  left: 30px;
+  top: 41px;
+
+  width: 12px;
+  height: 80px;
+
+  background: #8fc1b5;
+
+  border-radius: 2px;
+}
+
+/* --- 入力欄共通 --- */
+.edit-title-input,
+.edit-content-input {
+  width: 100%;
+
+  border: 1px solid #ccc;
+  border-radius: 10px;
+}
+
+/* --- タイトル --- */
+.edit-title-input {
+  padding: 20px;
+
+  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-weight: 500;
+
+  margin-bottom: 25px;
+}
+
+.edit-title-input::placeholder {
+  color: #999;
+  font-size: clamp(1.4rem, 2vw, 2rem);
+}
+
+/* --- 本文 --- */
+.edit-content-input {
+  padding: 15px;
+
+  height: 250px;
+
+  font-size: 1.2rem;
+
+  resize: vertical;
+
+  margin-bottom: 25px;
+}
+
+/* --- ボタンエリア --- */
+.edit-buttons {
+  display: flex;
+  justify-content: flex-end;
+
+  gap: 20px;
+
+  margin-top: 20px;
+}
+
+.edit-submit {
+  padding: 15px 40px;
+
+  background: #418281;
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 1.3rem;
+
+  cursor: pointer;
+  transition: all 0.15s ease;
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.1);
+}
+.edit-submit:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.edit-submit:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+.edit-cancel {
+  padding: 15px 40px;
+
+  background: white;
+  color: #418281;
+
+  border: 2px solid #418281;
+  border-radius: 10px;
+
+  font-size: 1.3rem;
+
+  cursor: pointer;
+}
+
+/* ==========================
+   タブレット・スマホ
+========================== */
+@media (max-width: 768px) {
+  .edit-header {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+
+    padding: 20px;
+  }
+
+  .edit-header h1 {
+    font-size: 2rem;
+    text-align: center;
+  }
+
+  .edit-backbutton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .edit-container {
+    width: 95%;
+
+    margin: 20px auto;
+
+    padding: 20px;
+
+    border-radius: 20px;
+  }
+
+  .edit-container::before {
+    display: none;
+  }
+
+  .edit-title-input {
+    padding: 15px;
+    font-size: 1.2rem;
+  }
+
+  .edit-title-input::placeholder {
+    font-size: 1rem;
+  }
+
+  .edit-content-input {
+    height: 40vh;
+    min-height: 200px;
+
+    font-size: 1rem;
+  }
+
+  .edit-buttons {
+    flex-direction: column;
+  }
+
+  .edit-submit,
+  .edit-cancel {
+    width: 100%;
+    padding: 15px;
+  }
+}
+
+/* ==========================
+   小型スマホ
+========================== */
+@media (max-width: 480px) {
+  .edit-header h1 {
+    font-size: 1.6rem;
+  }
+
+  .edit-title-input {
+    font-size: 1.1rem;
+  }
+
+  .edit-content-input {
+    font-size: 0.95rem;
+  }
+
+  .edit-submit,
+  .edit-cancel {
+    font-size: 1.1rem;
+  }
+}

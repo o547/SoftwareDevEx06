@@ -1,0 +1,313 @@
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: #efefef;
+}
+
+.manage-app {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+/* google翻訳用 */
+.goog-te-banner-frame {
+  display: none !important;
+}
+
+.skiptranslate {
+  display: none !important;
+}
+
+body {
+  top: 0 !important;
+}
+/* --------------------
+   ヘッダー
+-------------------- */
+
+.manage-header {
+  height: 80px;
+
+  background: #294d3c;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  padding: 20px 4vw;
+}
+
+.manage-header h1 {
+  margin: 0;
+
+  color: white;
+  font-size: clamp(2rem, 4vw, 4rem);
+  font-weight: normal;
+}
+
+.manage-backbutton {
+  padding: 1rem 2rem;
+
+  min-width: 180px;
+
+  background: white;
+  color: #294d3c;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: clamp(1rem, 1.5vw, 1.5rem);
+
+  cursor: pointer;
+}
+
+/* --------------------
+   一覧
+-------------------- */
+
+.manage-container {
+  width: min(90%, 1200px);
+
+  margin: 40px auto;
+
+  background: white;
+
+  border-radius: 30px;
+
+  padding: clamp(20px, 3vw, 50px);
+}
+
+.manage-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  gap: 20px;
+
+  padding: 20px 0;
+
+  border-bottom: 1px solid #ddd;
+}
+
+.manage-title {
+  flex: 1;
+
+  font-size: clamp(1.2rem, 2vw, 2rem);
+
+  overflow-wrap: break-word;
+}
+
+/* --------------------
+   ボタン群
+-------------------- */
+.manage-buttons {
+  display: flex;
+  gap: 15px;
+}
+
+.manage-buttons button {
+  position: relative;
+
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  width: 70px;
+  height: 70px;
+
+  border: none;
+  border-radius: 10px;
+
+  color: white;
+  font-size: 1.2rem;
+
+  cursor: pointer;
+
+  overflow: hidden;
+
+  transition: width 0.3s ease;
+}
+
+/* アイコンを常に中央配置 */
+
+.manage-buttons button .icon {
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+
+  transition: all 0.3s ease;
+}
+
+/* ラベルは隠しておく */
+
+.manage-buttons button .label {
+  opacity: 0;
+
+  margin-left: 10px;
+
+  white-space: nowrap;
+
+  transition: opacity 0.2s ease;
+}
+
+/* ホバー時に横へ展開 */
+
+.manage-buttons button:hover {
+  width: 160px;
+}
+
+/* ホバー時は通常のFlex配置へ戻す */
+
+.manage-buttons button:hover .icon {
+  position: static;
+  transform: none;
+}
+
+.manage-buttons button:hover .label {
+  opacity: 1;
+}
+
+.edit-button {
+  background: #418281;
+}
+
+.delete-button {
+  background: #c94a4a;
+}
+
+/* --------------------
+   新規作成
+-------------------- */
+
+.new-create-area {
+  display: flex;
+  justify-content: center;
+
+  margin-top: 20px;
+}
+
+.new-create-button {
+  width: 200px;
+  height: 80px;
+
+  background: #418281;
+  color: white;
+
+  border: none;
+  border-radius: 10px;
+
+  font-size: 24px;
+
+  cursor: pointer;
+
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  transition: all 0.15s ease;
+}
+.new-create-button:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+}
+
+.new-create-button:active {
+  transform: translateY(2px);
+  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.2);
+}
+
+/* ==========================
+   タブレット・スマホ
+========================== */
+
+@media (max-width: 768px) {
+  .manage-header {
+    flex-direction: column;
+    height: auto;
+    gap: 15px;
+
+    padding: 20px;
+  }
+
+  .manage-backbutton {
+    width: 100%;
+    min-width: 0;
+  }
+
+  .manage-container {
+    width: 95%;
+
+    margin: 20px auto;
+
+    border-radius: 20px;
+  }
+
+  .manage-item {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .manage-title {
+    text-align: center;
+  }
+
+  .manage-buttons {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .manage-buttons button {
+    flex: 1;
+
+    width: auto;
+    height: 60px;
+  }
+
+  /* スマホではホバー拡張無効 */
+
+  .manage-buttons button:hover {
+    width: auto;
+  }
+
+  .manage-buttons button .icon {
+    position: static;
+    transform: none;
+  }
+
+  .manage-buttons button .label {
+    opacity: 1;
+    margin-left: 8px;
+  }
+
+  .new-create-button {
+    width: 90%;
+    max-width: 320px;
+
+    height: 70px;
+
+    font-size: 1.2rem;
+  }
+}
+
+/* ==========================
+   小型スマホ
+========================== */
+
+@media (max-width: 480px) {
+  .manage-header h1 {
+    font-size: 1.6rem;
+    text-align: center;
+  }
+
+  .manage-buttons {
+    flex-direction: column;
+  }
+
+  .manage-buttons button {
+    width: 100%;
+  }
+}
