@@ -169,12 +169,67 @@ class UserInfoManagement:
 
 # C12区画情報管理部
 class SectionInfoManagement:
-    pass
+    def get_coordinate_list(self, request, map_name):
+        try:
+            building, floor = str(map_name).split("_")
+        except ValueError:
+            return []
+
+        try:
+            section_objects = Section.objects.filter(building=building, floor=floor)
+
+            coordinate_list = []
+            for section in section_objects:
+                section_name = f"{section.building}_{section.floor}_{section.section}"
+                coordinate_list.append(
+                    {
+                        "section_name": section_name,
+                        "top_left_x": section.top_left_x,
+                        "top_left_y": section.top_left_y,
+                        "bottom_right_x": section.bottom_right_x,
+                        "bottom_right_y": section.bottom_right_y,
+                    }
+                )
+            return coordinate_list
+
+        except Exception:
+            return []
+
+    def get_section_info(self, request, section_name):
+        try:
+            building, floor, section = str(section_name).split("_")
+        except ValueError:
+            return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
+
+        try:
+            section_object = Section.objects.filter(
+                building=building, floor=floor, section=section
+            ).first()
+
+            if section_object is not None:
+                return {
+                    "section": section_object.section,
+                    "usage": section_object.usage or "",
+                    "capacity": section_object.capacity
+                    if section_object.capacity is not None
+                    else -1,
+                    "business_hours": section_object.business_hours or "",
+                }
+            else:
+                return {
+                    "section": "",
+                    "usage": "",
+                    "capacity": -1,
+                    "business_hours": "",
+                }
+
+        except Exception:
+            return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
 
 # C16経路管理部
 class RouteManagement:
-    def get_node_coodinate(self, request, section_name):
+    def get_node_coordinate(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
         except ValueError:
@@ -233,6 +288,10 @@ class RouteManagement:
                 + edge_object.section_b.section
             )
             edges.append(
-                {"section_name_a": section_name_a, "section_name_b": section_name_b}
+                {
+                    "section_name_a": section_name_a,
+                    "section_name_b": section_name_b,
+                    "estimated_travel_time": edge_object.estimated_travel_time,
+                }
             )
         return edges

@@ -139,6 +139,7 @@ class SearchView(View):
     def get(self, request, start, goal):
         print("start : " + start)
         print("goal : " + goal)
+        print(RouteSearchProcess().route_search_main(request, start, goal))
         return redirect("toyosu_campus_navi:index")
 
 
@@ -215,6 +216,16 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
+        route = [
+            "研究棟_14階_情報・通信工学 課程実験室13",
+            "研究棟_14階_エレベータ（左）",
+            "研究棟_13階_エレベータ（左）",
+        ]
+
+        result = CampusMapImageCreate().create_map_image(request, route, "debug")
+
+        print(result)
+
         return redirect("toyosu_campus_navi:index")
 
 
