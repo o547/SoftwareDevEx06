@@ -40,10 +40,10 @@ def create_info_to_send(request):
 class IndexView(View):
     def get(self, request):
         nodes = SectionInfoProcess().get_all_sections(request)
-
         info_to_send = create_info_to_send(request) | {
             "section_names": [node["section_name"] for node in nodes]
         }
+        request.session["chat_history"] = ""
         return render(request, "toyosu_campus_navi/index.html", info_to_send)
 
 
@@ -103,7 +103,7 @@ class ChatBotView(View):
 
         body = json.loads(request.body)
         question = body["question"]
-        response = ChatBotProcess().reply_to_chat(request, question)
+        response = ChatBotProcess().reply_to_chat(request, question)["user_output"]
 
         return JsonResponse({"chatbot_response": response})
 
