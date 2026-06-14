@@ -8,7 +8,9 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/history.css' %}">
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -23,26 +25,20 @@
     </div>
 
     <!--履歴エリア-->
+    
     <div class="history-container">
       <div class="history-list">
-        <div class="history-item">
-          <div class="history-route">
-            ○○○ → ×××
-          </div>
-
-          <button class="research-button">
-            再検索
-          </button>
-        </div>
-        <div class="history-item">
-          <div class="history-route">
-            ☐☐☐ → △△△
-          </div>
-
-          <button class="research-button">
-            再検索
-          </button>
-        </div>
+            {% for history in histories %}
+            <div class="history-item">
+              <div class="history-route">
+                {{history.start_section_name}} → {{history.goal_section_name}}
+              </div>
+              
+              <button class="research-button" onclick="location.href='/search/{{history.start_section_name}}/{{history.goal_section_name}}'">
+                再検索
+              </button>
+            </div>
+            {% endfor %}
       </div>
     </div>
     <div class="new-search-area">

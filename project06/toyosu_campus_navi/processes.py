@@ -46,6 +46,7 @@ class NoticeProcess:
                 return ""
             else:
                 return "お知らせを削除できませんでした"
+
     def get_notice(self, request, id):
         notice_object = NoticeManagement().get_notice(request, id)
         if notice_object and notice_object.get("title") != "":
@@ -217,7 +218,7 @@ class CampusMapImageCreate:
                 "static",
                 "toyosu_campus_navi",
                 "image",
-                "floor_maps",
+                "floor_map",
                 "created_maps",
                 map_folder_name,
             )
@@ -252,7 +253,7 @@ class CampusMapImageCreate:
                 color = (0, 0, 255)
                 thickness = 2
                 line_type = cv2.LINE_AA
-                tip_length = 0.1
+                # tip_length = 0.1
 
                 # 同じ階の中だけ矢印を描画する
                 for i in range(len(floor_route) - 1):
@@ -268,9 +269,13 @@ class CampusMapImageCreate:
                     if start_node["node_x"] == -1 or goal_node["node_x"] == -1:
                         continue
 
+                    arrow_length = (
+                        (start_node["node_x"] - goal_node["node_x"]) ** 2
+                        + (start_node["node_y"] - goal_node["node_y"]) ** 2
+                    ) ** 0.5
+
                     start = (start_node["node_x"], start_node["node_y"])
                     goal = (goal_node["node_x"], goal_node["node_y"])
-
                     cv2.arrowedLine(
                         img,
                         start,
@@ -278,7 +283,7 @@ class CampusMapImageCreate:
                         color,
                         thickness=thickness,
                         line_type=line_type,
-                        tipLength=tip_length,
+                        tipLength=8 / arrow_length,
                     )
 
                 output_file_name = building + "_" + floor + "_route.jpg"
@@ -410,7 +415,7 @@ class CampusMapImageCreate:
                         "static",
                         "toyosu_campus_navi",
                         "image",
-                        "floor_maps",
+                        "floor_map",
                         "created_maps",
                         map_folder_name,
                         route_file_name,
@@ -607,7 +612,7 @@ class CampusMapImageCreate:
                 "static",
                 "toyosu_campus_navi",
                 "image",
-                "floor_maps",
+                "floor_map",
                 "created_maps",
                 map_folder_name,
             )
@@ -662,7 +667,7 @@ class LocationProcess:
     }
 
     def identify_wing(self, request, latitude, longitude):
-        test = False
+        test = True
 
         if not test:
             for building_name, corners in LocationProcess.building_corners.items():
@@ -709,11 +714,9 @@ class RouteSearchProcess:
         # 構内図画像を作成
 
         map_folder_name = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
-
         map_result = CampusMapImageCreate().create_map_image(
             request, route, map_folder_name
         )
-
         map_files = map_result["output_files"]
 
         if map_result["alert_message"] != "":
@@ -721,9 +724,11 @@ class RouteSearchProcess:
 
         # ログイン済みであれば保存
         if request.user.is_authenticated:
-            HistoryInfoManagement().save_history(
+            history_alert_message = HistoryInfoProcess().save_history(
                 request, request.user.username, start, goal
             )
+            if history_alert_message:
+                alert_message = history_alert_message
 
         return {
             "route": route,
@@ -782,7 +787,9 @@ class SectionInfoProcess:
             return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
         try:
-            section_info = SectionInfoManagement().get_section_info(section_name)
+            section_info = SectionInfoManagement().get_section_info(
+                request, section_name
+            )
             if section_info:
                 return {
                     "section": section_info.get("section", ""),
@@ -796,7 +803,7 @@ class SectionInfoProcess:
         return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
     def identify_section(self, request, image_x, image_y, map_name):
-        section_objects = SectionInfoManagement().get_coordinate_list(map_name)
+        section_objects = SectionInfoManagement().get_coordinate_list(request, map_name)
         for section in section_objects:
             if section.get("top_left_x") in [None, -1]:
                 continue
@@ -833,7 +840,7 @@ class ChatBotProcess:
         api_key = settings.GEMINI_API_KEY
         user_output = ""
         alert_message = ""
-        if api_key == "ここにAPIキーを入力":
+        if api_key == "ここにAPIキーを入力" or len(str(user_input)) > 200:
             alert_message = "チャットボットが使用できません．"
             return {"user_output": user_output, "alert_message": alert_message}
         else:

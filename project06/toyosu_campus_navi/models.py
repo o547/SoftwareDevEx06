@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 # F1 ユーザ情報
 # デフォルトのUserの拡張項目
 class UserInfo(AbstractUser):
-    language = models.CharField(max_length=16, default="JA")
+    language = models.CharField(max_length=16, default="ja")
 
 
 # F2 お知らせ情報
@@ -17,7 +17,7 @@ class Notice(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="更新日時")
-    title = models.TextField(max_length=127, verbose_name="タイトル")
+    title = models.CharField(blank=False, max_length=127, verbose_name="タイトル")
     body = models.TextField(blank=False, verbose_name="本文")
 
 
@@ -54,14 +54,24 @@ class Section(models.Model):
     section = models.CharField(max_length=128, verbose_name="区画")
     node_x = models.BigIntegerField(verbose_name="ノードx座標")
     node_y = models.BigIntegerField(verbose_name="ノードy座標")
-    top_left_x = models.BigIntegerField(null=True, verbose_name="区画の左上x座標")
-    top_left_y = models.BigIntegerField(null=True, verbose_name="区画の左上y座標")
-    bottom_right_x = models.BigIntegerField(null=True, verbose_name="区画の右下x座標")
-    bottom_right_y = models.BigIntegerField(null=True, verbose_name="区画の右下y座標")
-    usage = models.CharField(null=True, max_length=1023, verbose_name="使用用途")
-    capacity = models.BigIntegerField(null=True, verbose_name="収容人数")
+    top_left_x = models.BigIntegerField(
+        null=True, blank=True, verbose_name="区画の左上x座標"
+    )
+    top_left_y = models.BigIntegerField(
+        null=True, blank=True, verbose_name="区画の左上y座標"
+    )
+    bottom_right_x = models.BigIntegerField(
+        null=True, blank=True, verbose_name="区画の右下x座標"
+    )
+    bottom_right_y = models.BigIntegerField(
+        null=True, blank=True, verbose_name="区画の右下y座標"
+    )
+    usage = models.CharField(
+        null=True, blank=True, max_length=1023, verbose_name="使用用途"
+    )
+    capacity = models.BigIntegerField(null=True, blank=True, verbose_name="収容人数")
     business_hours = models.CharField(
-        null=True, max_length=1023, verbose_name="営業時間"
+        null=True, blank=True, max_length=1023, verbose_name="営業時間"
     )
 
     def __str__(self):
@@ -86,5 +96,5 @@ class Edge(models.Model):
         related_name="section_b",
     )
     estimated_travel_time = models.BigIntegerField(
-        null=True, verbose_name="推定移動時間(ミリ秒)"
+        default=0, verbose_name="推定移動時間(ミリ秒)"
     )

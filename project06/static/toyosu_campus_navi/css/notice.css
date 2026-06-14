@@ -1,6 +1,7 @@
 body {
   margin: 0;
   background: #efefef;
+  font-family: "Noto Sans JP", sans-serif;
 }
 /* google翻訳用 */
 .goog-te-banner-frame {
@@ -35,7 +36,7 @@ body {
   margin: 0;
 
   color: white;
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: clamp(2rem, 3.5vw, 52px);
   font-weight: normal;
 }
 
@@ -71,7 +72,7 @@ body {
 
   padding: 30px 40px;
 
-  font-size: clamp(1.8rem, 3vw, 3rem);
+  font-size: clamp(1.8rem, 2.6vw, 2.6rem);
 }
 
 .notice-content {

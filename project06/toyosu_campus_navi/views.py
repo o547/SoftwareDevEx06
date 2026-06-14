@@ -19,6 +19,7 @@ from django.contrib.auth.models import User
 from django.contrib.auth import authenticate, login
 from django.http import JsonResponse
 import json
+import uuid
 
 
 # フロントに送る情報をまとめる
@@ -40,24 +41,44 @@ def create_info_to_send(request):
 class IndexView(View):
     def get(self, request):
         nodes = SectionInfoProcess().get_all_sections(request)
-
+        all_notices = NoticeProcess().get_all_notices(request)
         info_to_send = create_info_to_send(request) | {
-            "section_names": [node["section_name"] for node in nodes]
+            "section_names": [node["section_name"] for node in nodes],
+            "notices": all_notices["notices"],
+            "notices_alert_message": all_notices["alert_message"],
         }
+
+        search_result = request.session.get("search_result")
+        if search_result:
+            # 検索から遷移した場合
+            del request.session["search_result"]
+            info_to_send = info_to_send | {
+                "route": search_result["route"],
+                "map_files": search_result["map_files"],
+                "map_folder_name": search_result["map_folder_name"],
+            }
+
+        request.session["chat_history"] = ""
         return render(request, "toyosu_campus_navi/index.html", info_to_send)
 
 
 # /notice
 class NoticeView(View):
-    def get(self, request):
-        info_to_send = create_info_to_send(request)
+    def get(self, request, notice_id):
+        info_to_send = create_info_to_send(request) | {
+            "notice": NoticeProcess().get_notice(request, notice_id),
+        }
         return render(request, "toyosu_campus_navi/notice.html", info_to_send)
 
 
 # /notice/management
 class NoticeManagementView(View):
     def get(self, request):
-        info_to_send = create_info_to_send(request)
+        all_notices = NoticeProcess().get_all_notices(request)
+        info_to_send = create_info_to_send(request) | {
+            "notices": all_notices["notices"],
+            "notices_alert_message": all_notices["alert_message"],
+        }
         return render(
             request, "toyosu_campus_navi/notice_management.html", info_to_send
         )
@@ -67,14 +88,67 @@ class NoticeManagementView(View):
 class NoticeEditView(View):
     def get(self, request):
         info_to_send = create_info_to_send(request)
+        if "notice_id" in request.GET:
+            # 既存のお知らせの編集
+            notice_id = request.GET.get("notice_id")
+            info_to_send = info_to_send | {
+                "current_notice": NoticeProcess().get_notice(request, notice_id),
+            }
+
         return render(request, "toyosu_campus_navi/notice_edit.html", info_to_send)
+
+
+# /notice/delete
+class NoticeDeleteView(View):
+    def get(self, request, notice_id):
+        alert_message = NoticeProcess().notice_delete(request, notice_id)
+        if alert_message:
+            request.session["alert_message"] = alert_message
+        return redirect("toyosu_campus_navi:notice_management")
+
+
+# /notice/submit
+class NoticeSubmitView(View):
+    def post(self, request):
+        body = json.loads(request.body)
+        notice_title = body["title"]
+        notice_body = body["body"]
+        notice_id = body["notice_id"]
+        alert_message = ""
+        if notice_id is None:
+            alert_message = NoticeProcess().create_notice(
+                request, notice_title, notice_body
+            )
+        else:
+            alert_message = NoticeProcess().update_notice(
+                request, uuid.UUID(notice_id), notice_title, notice_body
+            )
+        if alert_message:
+            request.session["alert_message"] = alert_message
+
+        return JsonResponse({"alert_message": alert_message})
 
 
 # /history
 class HistoryView(View):
     def get(self, request):
-        info_to_send = create_info_to_send(request)
+        info_to_send = create_info_to_send(request) | {
+            "histories": HistoryInfoProcess().get_all_histories(
+                request, request.user.username
+            ),
+        }
         return render(request, "toyosu_campus_navi/history.html", info_to_send)
+
+
+# /identify/wing
+class IdentifyWingView(View):
+    def post(self, request):
+
+        body = json.loads(request.body)
+        latitude = body["latitude"]
+        longitude = body["longitude"]
+        wing_name = LocationProcess().identify_wing(request, latitude, longitude)
+        return JsonResponse({"wing_name": wing_name})
 
 
 # /user/login
@@ -86,10 +160,8 @@ class UserLoginView(View):
         login_method = request.POST["login-method"]
 
         if login_method == "login":
-            is_login_success = LoginProcess().user_login(
-                request, login_id, login_password
-            )
-            if is_login_success:
+            alert_message = LoginProcess().user_login(request, login_id, login_password)
+            if alert_message == "":
                 return redirect("toyosu_campus_navi:history")
         elif login_method == "regist":
             LoginProcess().user_regist(request, login_id, login_password)
@@ -103,9 +175,13 @@ class ChatBotView(View):
 
         body = json.loads(request.body)
         question = body["question"]
-        response = ChatBotProcess().reply_to_chat(request, question)
+        reply = ChatBotProcess().reply_to_chat(request, question)
+        response = reply["user_output"]
+        alert_message = reply["alert_message"]
 
-        return JsonResponse({"chatbot_response": response})
+        return JsonResponse(
+            {"chatbot_response": response, "alert_message": alert_message}
+        )
 
 
 # /language/submit
@@ -125,21 +201,23 @@ class LanguageView(View):
 class CoordinateSubmitView(View):
     def post(self, request):
         body = json.loads(request.body)
-        image_x = body["image_x"]
-        image_y = body["image_y"]
-        map_name = body["map_name"]
-        print("image_x : " + str(image_x))
-        print("image_y : " + str(image_y))
-        print("map_name : " + str(map_name))
-        return JsonResponse({"alert_message": ""})
+        section_name = SectionInfoProcess().identify_section(
+            request, body["image_x"], body["image_y"], body["map_name"]
+        )
+        section_info = SectionInfoProcess().get_section_info(request, section_name)
+        return JsonResponse(section_info)
 
 
-# /search/submit
+# /search
 class SearchView(View):
     def get(self, request, start, goal):
         print("start : " + start)
         print("goal : " + goal)
-        print(RouteSearchProcess().route_search_main(request, start, goal))
+        search_result = RouteSearchProcess().route_search_main(request, start, goal)
+        if search_result["alert_message"] != "":
+            request.session["alert_message"] = search_result["alert_message"]
+        request.session["search_result"] = search_result
+
         return redirect("toyosu_campus_navi:index")
 
 
@@ -179,7 +257,7 @@ class DemoIndexView(View):
                     map.drow_arrows(shortest_path)
                     shortest_path_string = " → ".join(shortest_path)
                     map_image_file = "demo_output/output.png"
-            except:
+            except Exception:
                 shortest_path_string = "取得できませんでした"
 
         if start == "":
@@ -216,15 +294,6 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        route = [
-            "研究棟_14階_情報・通信工学 課程実験室13",
-            "研究棟_14階_エレベータ（左）",
-            "研究棟_13階_エレベータ（左）",
-        ]
-
-        result = CampusMapImageCreate().create_map_image(request, route, "debug")
-
-        print(result)
 
         return redirect("toyosu_campus_navi:index")
 
@@ -241,7 +310,10 @@ coordinate_submit = CoordinateSubmitView.as_view()
 notice = NoticeView.as_view()
 notice_management = NoticeManagementView.as_view()
 notice_edit = NoticeEditView.as_view()
+notice_delete = NoticeDeleteView.as_view()
+notice_submit = NoticeSubmitView.as_view()
 history = HistoryView.as_view()
+identify_wing = IdentifyWingView.as_view()
 plot = PlotView.as_view()
 demo_index = DemoIndexView.as_view()
 debug = DebugView.as_view()

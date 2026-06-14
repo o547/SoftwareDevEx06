@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Noto Sans JP", sans-serif;
 }
 .goog-te-banner-frame,
 .skiptranslate {
@@ -61,7 +62,7 @@ html {
 .research-building-floor-map {
   width: 82%;
   height: auto;
-  margin-top: 7vw;
+  margin-top: 3vw;
   margin-left: 15vw;
 }
 
@@ -69,7 +70,7 @@ html {
   height: 75%;
   width: auto;
   margin-top: 3vw;
-  margin-left: 20vw;
+  margin-left: 27vw;
 }
 
 .whole-map-img {
@@ -80,7 +81,7 @@ html {
 }
 
 .campus-img {
-  width: 40vw;
+  height: 70vh;
   display: block;
 }
 
@@ -146,7 +147,7 @@ html {
   align-items: center;
   justify-content: center;
 
-  gap: 10px;
+  gap: 6px;
 
   font-size: 20px;
 }
@@ -208,7 +209,7 @@ select.search-menu-section {
   background: white;
   border-radius: 30px;
 
-  padding: 25px 35px;
+  padding: 25px 20px;
 
   color: #294d3c;
   box-sizing: border-box;
@@ -218,6 +219,7 @@ select.search-menu-section {
   align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
+  overflow-y: auto;
 }
 
 .notice-title {
@@ -348,6 +350,12 @@ body {
   opacity: 1;
 }
 
+.login-button {
+  text-decoration: underline;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 /* モーダルウィンドウ */
 .modal {
   z-index: 2000;
@@ -365,6 +373,59 @@ body {
   transition: 0.2s;
 }
 
+.section-modal {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.1);
+  transition: 0s;
+  justify-content: right;
+  align-items: flex-end;
+}
+
+.section-modal-content {
+  display: flex;
+  min-height: 22vh;
+  width: 40vh;
+  background: #4d8c8a;
+  box-shadow: 10px 10px #294d3c;
+  margin: 20px 80px 80px 20px;
+  color: white;
+  flex-direction: column;
+  align-items: center;
+}
+
+.section-modal-header {
+  min-height: 3.6rem;
+  width: 90%;
+  padding: 0 5%;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.section-modal-name {
+  font-size: 1.4rem;
+  font-weight: bold;
+}
+
+.section-modal-close-button {
+  font-size: 1.7rem;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+.section-modal-body {
+  background-color: white;
+  flex: 1;
+  width: 84%;
+  min-height: 4.5rem;
+  color: black;
+  padding: 2%;
+  border: #2b3431 solid 2px;
+  margin-bottom: 20px;
+}
+
 .modal.active {
   visibility: visible;
   opacity: 1;
@@ -376,7 +437,7 @@ body {
   height: 80vh;
   background-color: #294d3c;
   border: 4px solid #305a46;
-  border-radius: 10px;
+  border-radius: 5px;
   padding: 20px;
   color: white;
   flex-direction: column;
@@ -461,7 +522,7 @@ body {
 
   height: 70px;
 
-  padding: 0 25px;
+  padding: 0 20px;
 
   background: white;
 
@@ -471,6 +532,7 @@ body {
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 1px;
 }
 #chatbot-menu .modal-body {
   flex: 1;
@@ -509,17 +571,17 @@ body {
   width: 100%;
   background: white;
   border-radius: 6px;
-  padding: 40px;
+  padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .chatbot-message {
   width: fit-content;
-  max-width: 320px;
+  max-width: 360px;
   padding: 18px 22px;
   border-radius: 20px;
   font-size: 16px;
@@ -683,6 +745,7 @@ body {
   flex-shrink: 0;
   font-size: 20px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .wing-switch-menu {
@@ -728,12 +791,9 @@ body {
   accent-color: white;
 
   flex-shrink: 0;
+  cursor: pointer;
 }
-.gps-link {
-  margin-top: 10px;
-
-  font-size: 14px;
-
+.wing-gps-button {
   text-decoration: underline;
 
   cursor: pointer;
@@ -825,6 +885,12 @@ body {
   .search-menu-button {
     width: 90%;
   }
+
+  .search-selects-row {
+    flex-direction: column;
+    gap: 15px;
+  }
+
   .research-building-floor-map {
     width: 95%;
     height: auto;
@@ -861,7 +927,7 @@ body {
     padding: 10px 15px;
   }
   #whole-map-image-area {
-    padding-top: 110px;
+    padding-top: 130px;
     padding-left: 0px;
   }
   .wing-switch-title {
@@ -893,6 +959,7 @@ body {
   }
 
   .campus-img {
+    height: auto;
     width: 75vw;
     margin: 0 auto;
   }
@@ -900,5 +967,11 @@ body {
   .campus-img-area {
     margin-left: 0;
     margin-top: 2vh;
+  }
+
+  .section-modal-content {
+    min-height: 20vh;
+    width: 35vh;
+    margin: 30px auto;
   }
 }
