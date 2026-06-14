@@ -50,7 +50,7 @@ function openSidebar(sidebarId, buttonId) {
 
 //チャットボットに質問をする
 async function chatbotSubmit() {
-  const div = document.querySelector(".chatbot-conversation");
+  const conversationArea = document.querySelector(".chatbot-conversation");
   const chatbotInput = document.querySelector(".chatbot-input");
 
   //Ajax通信で返答を取得
@@ -67,20 +67,29 @@ async function chatbotSubmit() {
   const data = await response.json();
 
   //ユーザの質問文を描画
-  div.insertAdjacentHTML(
+  conversationArea.insertAdjacentHTML(
     "beforeend",
-    `<div class="chatbot-message user-message">${chatbotInput.value}</div>`,
+    `<div class="chat-row user-row">
+      <div class="chatbot-message user-message">${chatbotInput.value}</div>
+    </div>`,
   );
 
   //テキストボックスをクリア
   chatbotInput.value = "";
 
+  const botIconSrc = document.querySelector(".bot-icon").src;
+
   //返答文を描画
-  div.insertAdjacentHTML(
+  conversationArea.insertAdjacentHTML(
     "beforeend",
-    `<div class="chatbot-message">${data.chatbot_response}</div>`,
+    `<div class="chat-row bot-row">
+      <img src="${botIconSrc}" class="bot-icon">
+      <div class="chatbot-message bot-message">${data.chatbot_response}</div>
+    </div>`,
   );
-  // console.log(data.chatbot_response);
+
+  //最後までスクロール
+  conversationArea.scrollTop = conversationArea.scrollHeight;
 }
 
 function createPostJson(key, value) {
@@ -108,6 +117,7 @@ async function selectLanguage(language) {
     alert(data.alert_message);
   }
   changeLanguage(language);
+  changeLanguage(language);
 }
 
 //検索をする
@@ -117,7 +127,8 @@ function submitSearch() {
   }
   location.href = `/search/${encodeURIComponent(startSectionSelect.value)}/${encodeURIComponent(goalSectionSelect.value)}`;
 }
-//
+
+//画像クリックで区画情報を取得
 async function sectionCoordinateSubmit(image_x, image_y) {
   //Ajax通信で返答を取得
   const map_name = currentWing + "_" + currentFloorNumber + "階";
@@ -135,6 +146,7 @@ async function sectionCoordinateSubmit(image_x, image_y) {
   });
   const data = await response.json();
 }
+
 function toggleLanguageMenu() {
   const menu = document.getElementById("sidebar-language-menu");
 
@@ -367,7 +379,7 @@ function changeLanguage(language) {
   }, 1000);
 }
 const wingTranslations = {
-  en: {
+  "en": {
     本部棟: "Centennial Main Building",
     教室棟: "Classroom & Administration Building",
     交流棟: "Multi-Activity Building",
@@ -379,7 +391,7 @@ const wingTranslations = {
     交流棟: "交流楼",
     研究棟: "研究楼",
   },
-  ja: {
+  "ja": {
     本部棟: "本部棟",
     教室棟: "教室棟",
     交流棟: "交流棟",

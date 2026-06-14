@@ -1,6 +1,7 @@
 * {
   margin: 0;
   padding: 0;
+  font-family: "Noto Sans JP", sans-serif;
 }
 .goog-te-banner-frame,
 .skiptranslate {
@@ -80,7 +81,7 @@ html {
 }
 
 .campus-img {
-  width: 40vw;
+  height: 70vh;
   display: block;
 }
 
@@ -146,7 +147,7 @@ html {
   align-items: center;
   justify-content: center;
 
-  gap: 10px;
+  gap: 6px;
 
   font-size: 20px;
 }
@@ -208,7 +209,7 @@ select.search-menu-section {
   background: white;
   border-radius: 30px;
 
-  padding: 25px 35px;
+  padding: 25px 20px;
 
   color: #294d3c;
   box-sizing: border-box;
@@ -218,6 +219,7 @@ select.search-menu-section {
   align-items: center;
   margin-top: 20px;
   margin-bottom: 20px;
+  overflow-y: auto;
 }
 
 .notice-title {
@@ -461,7 +463,7 @@ body {
 
   height: 70px;
 
-  padding: 0 25px;
+  padding: 0 20px;
 
   background: white;
 
@@ -471,6 +473,7 @@ body {
   align-items: center;
   justify-content: space-between;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+  border-radius: 1px;
 }
 #chatbot-menu .modal-body {
   flex: 1;
@@ -509,17 +512,17 @@ body {
   width: 100%;
   background: white;
   border-radius: 6px;
-  padding: 40px;
+  padding: 20px;
   box-sizing: border-box;
   overflow-y: auto;
   display: flex;
   flex-direction: column;
-  gap: 25px;
+  gap: 20px;
 }
 
 .chatbot-message {
   width: fit-content;
-  max-width: 320px;
+  max-width: 360px;
   padding: 18px 22px;
   border-radius: 20px;
   font-size: 16px;
@@ -683,6 +686,7 @@ body {
   flex-shrink: 0;
   font-size: 20px;
   text-decoration: none;
+  cursor: pointer;
 }
 
 .wing-switch-menu {
@@ -728,6 +732,7 @@ body {
   accent-color: white;
 
   flex-shrink: 0;
+  cursor: pointer;
 }
 .gps-link {
   margin-top: 10px;
@@ -861,7 +866,7 @@ body {
     padding: 10px 15px;
   }
   #whole-map-image-area {
-    padding-top: 110px;
+    padding-top: 130px;
     padding-left: 0px;
   }
   .wing-switch-title {
@@ -893,6 +898,7 @@ body {
   }
 
   .campus-img {
+    height: auto;
     width: 75vw;
     margin: 0 auto;
   }

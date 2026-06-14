@@ -8,7 +8,9 @@
   {% load static %}
   <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/manage.css' %}">
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -23,36 +25,29 @@
     </div>
 
     <div class="manage-container">
+
+
+      {% for notice in notices reversed  %}
+
       <div class="manage-item">
-        <div class="manage-title">記事タイトル1</div>
+        <div class="manage-title">{{notice.title}}</div>
 
         <div class="manage-buttons">
-          <button class="edit-button" onclick="location.href='/notice/edit'">
+          <button class="edit-button" onclick="location.href='/notice/edit?notice_id={{notice.notice_id}}'">
             <img src="{%static 'toyosu_campus_navi/image/pen.png' %}" class="icon">
             <span class="label">編集</span>
           </button>
 
-          <button class="delete-button">
+          <button class="delete-button"  onclick="location.href='/notice/delete/{{notice.notice_id}}'">
             <img src="{%static 'toyosu_campus_navi/image/bin.png' %}" class="icon">
             <span class="label">削除</span>
           </button>
         </div>
       </div>
-      <div class="manage-item">
-        <div class="manage-title">記事タイトル2</div>
+      {% endfor  %}
 
-        <div class="manage-buttons">
-          <button class="edit-button" onclick="location.href='/notice/edit'">
-            <img src="{%static 'toyosu_campus_navi/image/pen.png' %}" class="icon">
-            <span class="label">編集</span>
-          </button>
 
-          <button class="delete-button">
-            <img src="{%static 'toyosu_campus_navi/image/bin.png' %}" class="icon">
-            <span class="label">削除</span>
-          </button>
-        </div>
-      </div>
+
 
     </div>
 

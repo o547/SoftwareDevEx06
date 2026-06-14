@@ -11,7 +11,9 @@
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
   <script src="//translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
-
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
 </head>
 
 <body>
@@ -121,7 +123,7 @@
           {% load static %}
           <img src="{% static 'toyosu_campus_navi/image/cross.png' %}" style="width: 45px" />
         </div>
-        <div id="language-button" class="sidebar-button square" onclick="toggleLanguageMenu()">
+        <div id="language-button" class="sidebar-button square notranslate" onclick="toggleLanguageMenu()">
 
           <img src="{% static 'toyosu_campus_navi/image/globe.png' %}" class="language-icon">
           Language
@@ -129,15 +131,15 @@
         <div id="sidebar-language-menu" class="language-menu">
           <div class="language-close" onclick="closeLanguageMenu()">×</div>
 
-          <div class="language-item" onclick="selectLanguage('ja')">
+          <div class="language-item notranslate" onclick="selectLanguage('ja')">
             日本語
           </div>
 
-          <div class="language-item" onclick="selectLanguage('en')">
+          <div class="language-item notranslate" onclick="selectLanguage('en')">
             English
           </div>
 
-          <div class="language-item" onclick="selectLanguage('zh-CN')">
+          <div class="language-item notranslate" onclick="selectLanguage('zh-CN')">
             中文
           </div>
         </div>
@@ -156,7 +158,7 @@
         {% else %}
         <div class="sidebar-button" onclick="location.href='./history'">
           <img src="{%static 'toyosu_campus_navi/image/history.png' %}" class="menu-icon">
-          <span>履歴 ({{ username }})</span>
+          <span>履歴 <span class="notranslate">({{ username }})</span></span>
         </div>
         {% endif %}
         <div class="sidebar-button" onclick="openModal('chatbot-menu')">
@@ -167,13 +169,13 @@
       <div class="sidebar-notice" id="sidebar-notice">
         <h3 class="notice-title">お知らせ</h3>
 
-        <a class="notice-link" href="/notice">お知らせタイトル1</a>
-        <a class="notice-link" href="/notice">お知らせタイトル2</a>
-        <a class="notice-link" href="/notice">お知らせタイトル3</a>
+        {% for notice in notices reversed  %}
+        <a class="notice-link" href="/notice/{{notice.notice_id}}">{{notice.title}}</a>
+        {% endfor %}
 
         {% if is_superuser %}
         <p id="notice-management-button">
-          <a href="/notice/management">お知らせ追加</a>
+          <a href="/notice/management">お知らせを管理</a>
         </p>
         {% endif %}
 
@@ -341,18 +343,12 @@
           <div class="modal-body" style="padding: 2vh 0">
             <div class="chatbot-conversation">
 
-              <div class="chat-row user-row">
-                <div class="chatbot-message user-message">
-                  食堂はどこ？
-                </div>
-              </div>
-
               <div class="chat-row bot-row">
                 <img src="{%static 'toyosu_campus_navi/image/bot.png' %}" class="bot-icon">
-
                 <div class="chatbot-message bot-message">
-                  食堂は交流棟の3Fです。
+                  「出発地」と「目的地」を教えてください。<br>経路検索のリンクを案内します
                 </div>
+
               </div>
 
 
@@ -360,7 +356,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" placeholder="質問内容(開発中につき返答はできません)"></textarea>
+            <textarea class="chatbot-input" placeholder="質問内容"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>

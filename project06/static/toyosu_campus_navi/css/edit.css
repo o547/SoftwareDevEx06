@@ -2,6 +2,7 @@
 *::before,
 *::after {
   box-sizing: border-box;
+  font-family: "Noto Sans JP", sans-serif;
 }
 
 body {
@@ -44,7 +45,7 @@ body {
   margin: 0;
 
   color: white;
-  font-size: clamp(2rem, 4vw, 4rem);
+  font-size: clamp(2rem, 3.7vw, 50px);
   font-weight: normal;
 }
 
@@ -108,7 +109,7 @@ body {
 .edit-title-input {
   padding: 20px;
 
-  font-size: clamp(1.6rem, 2.5vw, 2.2rem);
+  font-size: clamp(1.6rem, 2.3vw, 2rem);
   font-weight: 500;
 
   margin-bottom: 25px;
