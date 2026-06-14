@@ -175,7 +175,6 @@ class ChatBotView(View):
 
         body = json.loads(request.body)
         question = body["question"]
-        print(question)
         reply = ChatBotProcess().reply_to_chat(request, question)
         response = reply["user_output"]
         alert_message = reply["alert_message"]
