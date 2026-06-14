@@ -17,7 +17,7 @@ class Notice(models.Model):
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="作成日時")
     updated_at = models.DateTimeField(auto_now=True, verbose_name="更新日時")
-    title = models.TextField(max_length=127, verbose_name="タイトル")
+    title = models.CharField(max_length=127, verbose_name="タイトル")
     body = models.TextField(blank=False, verbose_name="本文")
 
 
