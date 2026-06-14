@@ -204,7 +204,6 @@ class CoordinateSubmitView(View):
         section_name = SectionInfoProcess().identify_section(
             request, body["image_x"], body["image_y"], body["map_name"]
         )
-        print(section_name)
         section_info = SectionInfoProcess().get_section_info(request, section_name)
         return JsonResponse(section_info)
 
@@ -295,11 +294,6 @@ class PlotView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        from managements import Section
-
-        objects = Section.objects.filter(building="交流棟")
-        for object in objects:
-            object.delete()
 
         return redirect("toyosu_campus_navi:index")
 
