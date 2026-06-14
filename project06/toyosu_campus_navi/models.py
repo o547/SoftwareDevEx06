@@ -7,7 +7,7 @@ from django.contrib.auth.models import AbstractUser
 # F1 ユーザ情報
 # デフォルトのUserの拡張項目
 class UserInfo(AbstractUser):
-    language = models.CharField(max_length=16, default="JA")
+    language = models.CharField(max_length=16, default="ja")
 
 
 # F2 お知らせ情報
@@ -95,4 +95,6 @@ class Edge(models.Model):
         verbose_name="区画B",
         related_name="section_b",
     )
-    estimated_travel_time = models.BigIntegerField(default=0, verbose_name="推定移動時間(ミリ秒)")
+    estimated_travel_time = models.BigIntegerField(
+        default=0, verbose_name="推定移動時間(ミリ秒)"
+    )

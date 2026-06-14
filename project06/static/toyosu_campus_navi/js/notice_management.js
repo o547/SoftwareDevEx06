@@ -9,14 +9,14 @@ function googleTranslateElementInit() {
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
   const select = document.querySelector(".goog-te-combo");
-  
+
   if (select) {
     select.value = language;
     select.dispatchEvent(new Event("change"));
   }
 }
 
-changeLanguage(language)
+changeLanguage(language);
 
 const alertMessage = JSON.parse(
   document.getElementById("alert_message").textContent,
@@ -24,4 +24,11 @@ const alertMessage = JSON.parse(
 
 if (alertMessage) {
   alert(alertMessage);
+}
+const noticesAlertMessage = JSON.parse(
+  document.getElementById("notices_alert_message").textContent,
+);
+
+if (noticesAlertMessage) {
+  alert(noticesAlertMessage);
 }

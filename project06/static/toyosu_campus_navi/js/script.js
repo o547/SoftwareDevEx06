@@ -48,10 +48,63 @@ function openSidebar(sidebarId, buttonId) {
   openButton.classList.remove("active");
 }
 
+//ログインまたは新規登録のデータを送信
+function submitLogin(parentId) {
+  const parentDiv = document.getElementById(parentId);
+  const username = parentDiv.querySelector("#login-id").value;
+  const usernameRegex = /^[A-Za-z0-9_@.+-]{1,150}$/;
+
+  if (!usernameRegex.test(username)) {
+    alert(
+      "usernameは150文字以下の半角英数字および記号(_@.+-)で入力してください",
+    );
+    return;
+  }
+
+  const password = parentDiv.querySelector("#login-password").value;
+  const passwordRegex = /^[!-~]{1,128}$/;
+
+  if (!passwordRegex.test(password)) {
+    alert("パスワードは128文字以下の半角英数字および記号で入力してください");
+    return;
+  }
+
+  const form = parentDiv.querySelector("form");
+  form.action = "/user/login";
+  form.method = "post";
+  form.requestSubmit();
+}
+
 //チャットボットに質問をする
 async function chatbotSubmit() {
   const conversationArea = document.querySelector(".chatbot-conversation");
   const chatbotInput = document.querySelector(".chatbot-input");
+
+  if (!chatbotInput.value) {
+    alert("質問を入力してください");
+    return;
+  }
+  if (chatbotInput.value.length > 200) {
+    alert("200文字以下で入力してください");
+    return;
+  }
+
+  //ユーザの質問文を描画
+  conversationArea.insertAdjacentHTML(
+    "beforeend",
+    `<div class="chat-row user-row">
+      <div class="chatbot-message user-message">${chatbotInput.value}</div>
+    </div>`,
+  );
+
+  const botIconSrc = document.querySelector(".bot-icon").src;
+  conversationArea.insertAdjacentHTML(
+    "beforeend",
+    `<div class="chat-row bot-row bot-loading">
+      <img src="${botIconSrc}" class="bot-icon">
+      <div class="chatbot-message bot-message">メッセージを生成中...</div>
+    </div>`,
+  );
 
   //Ajax通信で返答を取得
   const response = await fetch("/chatbot/submit", {
@@ -64,20 +117,19 @@ async function chatbotSubmit() {
       question: chatbotInput.value,
     }),
   });
-  const data = await response.json();
-
-  //ユーザの質問文を描画
-  conversationArea.insertAdjacentHTML(
-    "beforeend",
-    `<div class="chat-row user-row">
-      <div class="chatbot-message user-message">${chatbotInput.value}</div>
-    </div>`,
-  );
 
   //テキストボックスをクリア
   chatbotInput.value = "";
 
-  const botIconSrc = document.querySelector(".bot-icon").src;
+  const data = await response.json();
+  document.querySelector(".bot-loading").remove();
+  if (data.alert_message) {
+    alert(data.alert_message);
+
+    if (!data.chatbot_response) {
+      return;
+    }
+  }
 
   //返答文を描画
   conversationArea.insertAdjacentHTML(
@@ -116,8 +168,8 @@ async function selectLanguage(language) {
   if (data.alert_message) {
     alert(data.alert_message);
   }
-  changeLanguage(language);
-  changeLanguage(language);
+  await changeLanguage(language);
+  await changeLanguage(language);
 }
 
 //検索をする
@@ -145,18 +197,89 @@ async function sectionCoordinateSubmit(image_x, image_y) {
     }),
   });
   const data = await response.json();
+  if (data.section) {
+    console.log(data);
+
+    if (selectFromMapMode) {
+      const wingSelectBox = document.getElementById(
+        `${selectFromMapDirection}-wing-select`,
+      );
+      wingSelectBox.value = currentWing;
+
+      const floorSelectBox = document.getElementById(
+        `${selectFromMapDirection}-floor-select`,
+      );
+      floorSelectBox.value = currentFloorNumber + "階";
+
+      const sectionSelectBox = document.getElementById(
+        `${selectFromMapDirection}-section-select`,
+      );
+      sectionSelectBox.value = `${currentWing}_${currentFloorNumber}階_${data.section}`;
+
+      selectFromMapMode = false;
+      openModal(`${selectFromMapDirection}-point-menu`);
+    } else {
+      openSectionModal(
+        data.section,
+        data.usage,
+        data.capacity,
+        data.business_hours,
+      );
+    }
+  }
+}
+
+//詳細表示モーダルを活性にする
+function openSectionModal(section, usage, capacity, business_hours) {
+  const sectionModalNameElement = document.querySelector(".section-modal-name");
+  const sectionModalBodyElement = document.querySelector(".section-modal-body");
+  sectionModalNameElement.innerHTML = section;
+
+  if (section.length > 20) {
+    sectionModalNameElement.style.fontSize = "1rem";
+  } else if (section.length > 15) {
+    sectionModalNameElement.style.fontSize = "1.2rem";
+  } else {
+    sectionModalNameElement.style.fontSize = "1.4rem";
+  }
+
+  let sectionInfo = "";
+  if (!usage && capacity == -1 && !business_hours) {
+    sectionInfo = "情報は登録されていません";
+  } else {
+    if (usage) {
+      sectionInfo += `<div>主な用途：${usage}</div>`;
+    }
+    if (capacity != -1) {
+      sectionInfo += `<div>収容人数：${capacity}人</div>`;
+    }
+    if (business_hours) {
+      sectionInfo += `<div>営業時間：${business_hours}</div>`;
+    }
+  }
+
+  sectionModalBodyElement.innerHTML = sectionInfo;
+  document.querySelector(".section-modal").classList.add("active");
+}
+
+//詳細表示モーダルを非活性にする
+function closeSectionModal() {
+  if (event.target == event.currentTarget) {
+    document.querySelector(".section-modal").classList.remove("active");
+  }
 }
 
 function toggleLanguageMenu() {
   const menu = document.getElementById("sidebar-language-menu");
-
   menu.classList.toggle("active");
+  document.addEventListener("click", removeLanguageMenuActive);
 }
 
 function closeLanguageMenu() {
   document.getElementById("sidebar-language-menu").classList.remove("active");
 }
-document.addEventListener("click", (event) => {
+
+function removeLanguageMenuActive(event) {
   const menu = document.getElementById("sidebar-language-menu");
 
   if (!menu) return;
@@ -166,8 +289,238 @@ document.addEventListener("click", (event) => {
 
   if (!insideMenu && !button) {
     menu.classList.remove("active");
+    document.removeEventListener("click", removeLanguageMenuActive);
   }
-});
+}
+function getCurrentPositionPromise() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
+
+function getCurrentPositionPromise() {
+  return new Promise((resolve, reject) => {
+    navigator.geolocation.getCurrentPosition(resolve, reject);
+  });
+}
+
+async function getLocation() {
+  if (!navigator.geolocation) {
+    return {
+      latitude: -91,
+      longitude: -181,
+    };
+  }
+  try {
+    const position = await getCurrentPositionPromise();
+    const latitude = position.coords.latitude;
+    const longitude = position.coords.longitude;
+    return {
+      latitude: latitude,
+      longitude: longitude,
+    };
+  } catch (error) {
+    console.log(error);
+    return {
+      latitude: -91,
+      longitude: -181,
+    };
+  }
+}
+
+async function getWingNameByLocation() {
+  const location = await getLocation();
+
+  //Ajax通信で返答を取得
+  const response = await fetch("/identify/wing", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+    },
+    body: JSON.stringify({
+      latitude: location.latitude,
+      longitude: location.longitude,
+    }),
+  });
+  const data = await response.json();
+  return data.wing_name;
+}
+
+async function changeWingByLocation() {
+  const wingGPSButton = document.querySelector(".wing-gps-button");
+  wingGPSButton.innerText = "位置を取得中...";
+  const wingName = await getWingNameByLocation();
+
+  if (wingName) {
+    for (const wingSwitch of wingSwitches) {
+      if (wingSwitch.value == wingName) {
+        wingSwitch.checked = true;
+        changeWing(wingSwitch.value, wingSwitch);
+      } else {
+        wingSwitch.checked = false;
+        if (!isFloorMapMode) {
+          changeWing(wingSwitch.value, wingSwitch);
+        }
+      }
+    }
+    wingGPSButton.innerText = `GPSから取得 (${wingName})`;
+  } else {
+    wingGPSButton.innerHTML = `GPSから取得 (失敗))`;
+  }
+}
+
+//選択メニューの「GPSから取得」
+async function changeSelectOptionByLocation(buttonElement, targetInputId) {
+  const targetInput = document.getElementById(targetInputId);
+  buttonElement.innerText = "位置を取得中...";
+
+  const wingName = await getWingNameByLocation();
+  if (wingName) {
+    targetInput.value = wingName;
+    const event = new Event("change");
+    targetInput.dispatchEvent(event);
+    buttonElement.innerText = `GPSから推定 (${wingName})`;
+  } else {
+    buttonElement.innerText = `GPSから推定 (失敗)`;
+  }
+}
+
+let selectFromMapMode = false;
+let selectFromMapDirection = null;
+//検索メニューの「地図から取得」
+function selectFromMap(direction) {
+  selectFromMapMode = true;
+  selectFromMapDirection = direction;
+  if (!isFloorMapMode) {
+    const switchElement = document.querySelector(".dimention-switch-switch");
+    toggleDimention(switchElement);
+  }
+  closeModal();
+}
+
+//検索メニューの「決定」ボタンを必要であれば「検索」に変える
+function toggleSearchEnterButton(direction) {
+  let oppositeSectionSelect = null;
+  if (direction == "start") {
+    oppositeSectionSelect = document.getElementById("goal-section-select");
+  } else {
+    oppositeSectionSelect = document.getElementById("start-section-select");
+  }
+  let enterButton = document.getElementById(`${direction}-point-enter-button`);
+  if (oppositeSectionSelect.value) {
+    enterButton.innerText = "検索";
+  } else {
+    enterButton.innerText = "決定";
+  }
+}
+
+//検索メニューの選択肢制御
+function controlSearchMenu(selectBoxId) {
+  if (selectBoxId == "start-wing-select" || selectBoxId == "goal-wing-select") {
+    const selectedWingName = document.getElementById(selectBoxId).value;
+    //階を制御
+    let floorSelect = null;
+    if (selectBoxId == "start-wing-select") {
+      floorSelect = document.getElementById("start-floor-select");
+    } else {
+      floorSelect = document.getElementById("goal-floor-select");
+    }
+    const floorSelectOptions = floorSelect.querySelectorAll(
+      "option[value]:not([value='']",
+    );
+    for (const floorSelectOption of floorSelectOptions) {
+      if (selectedWingName) {
+        if (
+          wingFloors[selectedWingName].includes(
+            String(floorSelectOption.value).slice(0, -1),
+          )
+        ) {
+          floorSelectOption.style.display = "";
+        } else {
+          floorSelectOption.style.display = "none";
+          if (floorSelectOption.value == floorSelect.value) {
+            floorSelect.value = "";
+          }
+        }
+      } else {
+        floorSelectOption.style.display = "";
+      }
+    }
+
+    //区画を制御
+    let sectionSelect = null;
+    if (selectBoxId == "start-wing-select") {
+      sectionSelect = document.getElementById("start-section-select");
+    } else {
+      sectionSelect = document.getElementById("goal-section-select");
+    }
+    const sectionSelectOptions = sectionSelect.querySelectorAll(
+      "option[value]:not([value='']",
+    );
+    for (const sectionSelectOption of sectionSelectOptions) {
+      if (selectedWingName) {
+        if (sectionSelectOption.dataset.wing == selectedWingName) {
+          sectionSelectOption.style.display = "";
+        } else {
+          sectionSelectOption.style.display = "none";
+          if (sectionSelectOption.value == sectionSelect.value) {
+            sectionSelect.value = "";
+          }
+        }
+      } else {
+        sectionSelectOption.style.display = "";
+      }
+    }
+  } else if (
+    selectBoxId == "start-floor-select" ||
+    selectBoxId == "goal-floor-select"
+  ) {
+    const selectedFloor = document.getElementById(selectBoxId).value;
+    let sectionSelect = null;
+    if (selectBoxId == "start-floor-select") {
+      sectionSelect = document.getElementById("start-section-select");
+    } else {
+      sectionSelect = document.getElementById("goal-section-select");
+    }
+    const sectionSelectOptions = sectionSelect.querySelectorAll(
+      "option[value]:not([value='']",
+    );
+    //区画を制御
+    for (const sectionSelectOption of sectionSelectOptions) {
+      if (selectedFloor) {
+        if (sectionSelectOption.dataset.floor == selectedFloor) {
+          sectionSelectOption.style.display = "";
+        } else {
+          sectionSelectOption.style.display = "none";
+          if (sectionSelectOption.value == sectionSelect.value) {
+            sectionSelect.value = "";
+          }
+        }
+      } else {
+        sectionSelectOption.style.display = "";
+      }
+    }
+  } else if (
+    selectBoxId == "start-section-select" ||
+    selectBoxId == "goal-section-select"
+  ) {
+    const selectedOption =
+      document.getElementById(selectBoxId).selectedOptions[0];
+    if (selectBoxId == "start-section-select") {
+      document.getElementById("start-wing-select").value =
+        selectedOption.dataset.wing;
+      document.getElementById("start-floor-select").value =
+        selectedOption.dataset.floor;
+    } else {
+      document.getElementById("goal-wing-select").value =
+        selectedOption.dataset.wing;
+      document.getElementById("goal-floor-select").value =
+        selectedOption.dataset.floor;
+    }
+  }
+}
+
 //---------------地図切り替え処理 開始---------------
 
 let currentWing = "教室棟";
@@ -189,7 +542,7 @@ const wholeMapImages = {
 
 const wingFloors = {
   教室棟: ["1", "2", "3", "4", "5", "6", "7"],
-  交流棟: ["1", "2", "3", "4", "5"],
+  交流棟: ["1", "2", "3", "4", "5", "6"],
   研究棟: [
     "1",
     "2",
@@ -228,11 +581,20 @@ const wingFloors = {
 //表示階を変更
 function changeFloor(floorNumber) {
   currentFloorNumber = floorNumber;
-
-  floorMapImage.src = floorMapImage.src.replace(
-    /floor_map\/.*/,
-    `floor_map/${currentWing}_${floorNumber}階.jpg`,
-  );
+  if (
+    createdMapFiles &&
+    createdMapFiles.includes(`${currentWing}_${floorNumber}階_route.jpg`)
+  ) {
+    floorMapImage.src = floorMapImage.src.replace(
+      /floor_map\/.*/,
+      `floor_map/created_maps/${createdMapFolderName}/${currentWing}_${floorNumber}階_route.jpg`,
+    );
+  } else {
+    floorMapImage.src = floorMapImage.src.replace(
+      /floor_map\/.*/,
+      `floor_map/${currentWing}_${floorNumber}階.jpg`,
+    );
+  }
 
   const floorSelectElements = floorSelectMenu.querySelectorAll(".floor-select");
   for (const floorSelectElement of floorSelectElements) {
@@ -258,19 +620,20 @@ function toggleDimention(switchElement) {
     campusMapImage.style.display = "none";
     let firstChecked = true;
     let firstCheckedWing = "";
+    //どの棟がチェックされているかを確認
     for (const wingSwitch of wingSwitches) {
       if (wingSwitch.checked) {
-        if (!firstChecked) {
-          wingSwitch.checked = false;
-        } else {
+        if (firstChecked) {
           firstCheckedWing = wingSwitch.value;
+          firstChecked = false;
+        } else {
+          wingSwitch.checked = false;
         }
-        firstChecked = false;
       }
       wingSwitch.type = "radio";
-      floorMapImageArea.style.display = "";
-      wholeMapImageArea.style.display = "none";
     }
+    floorMapImageArea.style.display = "";
+    wholeMapImageArea.style.display = "none";
     panzoom.reset();
     if (firstCheckedWing) {
       changeWing(firstCheckedWing);
@@ -301,10 +664,6 @@ function toggleDimention(switchElement) {
 function changeWing(wingName, inputElement) {
   // console.log(wingName, inputElement.checked);
   if (isFloorMapMode) {
-    if (currentWing == wingName) {
-      return;
-    }
-
     currentWing = wingName;
     //階選択メニューを変更
     const floorSelectElements = document.querySelectorAll(".floor-select");
@@ -333,7 +692,7 @@ function changeWing(wingName, inputElement) {
       floorMapImage.classList.add("other-floor-map");
     }
   } else {
-    if (inputElement.checked) {
+    if (inputElement && inputElement.checked) {
       wholeMapImages[wingName].style.display = "block";
       wholeMapImages[wingName].scrollTop =
         wholeMapImages[wingName].scrollHeight;
@@ -379,7 +738,7 @@ function changeLanguage(language) {
   }, 1000);
 }
 const wingTranslations = {
-  "en": {
+  en: {
     本部棟: "Centennial Main Building",
     教室棟: "Classroom & Administration Building",
     交流棟: "Multi-Activity Building",
@@ -391,7 +750,7 @@ const wingTranslations = {
     交流棟: "交流楼",
     研究棟: "研究楼",
   },
-  "ja": {
+  ja: {
     本部棟: "本部棟",
     教室棟: "教室棟",
     交流棟: "交流棟",
@@ -416,6 +775,13 @@ const alertMessage = JSON.parse(
 if (alertMessage) {
   alert(alertMessage);
 }
+const noticesAlertMessage = JSON.parse(
+  document.getElementById("notices_alert_message").textContent,
+);
+
+if (noticesAlertMessage) {
+  alert(noticesAlertMessage);
+}
 
 const username = JSON.parse(document.getElementById("username").textContent);
 
@@ -427,10 +793,23 @@ if (is_superuser == true) {
   console.log("管理者でログイン");
 }
 
-const language = JSON.parse(document.getElementById("language").textContent);
+let language = JSON.parse(document.getElementById("language").textContent);
+if (!language) {
+  language = "ja";
+}
 
 const sectionNames = JSON.parse(
   document.getElementById("section_names").textContent,
+);
+
+const route = JSON.parse(document.getElementById("route").textContent);
+
+const createdMapFiles = JSON.parse(
+  document.getElementById("map_files").textContent,
+);
+
+const createdMapFolderName = JSON.parse(
+  document.getElementById("map_folder_name").textContent,
 );
 
 //panzoom
@@ -446,8 +825,41 @@ document
   .querySelector(".viewer")
   .addEventListener("wheel", panzoom.zoomWithWheel);
 
+//クリックかドラッグかの判定
+let isDragging = false;
+let dragStartX = 0;
+let dragStartY = 0;
+floorMapImage.addEventListener("pointerdown", (event) => {
+  if (event.pointerType === "mouse" && event.button !== 0) {
+    return;
+  }
+  dragStartX = event.clientX;
+  dragStartY = event.clientY;
+  isDragging = false;
+});
+
+floorMapImage.addEventListener("pointermove", (event) => {
+  if (event.pressure === 0) {
+    return;
+  }
+  const moveX = Math.abs(event.clientX - dragStartX);
+  const moveY = Math.abs(event.clientY - dragStartY);
+  if (moveX > 5 || moveY > 5) {
+    isDragging = true;
+  }
+});
+
+floorMapImage.addEventListener("pointerup", () => {
+  setTimeout(() => {
+    isDragging = false;
+  }, 0);
+});
+
 //画像クリックで座標を送信
 floorMapImage.addEventListener("click", async (event) => {
+  if (isDragging) {
+    return;
+  }
   const initialDisplayWidth = floorMapImage.offsetWidth;
   const initialDisplayHeight = floorMapImage.offsetHeight;
   const naturalWidth = floorMapImage.naturalWidth;
@@ -485,6 +897,7 @@ function Initializer() {
     changeLanguage(language);
   }
 
+  //検索の選択肢を初期化
   for (const sectionName of sectionNames) {
     if (sectionName.includes("中継") || sectionName.includes("区画調整")) {
       continue;
@@ -505,6 +918,32 @@ function Initializer() {
 
   changeLayoutForResponsive();
   changeFloor(1);
+  const inRouteWings = [];
+
+  const wingNames = ["本部棟", "教室棟", "交流棟", "研究棟"];
+  if (createdMapFiles) {
+    //全体地図の画像を置き換える
+    for (const wingName of wingNames) {
+      if (createdMapFiles.includes(`${wingName}_whole_map_route.jpg`)) {
+        const wholeMapImgElement =
+          wholeMapImages[wingName].querySelector("img");
+        wholeMapImgElement.src = wholeMapImgElement.src.replace(
+          /floor_map\/.*/,
+          `floor_map/created_maps/${createdMapFolderName}/${wingName}_whole_map_route.jpg`,
+        );
+        inRouteWings.push(wingName);
+      }
+    }
+    //選択肢を置き換えてルートに含まれる全体地図を表示する
+    for (const wingSwitch of wingSwitches) {
+      if (inRouteWings.includes(wingSwitch.value)) {
+        wingSwitch.checked = true;
+      } else {
+        wingSwitch.checked = false;
+      }
+      changeWing(wingSwitch.value, wingSwitch);
+    }
+  }
 }
 
 window.addEventListener("resize", changeLayoutForResponsive);

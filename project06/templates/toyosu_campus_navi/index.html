@@ -47,8 +47,6 @@
 
       </div>
 
-      <!-- <img id="dimention-switch" src="{% static 'toyosu_campus_navi/image/切り替え_平面.png' %}"
-        onclick="toggleDimention(this)" /> -->
       <div class="map-switches-area">
         <div class="dimention-switch">
           <div class="dimention-label left-label">
@@ -101,8 +99,25 @@
           <label><input type="checkbox" onchange="changeWing('研究棟',this)" class="wing-switch" value="研究棟"
               name="wing-switch" /> <span class="wing-name notranslate" data-wing="研究棟">研究棟</span></label>
         </div>
-        <div><u>GPSから取得</u></div>
+        <div onclick="changeWingByLocation()" class="wing-gps-button">GPSから取得</div>
       </div>
+
+      <div class="modal section-modal" onclick="closeSectionModal()">
+        <div class="section-modal-content">
+          <div class="section-modal-header">
+            <div class="section-modal-name">区画名</div>
+            <div onclick="closeSectionModal()" class="section-modal-close-button">×</div>
+          </div>
+          <div class="section-modal-body">
+            主な用途：<br>
+            収容人数：<br>
+            営業時間：<br>
+          </div>
+        </div>
+
+      </div>
+
+
       <!-- <div class="util_links">
         <a href="/demo/guide">経路案内デモ</a><br /><a href="/plot">座標取得アプリ</a>
       </div> -->
@@ -146,7 +161,7 @@
       </div>
 
       <div id="sidebar-buttons">
-        <div class="sidebar-button" onclick="openModal('search-menu')">
+        <div class="sidebar-button" onclick="selectFromMapMode=false; openModal('search-menu')">
           <img src="{%static 'toyosu_campus_navi/image/search.png' %}" class="menu-icon">
           <span>検索</span>
         </div>
@@ -169,13 +184,13 @@
       <div class="sidebar-notice" id="sidebar-notice">
         <h3 class="notice-title">お知らせ</h3>
 
-        {% for notice in notices reversed  %}
+        {% for notice in notices reversed %}
         <a class="notice-link" href="/notice/{{notice.notice_id}}">{{notice.title}}</a>
         {% endfor %}
 
         {% if is_superuser %}
         <p id="notice-management-button">
-          <a href="/notice/management">お知らせを管理</a>
+          <a href="/notice/management"><u>お知らせを管理</u></a>
         </p>
         {% endif %}
 
@@ -191,12 +206,12 @@
             <label for="login-password">password</label>
             <input id="login-password" name="login-password" type="password" required />
             <input type="hidden" id="login-method" name="login-method" value="login" required />
-            <button type="submit" formaction="/user/login">ログイン</button>
-            <button type="button" onclick="
+            <div class="login-button" onclick="submitLogin('sidebar-login')">ログイン</div>
+            <div class="login-button" type="button" onclick="
                 toggleMenu('sidebar-login', 'sidebar-buttons', 'contents')
               ">
               キャンセル
-            </button>
+            </div>
           </div>
         </form>
         <div class="account-row">
@@ -217,12 +232,12 @@
             <label for="login-password">password</label>
             <input id="login-password" name="login-password" type="password" required />
             <input type="hidden" id="login-method" name="login-method" value="regist" required />
-            <button type="submit" formaction="/user/login">登録</button>
-            <button type="button" onclick="
+            <div class="login-button" onclick="submitLogin('sidebar-create')">登録</div>
+            <div class="login-button" type="button" onclick="
                 toggleMenu('sidebar-create', 'sidebar-buttons', 'contents')
               ">
               キャンセル
-            </button>
+            </div>
           </div>
         </form>
         <div class="account-row"></div>
@@ -240,13 +255,13 @@
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
               <div class="search-menu-button" onclick="
-                  toggleMenu('search-menu', 'start-point-menu', 'contents')
+                  toggleSearchEnterButton('start'); toggleMenu('search-menu', 'start-point-menu', 'contents')
                 ">
                 出発地
               </div>
               <div class="search-arrow">▶▶▶</div>
               <div class="search-menu-button" onclick="
-                  toggleMenu('search-menu', 'goal-point-menu', 'contents')
+                  toggleSearchEnterButton('goal'); toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
                 目的地
               </div>
@@ -261,21 +276,24 @@
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
-            <div class="modal-row">
-              <div class="search-menu-button">GPSから推定</div>
-              <div class="search-menu-button">地図から選択</div>
+            <div class="modal-row search-selects-row">
+              <div class="search-menu-button" onclick="changeSelectOptionByLocation(this,'start-wing-select')">GPSから推定
+              </div>
+              <div class="search-menu-button" onclick="selectFromMap('start')">地図から選択</div>
               <div class="search-menu-button" style="visibility: hidden"></div>
             </div>
             <div class="modal-body-title">手動入力</div>
-            <div class="modal-row">
-              <select class="search-menu-button" id="start-wing-select">
+            <div class="modal-row search-selects-row">
+              <select class="search-menu-button" id="start-wing-select"
+                onchange="controlSearchMenu('start-wing-select')">
                 <option value="">棟を選択</option>
                 <option value="本部棟">本部棟</option>
                 <option value="教室棟">教室棟</option>
                 <option value="交流棟">交流棟</option>
                 <option value="研究棟">研究棟</option>
               </select>
-              <select class="search-menu-button" id="start-floor-select">
+              <select class="search-menu-button" id="start-floor-select"
+                onchange="controlSearchMenu('start-floor-select')">
                 <option value="">階を選択</option>
                 <option value="B1階">B1</option>
                 <option value="1階">1</option>
@@ -293,13 +311,14 @@
                 <option value="13階">13</option>
                 <option value="14階">14</option>
               </select>
-              <select class="search-menu-section search-menu-button" id="start-section-select">
+              <select class="search-menu-section search-menu-button" id="start-section-select"
+                onchange="controlSearchMenu('start-section-select')">
                 <option value="">区画を選択</option>
               </select>
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" onclick="
+            <div class="sidebar-button square" id="start-point-enter-button" onclick="
                 submitSearch(); toggleMenu('start-point-menu', 'search-menu', 'contents')
               ">
               決定
@@ -314,20 +333,23 @@
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
-            <div class="modal-row">
-              <div class="search-menu-button">地図から選択</div>
+            <div class="modal-row search-selects-row">
+              <div class="search-menu-button" onclick="selectFromMap('goal')">地図から選択</div>
               <div class="search-menu-button" style="visibility: hidden"></div>
               <div class="search-menu-button" style="visibility: hidden"></div>
             </div>
             <div class="modal-body-title">手動入力</div>
-            <div class="modal-row">
-              <select class="search-menu-button" id="goal-wing-select"></select>
-              <select class="search-menu-button" id="goal-floor-select"></select>
-              <select class="search-menu-section search-menu-button" id="goal-section-select"></select>
+            <div class="modal-row search-selects-row">
+              <select class="search-menu-button" id="goal-wing-select"
+                onchange="controlSearchMenu('goal-wing-select')"></select>
+              <select class="search-menu-button" id="goal-floor-select"
+                onchange="controlSearchMenu('goal-floor-select')"></select>
+              <select class="search-menu-section search-menu-button" id="goal-section-select"
+                onchange="controlSearchMenu('goal-section-select')"></select>
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square"
+            <div class="sidebar-button square" id="goal-point-enter-button"
               onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
               決定
             </div>
@@ -351,12 +373,10 @@
 
               </div>
 
-
-
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" placeholder="質問内容"></textarea>
+            <textarea class="chatbot-input" placeholder="質問を入力(200文字以内)"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>
@@ -369,10 +389,14 @@
 </body>
 
 {{ alert_message|json_script:"alert_message" }}
+{{ notices_alert_message|json_script:"notices_alert_message" }}
 {{username|json_script:"username" }}
 {{ is_superuser|json_script:"is_superuser"}}
 {{ language|json_script:"language" }}
 {{ section_names|json_script:"section_names" }}
+{{ route|json_script:"route" }}
+{{ map_files|json_script:"map_files" }}
+{{ map_folder_name|json_script:"map_folder_name" }}
 {% load static %}
 <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
 

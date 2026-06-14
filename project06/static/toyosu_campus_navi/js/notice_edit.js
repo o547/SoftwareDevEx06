@@ -16,8 +16,7 @@ function changeLanguage(language) {
   }
 }
 
-changeLanguage(language)
-
+changeLanguage(language);
 
 //お知らせを投稿(編集)
 async function submitNotice(language) {
@@ -39,7 +38,7 @@ async function submitNotice(language) {
 
   const url = new URL(window.location.href);
   const params = url.searchParams;
-  const notice_id = params.get('notice_id');
+  const notice_id = params.get("notice_id");
 
   //Ajax通信で返答を取得
   const response = await fetch("/notice/submit", {
@@ -63,4 +62,19 @@ async function submitNotice(language) {
   }
 }
 
-changeLanguage(language)
+const alertMessage = JSON.parse(
+  document.getElementById("alert_message").textContent,
+);
+
+if (alertMessage) {
+  alert(alertMessage);
+}
+const currentNotice = JSON.parse(
+  document.getElementById("current_notice").textContent,
+);
+
+if (currentNotice.alert_message) {
+  alert(currentNotice.alert_message);
+}
+
+changeLanguage(language);
