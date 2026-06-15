@@ -93,7 +93,7 @@ async function chatbotSubmit() {
   conversationArea.insertAdjacentHTML(
     "beforeend",
     `<div class="chat-row user-row">
-      <div class="chatbot-message user-message">${chatbotInput.value}</div>
+      <div class="chatbot-message user-message notranslate">${chatbotInput.value}</div>
     </div>`,
   );
 
@@ -893,10 +893,6 @@ function Initializer() {
     document.getElementById("notice-management-button").style.display = "";
   }
 
-  if (language != "ja") {
-    changeLanguage(language);
-  }
-
   //検索の選択肢を初期化
   for (const sectionName of sectionNames) {
     if (sectionName.includes("中継") || sectionName.includes("区画調整")) {
@@ -944,6 +940,36 @@ function Initializer() {
       changeWing(wingSwitch.value, wingSwitch);
     }
   }
+
+  //翻訳
+  if (language == "JA") {
+    language = "ja";
+  }
+
+  if (language != "ja") {
+    changeLanguage(language);
+    return;
+  }
+
+  const cookieLangage = getCookieValue("googtrans").split("/")[2];
+  if (cookieLangage) {
+    changeLanguage(cookieLangage);
+    return;
+  }
+}
+
+function getCookieValue(name) {
+  const cookies = document.cookie.split("; ");
+
+  for (const cookie of cookies) {
+    const [key, ...valueParts] = cookie.split("=");
+
+    if (key === name) {
+      return decodeURIComponent(valueParts.join("="));
+    }
+  }
+
+  return null;
 }
 
 window.addEventListener("resize", changeLayoutForResponsive);
