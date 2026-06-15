@@ -199,6 +199,10 @@ select.search-menu-section {
   background-color: #d6d6d6;
 }
 
+.search-ghost-button {
+  visibility: hidden;
+}
+
 .sidebar-notice {
   width: 90%;
   max-width: 300px;
@@ -884,6 +888,18 @@ body {
 
   .search-menu-button {
     width: 90%;
+  }
+
+  .search-ghost-button {
+    display: none;
+  }
+
+  #start-point-enter-button {
+    height: 50px;
+  }
+
+  #goal-point-enter-button {
+    height: 50px;
   }
 
   .search-selects-row {
