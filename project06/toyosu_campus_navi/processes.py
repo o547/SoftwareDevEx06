@@ -667,36 +667,40 @@ class LocationProcess:
     }
 
     def identify_wing(self, request, latitude, longitude):
-        test = True
+        # いずれかの棟の中にいるか判定
+        for building_name, corners in LocationProcess.building_corners.items():
+            signs = []
+            n = len(corners)
+            for i in range(n):
+                x1, y1 = corners[i]
+                x2, y2 = corners[(i + 1) % n]
+                cross = (x2 - x1) * (longitude - y1) - (y2 - y1) * (latitude - x1)
+                signs.append(cross)
+            if all(sign >= 0 for sign in signs) or all(sign <= 0 for sign in signs):
+                return building_name
 
-        if not test:
-            for building_name, corners in LocationProcess.building_corners.items():
-                signs = []
-                n = len(corners)
-                for i in range(n):
-                    x1, y1 = corners[i]
-                    x2, y2 = corners[(i + 1) % n]
-                    cross = (x2 - x1) * (longitude - y1) - (y2 - y1) * (latitude - x1)
-                    signs.append(cross)
-                if all(sign >= 0 for sign in signs) or all(sign <= 0 for sign in signs):
-                    return building_name
+        # どの棟に最も近いか判定
+        best_building_name = None
+        best_distance = None
+        TOLERANCE_DISTANCE = 1e-05
+        for building_name, corners in LocationProcess.building_corners.items():
+            n = len(corners)
+            x = sum(p[1] for p in corners) / n
+            y = sum(p[0] for p in corners) / n
+            distance = (longitude - x) ** 2 + (latitude - y) ** 2
+            if best_building_name is None:
+                best_building_name = building_name
+                best_distance = distance
+            elif distance < best_distance:
+                best_building_name = building_name
+                best_distance = distance
+
+        if best_distance > TOLERANCE_DISTANCE:
+            print("豊洲キャンパスから離れすぎています")
             return ""
 
-        else:
-            best_building_name = None
-            best_distance = None
-            for building_name, corners in LocationProcess.building_corners.items():
-                n = len(corners)
-                x = sum(p[1] for p in corners) / n
-                y = sum(p[0] for p in corners) / n
-                distance = (longitude - x) ** 2 + (latitude - y) ** 2
-                if best_building_name is None:
-                    best_building_name = building_name
-                    best_distance = distance
-                elif distance < best_distance:
-                    best_building_name = building_name
-                    best_distance = distance
-            return best_building_name
+        print("best_distance : " + str(best_distance))
+        return best_building_name
 
 
 # C11経路検索部
