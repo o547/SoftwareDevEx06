@@ -79,12 +79,13 @@ function submitLogin(parentId) {
 async function chatbotSubmit() {
   const conversationArea = document.querySelector(".chatbot-conversation");
   const chatbotInput = document.querySelector(".chatbot-input");
+  const chatbotInputValue = document.querySelector(".chatbot-input").value;
 
-  if (!chatbotInput.value) {
+  if (!chatbotInputValue) {
     alert("質問を入力してください");
     return;
   }
-  if (chatbotInput.value.length > 200) {
+  if (chatbotInputValue.length > 200) {
     alert("200文字以下で入力してください");
     return;
   }
@@ -93,9 +94,12 @@ async function chatbotSubmit() {
   conversationArea.insertAdjacentHTML(
     "beforeend",
     `<div class="chat-row user-row">
-      <div class="chatbot-message user-message notranslate">${chatbotInput.value}</div>
+      <div class="chatbot-message user-message notranslate">${chatbotInputValue}</div>
     </div>`,
   );
+
+  //テキストボックスをクリア
+  chatbotInput.value = "";
 
   const botIconSrc = document.querySelector(".bot-icon").src;
   conversationArea.insertAdjacentHTML(
@@ -114,12 +118,9 @@ async function chatbotSubmit() {
       "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
     },
     body: JSON.stringify({
-      question: chatbotInput.value,
+      question: chatbotInputValue,
     }),
   });
-
-  //テキストボックスをクリア
-  chatbotInput.value = "";
 
   const data = await response.json();
   document.querySelector(".bot-loading").remove();
