@@ -10,42 +10,38 @@ class HistoryInfoManagement:
         try:
             start_building, start_floor, start_section = str(start).split("_")
             goal_building, goal_floor, goal_section = str(goal).split("_")
-        except ValueError:
-            return False
 
-        start_section_object = Section.objects.filter(
-            building=start_building, floor=start_floor, section=start_section
-        ).first()
+            start_section_object = Section.objects.filter(
+                building=start_building, floor=start_floor, section=start_section
+            ).first()
+            goal_section_object = Section.objects.filter(
+                building=goal_building, floor=goal_floor, section=goal_section
+            ).first()
 
-        goal_section_object = Section.objects.filter(
-            building=goal_building, floor=goal_floor, section=goal_section
-        ).first()
+            user_object = User.objects.filter(username=username).first()
 
-        user_object = User.objects.filter(username=username).first()
-
-        if (
-            (start_section_object is not None)
-            and (goal_section_object is not None)
-            and (user_object is not None)
-        ):
-            try:
+            if (
+                (start_section_object is not None)
+                and (goal_section_object is not None)
+                and (user_object is not None)
+            ):
                 History.objects.create(
                     user=user_object,
                     start_section=start_section_object,
                     goal_section=goal_section_object,
                 )
-            except Exception as e:
-                print(e)
+                return True
+            else:
                 return False
-            return True
 
-        else:
+        except Exception as e:
+            print(type(e), e)
             return False
 
     def get_all_histories(self, request, username):
         try:
             user_object = User.objects.filter(username=username).first()
-            all_history_object = History.objects.all().filter(user=user_object)
+            all_history_object = History.objects.filter(user=user_object)
             histories = []
 
             for history_object in all_history_object:
@@ -71,8 +67,9 @@ class HistoryInfoManagement:
                     }
                 )
             return histories
+
         except Exception as e:
-            print(e)
+            print(type(e), e)
             return []
 
 
@@ -84,10 +81,10 @@ class NoticeManagement:
                 title=title,
                 body=body,
             )
+            return True
         except Exception as e:
-            print(e)
+            print(type(e), e)
             return False
-        return True
 
     def update_notice(self, request, id, title, body):
         try:
@@ -97,7 +94,7 @@ class NoticeManagement:
             notice_object.save()
             return True
         except Exception as e:
-            print(e)
+            print(type(e), e)
             return False
 
     def delete_notice(self, request, id):
@@ -106,34 +103,14 @@ class NoticeManagement:
             notice_object.delete()
             return True
         except Exception as e:
-            print(e)
+            print(type(e), e)
             return False
 
     def get_notice(self, request, id):
-        notice_object = Notice.objects.filter(notice_ID=id).first()
-        if notice_object is not None:
-            return {
-                "title": notice_object.title,
-                "body": notice_object.body,
-                "created_at": notice_object.created_at.strftime("%Y-%m-%d %H:%M:%S"),
-                "updated_at": notice_object.updated_at.strftime("%Y-%m-%d %H:%M:%S"),
-            }
-        else:
-            return {
-                "title": "",
-                "body": "",
-                "created_at": "",
-                "updated_at": "",
-            }
-
-    def get_all_notices(self, request):
-        all_notice_object = Notice.objects.all()
-        notices = []
-
-        for notice_object in all_notice_object:
-            notices.append(
-                {
-                    "notice_id": notice_object.notice_ID,
+        try:
+            notice_object = Notice.objects.filter(notice_ID=id).first()
+            if notice_object is not None:
+                return {
                     "title": notice_object.title,
                     "body": notice_object.body,
                     "created_at": notice_object.created_at.strftime(
@@ -143,27 +120,74 @@ class NoticeManagement:
                         "%Y-%m-%d %H:%M:%S"
                     ),
                 }
-            )
-        return notices
+            else:
+                return {
+                    "title": "",
+                    "body": "",
+                    "created_at": "",
+                    "updated_at": "",
+                }
+        except Exception as e:
+            print(type(e), e)
+            return {
+                "title": "",
+                "body": "",
+                "created_at": "",
+                "updated_at": "",
+            }
+
+    def get_all_notices(self, request):
+        try:
+            all_notice_object = Notice.objects.all()
+            notices = []
+            for notice_object in all_notice_object:
+                notices.append(
+                    {
+                        "notice_id": notice_object.notice_ID,
+                        "title": notice_object.title,
+                        "body": notice_object.body,
+                        "created_at": notice_object.created_at.strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        ),
+                        "updated_at": notice_object.updated_at.strftime(
+                            "%Y-%m-%d %H:%M:%S"
+                        ),
+                    }
+                )
+            return notices
+        except Exception as e:
+            print(type(e), e)
+            return []
 
 
 # C10ユーザ情報管理部
 class UserInfoManagement:
     def check_existence(self, request, username):
-        if User.objects.filter(username=username).exists():
-            return True
-        return False
+        try:
+            return User.objects.filter(username=username).exists()
+        except Exception as e:
+            print(type(e), e)
+            return False
 
     def certification(self, request, username, password):
-        return authenticate(request, username=username, password=password)
+        try:
+            return authenticate(request, username=username, password=password)
+        except Exception as e:
+            print(type(e), e)
+            return None
 
     def user_regist(self, request, username, password):
-        return User.objects.create_user(username, "", password)
+        try:
+            return User.objects.create_user(username, "", password)
+        except Exception as e:
+            print(type(e), e)
+            return None
 
     def save_language(self, request, language, username):
-        if User.objects.filter(username=username).update(language=language):
-            return True
-        else:
+        try:
+            return User.objects.filter(username=username).update(language=language)
+        except Exception as e:
+            print(type(e), e)
             return False
 
 
@@ -172,10 +196,7 @@ class SectionInfoManagement:
     def get_coordinate_list(self, request, map_name):
         try:
             building, floor = str(map_name).split("_")
-        except ValueError:
-            return []
 
-        try:
             section_objects = Section.objects.filter(building=building, floor=floor)
 
             coordinate_list = []
@@ -192,16 +213,14 @@ class SectionInfoManagement:
                 )
             return coordinate_list
 
-        except Exception:
+        except Exception as e:
+            print(type(e), e)
             return []
 
     def get_section_info(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
-        except ValueError:
-            return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
-        try:
             section_object = Section.objects.filter(
                 building=building, floor=floor, section=section
             ).first()
@@ -223,7 +242,8 @@ class SectionInfoManagement:
                     "business_hours": "",
                 }
 
-        except Exception:
+        except Exception as e:
+            print(type(e), e)
             return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
 
@@ -232,66 +252,75 @@ class RouteManagement:
     def get_node_coordinate(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
-        except ValueError:
-            return {"section_id": None, "node_x": -1, "node_y": -1}
 
-        section_object = Section.objects.filter(
-            building=building, floor=floor, section=section
-        ).first()
+            section_object = Section.objects.filter(
+                building=building, floor=floor, section=section
+            ).first()
 
-        if section_object is not None:
-            return {
-                "section_id": section_object.section_ID,
-                "node_x": section_object.node_x,
-                "node_y": section_object.node_y,
-            }
-        else:
-            return {"section_id": None, "node_x": -1, "node_y": -1}
-
-    def get_all_node_coordinates(self, request):
-        all_section_object = Section.objects.all()
-        nodes = []
-        for section_object in all_section_object:
-            section_name = (
-                section_object.building
-                + "_"
-                + section_object.floor
-                + "_"
-                + section_object.section
-            )
-            nodes.append(
-                {
-                    "section_name": section_name,
+            if section_object is not None:
+                return {
                     "section_id": section_object.section_ID,
                     "node_x": section_object.node_x,
                     "node_y": section_object.node_y,
                 }
-            )
-        return nodes
+            else:
+                return {"section_id": None, "node_x": -1, "node_y": -1}
+        except Exception as e:
+            print(type(e), e)
+            return {"section_id": None, "node_x": -1, "node_y": -1}
+
+    def get_all_node_coordinates(self, request):
+        try:
+            all_section_object = Section.objects.all()
+            nodes = []
+            for section_object in all_section_object:
+                section_name = (
+                    section_object.building
+                    + "_"
+                    + section_object.floor
+                    + "_"
+                    + section_object.section
+                )
+                nodes.append(
+                    {
+                        "section_name": section_name,
+                        "section_id": section_object.section_ID,
+                        "node_x": section_object.node_x,
+                        "node_y": section_object.node_y,
+                    }
+                )
+            return nodes
+        except Exception as e:
+            print(type(e), e)
+            return []
 
     def get_all_edges(self, request):
-        all_edge_object = Edge.objects.all()
-        edges = []
-        for edge_object in all_edge_object:
-            section_name_a = (
-                edge_object.section_a.building
-                + "_"
-                + edge_object.section_a.floor
-                + "_"
-                + edge_object.section_a.section
-            )
-            section_name_b = (
-                edge_object.section_b.building
-                + "_"
-                + edge_object.section_b.floor
-                + "_"
-                + edge_object.section_b.section
-            )
-            edges.append(
-                {
-                    "section_name_a": section_name_a,
-                    "section_name_b": section_name_b,
-                    "estimated_travel_time": edge_object.estimated_travel_time,
-                }
-            )
-        return edges
+        try:
+            all_edge_object = Edge.objects.all()
+            edges = []
+            for edge_object in all_edge_object:
+                section_name_a = (
+                    edge_object.section_a.building
+                    + "_"
+                    + edge_object.section_a.floor
+                    + "_"
+                    + edge_object.section_a.section
+                )
+                section_name_b = (
+                    edge_object.section_b.building
+                    + "_"
+                    + edge_object.section_b.floor
+                    + "_"
+                    + edge_object.section_b.section
+                )
+                edges.append(
+                    {
+                        "section_name_a": section_name_a,
+                        "section_name_b": section_name_b,
+                        "estimated_travel_time": edge_object.estimated_travel_time,
+                    }
+                )
+            return edges
+        except Exception as e:
+            print(type(e), e)
+            return []
