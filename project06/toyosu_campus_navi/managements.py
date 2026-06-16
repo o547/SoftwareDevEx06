@@ -185,7 +185,13 @@ class UserInfoManagement:
 
     def save_language(self, request, language, username):
         try:
-            return User.objects.filter(username=username).update(language=language)
+            update_count = User.objects.filter(username=username).update(
+                language=language
+            )
+            if update_count == 1:
+                return True
+            else:
+                return False
         except Exception as e:
             print(type(e), e)
             return False
