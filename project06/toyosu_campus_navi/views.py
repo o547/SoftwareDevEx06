@@ -191,10 +191,8 @@ class LanguageView(View):
         body = json.loads(request.body)
         language = body["language"]
         response = LoginProcess().save_language(request, language)
-        alert_message = request.session.get("alert_message")
-        if alert_message:
-            del request.session["alert_message"]
-        return JsonResponse({"alert_message": alert_message})
+        print("responce : " + response)
+        return JsonResponse({"alert_message": response})
 
 
 # /coordinate/submit
@@ -292,6 +290,7 @@ class PlotView(View):
 
 # /debug
 # ここを書き換えて、/deubugにアクセスする
+
 class DebugView(View):
     def get(self, request):
 
