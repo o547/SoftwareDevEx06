@@ -113,9 +113,8 @@ class LoginProcess:
                     request, language, user_info["username"]
                 )
             ):
-                request.session["alert_message"] = "言語情報を保存できませんでした"
-        request.session["language"] = language
-        return "言語情報を保存できませんでした"
+                return "言語情報を保存できませんでした"
+        return ""
 
     def get_user_info(self, request):
         if request.user.is_authenticated:
