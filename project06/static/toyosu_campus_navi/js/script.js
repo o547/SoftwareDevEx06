@@ -234,7 +234,7 @@ async function sectionCoordinateSubmit(image_x, image_y) {
 function openSectionModal(section, usage, capacity, business_hours) {
   const sectionModalNameElement = document.querySelector(".section-modal-name");
   const sectionModalBodyElement = document.querySelector(".section-modal-body");
-  sectionModalNameElement.innerHTML = section;
+  sectionModalNameElement.innerHTML = section.replace("区画調整", "");
 
   if (section.length > 20) {
     sectionModalNameElement.style.fontSize = "1rem";
