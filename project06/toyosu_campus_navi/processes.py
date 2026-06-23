@@ -808,9 +808,6 @@ class SectionInfoProcess:
     def identify_section(self, request, image_x, image_y, map_name):
         section_objects = SectionInfoManagement().get_coordinate_list(request, map_name)
         for section in section_objects:
-            if section.get("top_left_x") in [None, -1]:
-                continue
-
             if (
                 image_x >= section["top_left_x"]
                 and image_y >= section["top_left_y"]

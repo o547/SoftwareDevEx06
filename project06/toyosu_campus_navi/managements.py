@@ -210,7 +210,17 @@ class SectionInfoManagement:
 
             coordinate_list = []
             for section in section_objects:
+                # 座標未設定の区画を除外
+                if (
+                    section.top_left_x is None
+                    or section.top_left_y is None
+                    or section.bottom_right_x is None
+                    or section.bottom_right_y is None
+                ):
+                    continue
+
                 section_name = f"{section.building}_{section.floor}_{section.section}"
+
                 coordinate_list.append(
                     {
                         "section_name": section_name,
