@@ -254,13 +254,13 @@
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
-              <div class="search-menu-button" onclick="
+              <div class="search-menu-button" id="start-point-menu-button" onclick="
                   toggleSearchEnterButton('start'); toggleMenu('search-menu', 'start-point-menu', 'contents')
                 ">
                 出発地
               </div>
               <div class="search-arrow">▶▶▶</div>
-              <div class="search-menu-button" onclick="
+              <div class="search-menu-button"  id="goal-point-menu-button" onclick="
                   toggleSearchEnterButton('goal'); toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
                 目的地
@@ -319,8 +319,7 @@
           </div>
           <div class="modal-row modal-footer">
             <div class="sidebar-button square" id="start-point-enter-button" onclick="
-                submitSearch(); toggleMenu('start-point-menu', 'search-menu', 'contents')
-              ">
+                searchEnter('start');">
               決定
             </div>
           </div>
@@ -350,7 +349,7 @@
           </div>
           <div class="modal-row modal-footer">
             <div class="sidebar-button square" id="goal-point-enter-button"
-              onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
+              onclick="searchEnter('goal');">
               決定
             </div>
           </div>
@@ -376,7 +375,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" placeholder="質問を入力(200文字以内)"></textarea>
+            <textarea class="chatbot-input" id="chatbot-input"　placeholder="質問を入力(200文字以内)"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>

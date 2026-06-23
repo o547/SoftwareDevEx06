@@ -110,6 +110,8 @@ async function chatbotSubmit() {
     </div>`,
   );
 
+  conversationArea.scrollTop = conversationArea.scrollHeight;
+
   //Ajax通信で返答を取得
   const response = await fetch("/chatbot/submit", {
     method: "POST",
@@ -173,11 +175,33 @@ async function selectLanguage(language) {
   await changeLanguage(language);
 }
 
-//検索をする
-function submitSearch() {
+//スタート地点またはゴール地点を決定
+function searchEnter(direction) {
+  //検索メニューの表記を変更
+  const startPointMenuButton = document.getElementById(
+    "start-point-menu-button",
+  );
+  const goalPointMenuButton = document.getElementById("goal-point-menu-button");
+  if (startSectionSelect.value) {
+    startPointMenuButton.innerText = startSectionSelect.value;
+    startPointMenuButton.style.fontSize = "0.9rem";
+  } else {
+    startPointMenuButton.innerText = "出発地";
+    startPointMenuButton.style.fontSize = "1rem";
+  }
+  if (goalSectionSelect.value) {
+    goalPointMenuButton.innerText = goalSectionSelect.value;
+    goalPointMenuButton.style.fontSize = "1rem";
+  } else {
+    goalPointMenuButton.innerText = "目的地";
+    goalPointMenuButton.style.fontSize = "1rem";
+  }
+
   if (!startSectionSelect.value || !goalSectionSelect.value) {
+    toggleMenu(`${direction}-point-menu`, "search-menu", "contents");
     return;
   }
+  //検索を実行
   location.href = `/search/${encodeURIComponent(startSectionSelect.value)}/${encodeURIComponent(goalSectionSelect.value)}`;
 }
 
@@ -879,6 +903,16 @@ floorMapImage.addEventListener("click", async (event) => {
   sectionCoordinateSubmit(x, y);
 });
 
+//ctrl+enterでチャットボット送信
+document
+  .getElementById("chatbot-input")
+  .addEventListener("keydown", (event) => {
+    if (event.ctrlKey && event.key == "Enter") {
+      event.preventDefault();
+      chatbotSubmit();
+    }
+  });
+
 //検索の選択肢を初期化
 const startWingSelect = document.getElementById("start-wing-select");
 const startFloorSelect = document.getElementById("start-floor-select");
@@ -953,9 +987,9 @@ function Initializer() {
     return;
   }
 
-  const cookieLangage = getCookieValue("googtrans").split("/")[2];
-  if (cookieLangage) {
-    changeLanguage(cookieLangage);
+  const cookieLangage = getCookieValue("googtrans");
+  if (cookieLangage && cookieLangage.split("/")[2]) {
+    changeLanguage(cookieLangage.split("/")[2]);
     return;
   }
 }

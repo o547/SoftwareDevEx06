@@ -26,7 +26,7 @@
     <div class="edit-container">
       <input type="text" class="edit-title-input" placeholder="記事タイトルを入力（1〜127文字）" value="{{current_notice.title}}">
 
-      <textarea class="edit-content-input" placeholder="本文を入力（HTML 可）">{{ current_notice.body }}</textarea>
+      <textarea class="edit-content-input" placeholder="本文を入力（HTML可, 改行は<br>）">{{ current_notice.body }}</textarea>
 
       <div class="edit-buttons">
         <button class="edit-submit" onclick="submitNotice()">
