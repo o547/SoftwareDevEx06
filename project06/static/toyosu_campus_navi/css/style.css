@@ -83,6 +83,7 @@ html {
 .campus-img {
   height: 75vh;
   display: block;
+  cursor: pointer;
 }
 
 .campus-img-area {
@@ -233,7 +234,7 @@ select.search-menu-section {
 .notice-title {
   font-size: 1.7rem;
   color: #294d3c;
-  margin-bottom: 25px;
+  margin-bottom: 20px;
 }
 
 .notice-link {
@@ -669,7 +670,7 @@ body {
   position: absolute;
   left: 20px;
   right: 20px;
-  bottom: 20px;
+  bottom: 25px;
   display: flex;
   align-items: center;
   gap: 40px;

@@ -42,7 +42,7 @@
         </div>
 
         <div class="campus-img-area" style="display: none;">
-          <img class="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
+          <img class="campus-img" id="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
         </div>
 
       </div>
@@ -287,10 +287,10 @@
               <select class="search-menu-button" id="start-wing-select"
                 onchange="controlSearchMenu('start-wing-select')">
                 <option value="">棟を選択</option>
-                <option value="本部棟">本部棟</option>
-                <option value="教室棟">教室棟</option>
-                <option value="交流棟">交流棟</option>
-                <option value="研究棟">研究棟</option>
+                <option value="本部棟"><span class="wing-name notranslate" data-wing="本部棟">本部棟</span></option>
+                <option value="教室棟"><span class="wing-name notranslate" data-wing="教室棟">教室棟</span></option>
+                <option value="交流棟"><span class="wing-name notranslate" data-wing="交流棟">交流棟</span></option>
+                <option value="研究棟"><span class="wing-name notranslate" data-wing="研究棟">研究棟</span></option>
               </select>
               <select class="search-menu-button" id="start-floor-select"
                 onchange="controlSearchMenu('start-floor-select')">
