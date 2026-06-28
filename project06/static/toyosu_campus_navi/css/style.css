@@ -865,6 +865,7 @@ body {
 
   .whole-map-img {
     max-width: 95%;
+    margin-bottom: 120px;
   }
   .sidebar.closed {
     width: 0;

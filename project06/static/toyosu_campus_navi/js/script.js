@@ -1027,6 +1027,10 @@ function Initializer() {
       }
       changeWing(wingSwitch.value, wingSwitch);
     }
+  } else {
+    //初期表示を教室棟4階付近にする
+    wholeMapImages[currentWing].scrollTop =
+      wholeMapImages[currentWing].scrollHeight * 0.39;
   }
 
   //翻訳
