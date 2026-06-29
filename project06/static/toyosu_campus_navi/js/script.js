@@ -197,6 +197,13 @@ function searchEnter(direction) {
     goalPointMenuButton.style.fontSize = "1rem";
   }
 
+  if (
+    (direction == "start" && !startSectionSelect.value) ||
+    (direction == "goal" && !goalSectionSelect.value)
+  ) {
+    return;
+  }
+
   if (!startSectionSelect.value || !goalSectionSelect.value) {
     toggleMenu(`${direction}-point-menu`, "search-menu", "contents");
     return;
@@ -443,18 +450,42 @@ function toggleSearchEnterButton(direction) {
 
 //検索メニューの選択肢制御
 function controlSearchMenu(selectBoxId) {
-  if (selectBoxId == "start-wing-select" || selectBoxId == "goal-wing-select") {
-    const selectedWingName = document.getElementById(selectBoxId).value;
-    //階を制御
-    let floorSelect = null;
-    if (selectBoxId == "start-wing-select") {
-      floorSelect = document.getElementById("start-floor-select");
-    } else {
-      floorSelect = document.getElementById("goal-floor-select");
-    }
-    const floorSelectOptions = floorSelect.querySelectorAll(
-      "option[value]:not([value='']",
-    );
+  const menuDirection = selectBoxId.split("-")[0];
+  if (
+    selectBoxId == "start-section-select" ||
+    selectBoxId == "goal-section-select"
+  ) {
+    //区画から棟，階を制御
+    const selectedOption =
+      document.getElementById(selectBoxId).selectedOptions[0];
+    document.getElementById(`${menuDirection}-wing-select`).value =
+      selectedOption.dataset.wing;
+    document.getElementById(`${menuDirection}-floor-select`).value =
+      selectedOption.dataset.floor;
+    controlSearchMenu(`${menuDirection}-floor-select`);
+    return;
+  }
+
+  const selectedWingName = document.getElementById(
+    `${menuDirection}-wing-select`,
+  ).value;
+
+  const sectionSelect = document.getElementById(
+    `${menuDirection}-section-select`,
+  );
+  const sectionSelectOptions = sectionSelect.querySelectorAll(
+    "option[value]:not([value='']",
+  );
+  const floorSelect = document.getElementById(`${menuDirection}-floor-select`);
+  const floorSelectOptions = floorSelect.querySelectorAll(
+    "option[value]:not([value='']",
+  );
+
+  let sectionSelectChenged = false;
+  let floorSelectChanged = false;
+
+  if (selectedWingName) {
+    //棟から階を制御
     for (const floorSelectOption of floorSelectOptions) {
       if (selectedWingName) {
         if (
@@ -467,6 +498,7 @@ function controlSearchMenu(selectBoxId) {
           floorSelectOption.style.display = "none";
           if (floorSelectOption.value == floorSelect.value) {
             floorSelect.value = "";
+            floorSelectChanged = true;
           }
         }
       } else {
@@ -474,16 +506,7 @@ function controlSearchMenu(selectBoxId) {
       }
     }
 
-    //区画を制御
-    let sectionSelect = null;
-    if (selectBoxId == "start-wing-select") {
-      sectionSelect = document.getElementById("start-section-select");
-    } else {
-      sectionSelect = document.getElementById("goal-section-select");
-    }
-    const sectionSelectOptions = sectionSelect.querySelectorAll(
-      "option[value]:not([value='']",
-    );
+    //棟から区画を制御
     for (const sectionSelectOption of sectionSelectOptions) {
       if (selectedWingName) {
         if (sectionSelectOption.dataset.wing == selectedWingName) {
@@ -492,57 +515,43 @@ function controlSearchMenu(selectBoxId) {
           sectionSelectOption.style.display = "none";
           if (sectionSelectOption.value == sectionSelect.value) {
             sectionSelect.value = "";
+            sectionSelectChenged = true;
           }
         }
       } else {
         sectionSelectOption.style.display = "";
       }
     }
-  } else if (
-    selectBoxId == "start-floor-select" ||
-    selectBoxId == "goal-floor-select"
-  ) {
-    const selectedFloor = document.getElementById(selectBoxId).value;
-    let sectionSelect = null;
-    if (selectBoxId == "start-floor-select") {
-      sectionSelect = document.getElementById("start-section-select");
-    } else {
-      sectionSelect = document.getElementById("goal-section-select");
+
+    if (floorSelectChanged) {
+      controlSearchMenu(`${menuDirection}-floor-select`);
     }
-    const sectionSelectOptions = sectionSelect.querySelectorAll(
-      "option[value]:not([value='']",
-    );
-    //区画を制御
+
+    if (sectionSelectChenged) {
+      controlSearchMenu(`${menuDirection}-section-select`);
+    }
+  }
+
+  //階から区画を制御
+  const selectedFloor = document.getElementById(
+    `${menuDirection}-floor-select`,
+  ).value;
+  if (selectedFloor) {
     for (const sectionSelectOption of sectionSelectOptions) {
-      if (selectedFloor) {
-        if (sectionSelectOption.dataset.floor == selectedFloor) {
+      if (sectionSelectOption.dataset.floor == selectedFloor) {
+        if (
+          selectedWingName == "" ||
+          (selectedWingName != "" &&
+            sectionSelectOption.dataset.wing == selectedWingName)
+        ) {
           sectionSelectOption.style.display = "";
-        } else {
-          sectionSelectOption.style.display = "none";
-          if (sectionSelectOption.value == sectionSelect.value) {
-            sectionSelect.value = "";
-          }
+          continue;
         }
-      } else {
-        sectionSelectOption.style.display = "";
       }
-    }
-  } else if (
-    selectBoxId == "start-section-select" ||
-    selectBoxId == "goal-section-select"
-  ) {
-    const selectedOption =
-      document.getElementById(selectBoxId).selectedOptions[0];
-    if (selectBoxId == "start-section-select") {
-      document.getElementById("start-wing-select").value =
-        selectedOption.dataset.wing;
-      document.getElementById("start-floor-select").value =
-        selectedOption.dataset.floor;
-    } else {
-      document.getElementById("goal-wing-select").value =
-        selectedOption.dataset.wing;
-      document.getElementById("goal-floor-select").value =
-        selectedOption.dataset.floor;
+      sectionSelectOption.style.display = "none";
+      if (sectionSelectOption.value == sectionSelect.value) {
+        sectionSelect.value = "";
+      }
     }
   }
 }
@@ -1005,7 +1014,7 @@ function Initializer() {
   const inRouteWings = [];
 
   const wingNames = ["本部棟", "教室棟", "交流棟", "研究棟"];
-  if (createdMapFiles) {
+  if (createdMapFiles && createdMapFiles.length != 0) {
     //全体地図の画像を置き換える
     for (const wingName of wingNames) {
       if (createdMapFiles.includes(`${wingName}_whole_map_route.jpg`)) {
