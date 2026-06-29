@@ -11,6 +11,7 @@ project06/.venv/
 project06/.env
 project06/project06/keys.py
 project06/toyosu_campus_navi/test.py
+project06/toyosu_campus_navi/tests.py
 
 # Logs
 project06/*.log
