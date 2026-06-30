@@ -860,10 +860,11 @@ class ChatBotProcess:
             try:
                 client = genai.Client(api_key=api_key)
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash-lite",
+                    model="gemini-3.5-flash",
                     contents=self.create_prompt(request, user_input),
                 )
                 user_output = response.text
+                user_output = user_output.replace("*", "")
                 history = request.session.get("chat_history", "")
                 request.session["chat_history"] = (
                     history
@@ -880,14 +881,32 @@ class ChatBotProcess:
 
     def create_prompt(self, request, user_input):
         route = RouteManagement().get_all_node_coordinates(request)
-        all_route = ""
+        all_route = {}
         for r in route:
-            if not ("中継" in r["section_name"] or "区画調整" in r["section_name"]):
-                all_route += (
-                    f"区画名：{r['section_name']}"
-                    # + f"ノード(区画)のid：{r['section_id']}"
-                    # + f"ノードの座標(x,y)：{r['node_x']},{r['node_y']}"
-                )
+            section_name = r["section_name"]
+            if "中継" in section_name or "区画調整" in section_name:
+                continue
+            building, floor, section = section_name.split("_", 2)
+            if building not in all_route:
+                all_route[building] = {}
+            if floor not in all_route[building]:
+                all_route[building][floor] = []
+            all_route[building][floor].append(section)
+        all_route_text = ""
+        for building in all_route:
+            floor_parts = []
+            sorted_floors = sorted(
+                all_route[building],
+                key=lambda floor: (
+                    -int(floor.replace("階", "")[1:])
+                    if floor.startswith("B")
+                    else int(floor.replace("階", ""))
+                ),
+            )
+            for floor in sorted_floors:
+                sections = "，".join(all_route[building][floor])
+                floor_parts.append(f"[{floor}：{sections}]")
+            all_route_text += building + "[" + "".join(floor_parts) + "]"
         history = request.session.get("chat_history", "")
         prompt = (
             "あなたはキャンパス案内のチャットボットです．ユーザの質問に答え，経路案内が必要ならリンクを返してください．送信元の言語に合わせて出力してください．"
@@ -898,8 +917,8 @@ class ChatBotProcess:
             "案内に関係ありそうで始点と終点のどちらかあるいは両方が特定できない場合：URLは出力せず，特定できそうな範囲まで絞るためにいくつか選択肢を用意してください．"
             "案内に関係ありそうで情報を聞くだけの場合：区画情報から答えられる範囲で質問の意図を満たすように回答してください．"
             "案内に関係ありそうで区画が存在しなそうな場合：見つかりません．ほかに情報はありますか的な回答をしてください．"
-            f"区画の情報一覧はこちらです．{all_route}"
-            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/始点の区画名/終点の区画名"
+            f"区画の情報一覧はこちらです．{all_route_text}"
+            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/棟名_区画の階_始点の区画名/棟名_区画の階_終点の区画名"
             f"過去のチャット履歴はこちらです．{history}"
         )
         return prompt
