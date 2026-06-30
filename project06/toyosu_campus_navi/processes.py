@@ -880,6 +880,32 @@ class ChatBotProcess:
 
     def create_prompt(self, request, user_input):
         route = RouteManagement().get_all_node_coordinates(request)
+        all_route = {}
+        for r in route:
+            section_name = r["section_name"]
+            if "中継" in section_name or "区画調整" in section_name:
+                continue
+            building, floor, section = section_name.split("_", 2)
+            if building not in all_route:
+                all_route[building] = {}
+            if floor not in all_route[building]:
+                all_route[building][floor] = []
+            all_route[building][floor].append(section)
+        all_route_text = ""
+        for building in all_route:
+            floor_parts = []
+            sorted_floors = sorted(
+                all_route[building],
+                key=lambda floor: (
+                    -int(floor.replace("階", "")[1:])
+                    if floor.startswith("B")
+                    else int(floor.replace("階", ""))
+                ),
+            )
+            for floor in sorted_floors:
+                sections = "，".join(all_route[building][floor])
+                floor_parts.append(f"[{floor}：{sections}]")
+            all_route_text += building + "[" + "".join(floor_parts) + "]"
         history = request.session.get("chat_history", "")
         prompt = (
             "あなたはキャンパス案内のチャットボットです．ユーザの質問に答え，経路案内が必要ならリンクを返してください．送信元の言語に合わせて出力してください．"
