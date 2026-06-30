@@ -28,7 +28,7 @@
     
     <div class="history-container">
       <div class="history-list">
-            {% for history in histories %}
+            {% for history in histories reversed %}
             <div class="history-item">
               <div class="history-route">
                 {{history.start_section_name}} → {{history.goal_section_name}}
