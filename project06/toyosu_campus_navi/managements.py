@@ -40,6 +40,9 @@ class HistoryInfoManagement:
 
     def get_all_histories(self, request, username):
         try:
+            if username != request.user.username:
+                return []
+
             user_object = User.objects.filter(username=username).first()
             all_history_object = History.objects.filter(user=user_object)
             histories = []

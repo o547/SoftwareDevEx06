@@ -28,8 +28,8 @@
       </div>
       <div id="whole-map-image-area">
         {% load static %}
-        <div class="map-scroll" style="width: 60%; display: none;" data-wing="本部棟">
-          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/本部棟.jpg' %}" />
+        <div class="map-scroll" style="width: 70%; display:none;" data-wing="研究棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/研究棟.jpg' %}" />
         </div>
         <div class="map-scroll" style="width: 40%; display:block;" data-wing="教室棟">
           <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/教室棟.jpg' %}" />
@@ -37,12 +37,12 @@
         <div class="map-scroll" style="width: 40%; display:none;" data-wing="交流棟">
           <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/交流棟.jpg' %}" />
         </div>
-        <div class="map-scroll" style="width: 80%; display:none;" data-wing="研究棟">
-          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/研究棟.jpg' %}" />
+        <div class="map-scroll" style="width: 60%; display: none;" data-wing="本部棟">
+          <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/本部棟.jpg' %}" />
         </div>
-
+        
         <div class="campus-img-area" style="display: none;">
-          <img class="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
+          <img class="campus-img" id="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
         </div>
 
       </div>
@@ -84,8 +84,8 @@
       <div class="wing-switch-menu">
         <div class="wing-switch-title">表示させたい棟</div>
         <div>
-          <label><input type="checkbox" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
-              value="本部棟" /> <span class="wing-name notranslate" data-wing="本部棟">本部棟</span></label>
+          <label><input type="checkbox" onchange="changeWing('研究棟',this)" class="wing-switch" value="研究棟"
+            name="wing-switch" /> <span class="wing-name notranslate" data-wing="研究棟">研究棟</span></label>
         </div>
         <div>
           <label><input type="checkbox" onchange="changeWing('教室棟',this)" class="wing-switch" value="教室棟"
@@ -93,16 +93,16 @@
         </div>
         <div>
           <label><input type="checkbox" onchange="changeWing('交流棟',this)" class="wing-switch" value="交流棟"
-              name="wing-switch" /> <span class="wing-name notranslate" data-wing="交流棟">交流棟</span></label>
+            name="wing-switch" /> <span class="wing-name notranslate" data-wing="交流棟">交流棟</span></label>
         </div>
         <div>
-          <label><input type="checkbox" onchange="changeWing('研究棟',this)" class="wing-switch" value="研究棟"
-              name="wing-switch" /> <span class="wing-name notranslate" data-wing="研究棟">研究棟</span></label>
+          <label><input type="checkbox" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
+              value="本部棟" /> <span class="wing-name notranslate" data-wing="本部棟">本部棟</span></label>
         </div>
-        <div onclick="changeWingByLocation()" class="wing-gps-button">GPSから取得</div>
+            <div onclick="changeWingByLocation()" class="wing-gps-button">GPSから取得</div>
       </div>
 
-      <div class="modal section-modal">
+      <div class="modal section-modal" onclick="if (event.target == event.currentTarget) closeSectionModal();">
         <div class="section-modal-content">
           <div class="section-modal-header">
             <div class="section-modal-name">区画名</div>
@@ -254,13 +254,13 @@
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
-              <div class="search-menu-button" onclick="
+              <div class="search-menu-button" id="start-point-menu-button" onclick="
                   toggleSearchEnterButton('start'); toggleMenu('search-menu', 'start-point-menu', 'contents')
                 ">
                 出発地
               </div>
               <div class="search-arrow">▶▶▶</div>
-              <div class="search-menu-button" onclick="
+              <div class="search-menu-button"  id="goal-point-menu-button" onclick="
                   toggleSearchEnterButton('goal'); toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
                 目的地
@@ -272,7 +272,7 @@
         <div id="start-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">出発地点入力</h2>
-            <h2 onclick="closeModal()" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('start-point-menu', 'search-menu', 'contents')" class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -287,10 +287,10 @@
               <select class="search-menu-button" id="start-wing-select"
                 onchange="controlSearchMenu('start-wing-select')">
                 <option value="">棟を選択</option>
-                <option value="本部棟">本部棟</option>
-                <option value="教室棟">教室棟</option>
-                <option value="交流棟">交流棟</option>
-                <option value="研究棟">研究棟</option>
+                <option value="研究棟"><span class="wing-name notranslate" data-wing="研究棟">研究棟</span></option>
+                <option value="教室棟"><span class="wing-name notranslate" data-wing="教室棟">教室棟</span></option>
+                <option value="交流棟"><span class="wing-name notranslate" data-wing="交流棟">交流棟</span></option>
+                <option value="本部棟"><span class="wing-name notranslate" data-wing="本部棟">本部棟</span></option>
               </select>
               <select class="search-menu-button" id="start-floor-select"
                 onchange="controlSearchMenu('start-floor-select')">
@@ -319,8 +319,7 @@
           </div>
           <div class="modal-row modal-footer">
             <div class="sidebar-button square" id="start-point-enter-button" onclick="
-                submitSearch(); toggleMenu('start-point-menu', 'search-menu', 'contents')
-              ">
+                searchEnter('start');">
               決定
             </div>
           </div>
@@ -329,7 +328,7 @@
         <div id="goal-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">目的地点入力</h2>
-            <h2 onclick="closeModal()" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')" class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -350,7 +349,7 @@
           </div>
           <div class="modal-row modal-footer">
             <div class="sidebar-button square" id="goal-point-enter-button"
-              onclick="submitSearch(); toggleMenu('goal-point-menu', 'search-menu', 'contents') ">
+              onclick="searchEnter('goal');">
               決定
             </div>
           </div>
@@ -376,7 +375,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" placeholder="質問を入力(200文字以内)"></textarea>
+            <textarea class="chatbot-input" id="chatbot-input"　placeholder="質問を入力(200文字以内)"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>

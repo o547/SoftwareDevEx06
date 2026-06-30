@@ -271,7 +271,7 @@ class CampusMapImageCreate:
                     arrow_length = (
                         (start_node["node_x"] - goal_node["node_x"]) ** 2
                         + (start_node["node_y"] - goal_node["node_y"]) ** 2
-                    ) ** 0.5
+                    ) ** 0.5 + 1
 
                     start = (start_node["node_x"], start_node["node_y"])
                     goal = (goal_node["node_x"], goal_node["node_y"])
@@ -712,10 +712,15 @@ class RouteSearchProcess:
         alert_message = ""
         if len(route) == 0:
             alert_message = "経路を検索できませんでした"
+            return {
+                "route": route,
+                "map_files": [],
+                "map_folder_name": "",
+                "alert_message": alert_message,
+            }
         print("経路 : " + str(route))
 
         # 構内図画像を作成
-
         map_folder_name = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
         map_result = CampusMapImageCreate().create_map_image(
             request, route, map_folder_name
@@ -741,34 +746,42 @@ class RouteSearchProcess:
         }
 
     def shortest_route_search(self, request, start, goal):
-        if RouteSearchProcess.graph_instance is None:
-            # グラフデータを初期化
-            edges = RouteManagement().get_all_edges(request)
-            nodes = RouteManagement().get_all_node_coordinates(request)
+        try:
+            if RouteSearchProcess.graph_instance is None:
+                # グラフデータを初期化
+                edges = RouteManagement().get_all_edges(request)
+                nodes = RouteManagement().get_all_node_coordinates(request)
+                filtered_nodes = [
+                    node for node in nodes if "区画調整" not in node["section_name"]
+                ]
 
-            node_list = []
-            for node in nodes:
-                node_list.append(node["section_name"])
+                node_list = []
+                for node in filtered_nodes:
+                    node_list.append(node["section_name"])
 
-            edge_list = []
-            for edge in edges:
-                edge_list.append(
-                    (
-                        str(edge["section_name_a"]),
-                        str(edge["section_name_b"]),
-                        edge["estimated_travel_time"],
+                edge_list = []
+                for edge in edges:
+                    edge_list.append(
+                        (
+                            str(edge["section_name_a"]),
+                            str(edge["section_name_b"]),
+                            edge["estimated_travel_time"],
+                        )
                     )
-                )
-            graph = nx.Graph()
-            graph.add_nodes_from(node_list)
-            graph.add_weighted_edges_from(edge_list)
-            RouteSearchProcess.graph_instance = graph
-            print("グラフデータが初期化されました")
+                graph = nx.Graph()
+                graph.add_nodes_from(node_list)
+                graph.add_weighted_edges_from(edge_list)
+                RouteSearchProcess.graph_instance = graph
+                print("グラフデータが初期化されました")
 
-        raw_route = nx.dijkstra_path(RouteSearchProcess.graph_instance, start, goal)
-        route = [node for node in raw_route if "エレベータ調整用" not in node]
-        # estimated_time = nx.dijkstra_path_length(RouteSearchProcess.graph_instance, start, goal)
-        return route
+            raw_route = nx.dijkstra_path(RouteSearchProcess.graph_instance, start, goal)
+            route = [node for node in raw_route if "エレベータ調整用" not in node]
+            # estimated_time = nx.dijkstra_path_length(RouteSearchProcess.graph_instance, start, goal)
+            return route
+
+        except Exception as e:
+            print(type(e), e)
+            return []
 
 
 # C13区画情報処理部
@@ -847,7 +860,7 @@ class ChatBotProcess:
             try:
                 client = genai.Client(api_key=api_key)
                 response = client.models.generate_content(
-                    model="gemini-2.5-flash",
+                    model="gemini-2.5-flash-lite",
                     contents=self.create_prompt(request, user_input),
                 )
                 user_output = response.text

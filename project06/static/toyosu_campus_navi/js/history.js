@@ -1,4 +1,5 @@
 const language = JSON.parse(document.getElementById("language").textContent);
+const histories = JSON.parse(document.getElementById("histories").textContent);
 
 //google翻訳による言語切り替え
 function changeLanguage(language) {
@@ -19,3 +20,7 @@ function googleTranslateElementInit() {
 }
 
 changeLanguage(language);
+
+if (histories.length == 0) {
+  alert("履歴がありません");
+}
