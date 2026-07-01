@@ -92,6 +92,16 @@ html {
   margin-left: 10vw;
 }
 
+#select-from-map-display {
+  margin-left: auto;
+  margin-right: 20px;
+  -webkit-text-stroke: 2px rgb(255, 255, 255);
+  paint-order: stroke;
+  color: green;
+  font-size: large;
+  font-weight: bold;
+}
+
 .sidebar {
   display: flex;
   width: 300px;
@@ -433,6 +443,8 @@ body {
   padding: 2%;
   border: #2b3431 solid 2px;
   margin-bottom: 20px;
+  word-break: break-word;
+  overflow-wrap: break-word;
 }
 
 .modal.active {
@@ -932,6 +944,7 @@ body {
 
   #floor-select-menu {
     max-width: calc(100vw - 40px);
+    gap: 9px;
   }
   .wing-switch-menu {
     width: auto;
