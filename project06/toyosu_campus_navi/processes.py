@@ -860,7 +860,7 @@ class ChatBotProcess:
             try:
                 client = genai.Client(api_key=api_key)
                 response = client.models.generate_content(
-                    model="gemini-3.5-flash-lite",
+                    model="gemini-3.1-flash-lite",
                     contents=self.create_prompt(request, user_input),
                 )
                 user_output = response.text
@@ -917,7 +917,10 @@ class ChatBotProcess:
             "案内に関係ありそうで情報を聞くだけの場合：区画情報から答えられる範囲で質問の意図を満たすように回答してください．"
             "案内に関係ありそうで区画が存在しなそうな場合：見つかりません．ほかに情報はありますか的な回答をしてください．"
             f"区画の情報一覧はこちらです．{all_route_text}"
-            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/始点の区画名/終点の区画名"
+            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/始点の棟_階_区画名/終点の棟_階_区画名"
+            "区画名は括弧の中や空白なども含めて、情報一覧と正確に一致させてください"
+            "ユーザの入力の例：405教室からカフェテリアに行きたい"
+            "出力の例：405教室からカフェテリアまでの経路案内はこちらです！<br><a href=/search/交流棟_3階_カフェテリア/研究棟_14階_新熊亮一研究室>/search/交流棟_3階_カフェテリア/研究棟_14階_新熊亮一研究室</a>"
             f"過去のチャット履歴はこちらです．{history}"
         )
         return prompt
