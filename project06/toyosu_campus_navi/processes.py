@@ -202,6 +202,16 @@ class CampusMapImageCreate:
             # routeを「棟_階」ごとに分割する
             floor_routes = {}
 
+            # 全エッジを取得し、双方向で確認できるようにsetにする
+            edges = RouteManagement().get_all_edges(request)
+            edge_set = set()
+
+            for edge in edges:
+                section_name_a = str(edge["section_name_a"])
+                section_name_b = str(edge["section_name_b"])
+
+                edge_set.add((section_name_a, section_name_b))
+                edge_set.add((section_name_b, section_name_a))
             for section_name in route:
                 building, floor, _ = section_name.split("_", 2)
                 key = building + "_" + floor
@@ -252,29 +262,46 @@ class CampusMapImageCreate:
                 color = (0, 0, 255)
                 thickness = 2
                 line_type = cv2.LINE_AA
-                # tip_length = 0.1
 
-                # 同じ階の中だけ矢印を描画する
-                for i in range(len(floor_route) - 1):
+                # 元のrouteで連続しているノード同士だけを確認する
+                for i in range(len(route) - 1):
+                    start_section_name = route[i]
+                    goal_section_name = route[i + 1]
+
+                    start_building, start_floor, _ = start_section_name.split("_", 2)
+                    goal_building, goal_floor, _ = goal_section_name.split("_", 2)
+
+                    # 今作成している階の画像に関係ない経路は描画しない
+                    if start_building != building or start_floor != floor:
+                        continue
+
+                    if goal_building != building or goal_floor != floor:
+                        continue
+
+                    # 実際にエッジが存在しない場合は矢印を描画しない
+                    if (start_section_name, goal_section_name) not in edge_set:
+                        continue
+
                     start_node = RouteManagement().get_node_coordinate(
                         request,
-                        floor_route[i],
+                        start_section_name,
                     )
                     goal_node = RouteManagement().get_node_coordinate(
                         request,
-                        floor_route[i + 1],
+                        goal_section_name,
                     )
 
                     if start_node["node_x"] == -1 or goal_node["node_x"] == -1:
                         continue
+
+                    start = (start_node["node_x"], start_node["node_y"])
+                    goal = (goal_node["node_x"], goal_node["node_y"])
 
                     arrow_length = (
                         (start_node["node_x"] - goal_node["node_x"]) ** 2
                         + (start_node["node_y"] - goal_node["node_y"]) ** 2
                     ) ** 0.5 + 1
 
-                    start = (start_node["node_x"], start_node["node_y"])
-                    goal = (goal_node["node_x"], goal_node["node_y"])
                     cv2.arrowedLine(
                         img,
                         start,
@@ -860,7 +887,7 @@ class ChatBotProcess:
             try:
                 client = genai.Client(api_key=api_key)
                 response = client.models.generate_content(
-                    model="gemini-3.5-flash-lite",
+                    model="gemini-3.1-flash-lite",
                     contents=self.create_prompt(request, user_input),
                 )
                 user_output = response.text
@@ -917,7 +944,10 @@ class ChatBotProcess:
             "案内に関係ありそうで情報を聞くだけの場合：区画情報から答えられる範囲で質問の意図を満たすように回答してください．"
             "案内に関係ありそうで区画が存在しなそうな場合：見つかりません．ほかに情報はありますか的な回答をしてください．"
             f"区画の情報一覧はこちらです．{all_route_text}"
-            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/始点の区画名/終点の区画名"
+            "URLはaタグで囲ってクリックできるようにしてください．URLの形式はこちらです．/search/始点の棟_階_区画名/終点の棟_階_区画名"
+            "区画名は括弧の中や空白なども含めて、情報一覧と正確に一致させてください"
+            "ユーザの入力の例：405教室からカフェテリアに行きたい"
+            "出力の例：405教室からカフェテリアまでの経路案内はこちらです！<br><a href=/search/交流棟_3階_カフェテリア/研究棟_14階_新熊亮一研究室>/search/交流棟_3階_カフェテリア/研究棟_14階_新熊亮一研究室</a>"
             f"過去のチャット履歴はこちらです．{history}"
         )
         return prompt

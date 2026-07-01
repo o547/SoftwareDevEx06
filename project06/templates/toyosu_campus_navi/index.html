@@ -20,7 +20,7 @@
   {% csrf_token %}
   <div id="google_translate_element"></div>
   <div class="app">
-    <div class="main">
+    <div class="main" id="app-main">
       <div class="viewer" id="floor-map-image-area" style="display: none;">
         {% load static %}
         <img id="floor-map-img" class="other-floor-map"
@@ -79,6 +79,7 @@
           <div onclick="changeFloor('13')" class="floor-select">13</div>
           <div onclick="changeFloor('14')" class="floor-select">14</div>
         </div>
+        <div id="select-from-map-display" style="display: none;">調べたい区画をクリック</div>
       </div>
 
       <div class="wing-switch-menu">
@@ -161,7 +162,7 @@
       </div>
 
       <div id="sidebar-buttons">
-        <div class="sidebar-button" onclick="selectFromMapMode=false; openModal('search-menu')">
+        <div class="sidebar-button" onclick="selectFromMapModeFalse(); openModal('search-menu')">
           <img src="{%static 'toyosu_campus_navi/image/search.png' %}" class="menu-icon">
           <span>検索</span>
         </div>

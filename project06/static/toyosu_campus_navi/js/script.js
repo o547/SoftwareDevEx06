@@ -232,7 +232,7 @@ async function sectionCoordinateSubmit(image_x, image_y) {
   if (data.section) {
     console.log(data);
 
-    if (selectFromMapMode) {
+    if (selectFromMapMode && !data.section.includes("区画調整")) {
       const wingSelectBox = document.getElementById(
         `${selectFromMapDirection}-wing-select`,
       );
@@ -247,10 +247,10 @@ async function sectionCoordinateSubmit(image_x, image_y) {
         `${selectFromMapDirection}-section-select`,
       );
       sectionSelectBox.value = `${currentWing}_${currentFloorNumber}階_${data.section}`;
-
-      selectFromMapMode = false;
+      controlSearchMenu(`${selectFromMapDirection}-section-select`);
+      selectFromMapModeFalse();
       openModal(`${selectFromMapDirection}-point-menu`);
-    } else {
+    } else if (!selectFromMapMode) {
       openSectionModal(
         data.section,
         data.usage,
@@ -259,6 +259,12 @@ async function sectionCoordinateSubmit(image_x, image_y) {
       );
     }
   }
+}
+
+function selectFromMapModeFalse() {
+  selectFromMapMode = false;
+  selectFromMapDisplay.style.display = "none";
+  appMain.style.backgroundColor = "rgb(255, 255, 255)";
 }
 
 //詳細表示モーダルを活性にする
@@ -429,6 +435,10 @@ function selectFromMap(direction) {
     const switchElement = document.querySelector(".dimention-switch-switch");
     toggleDimention(switchElement);
   }
+
+  selectFromMapDisplay.style.display = "";
+  appMain.style.backgroundColor = "rgb(218, 218, 218)";
+
   closeModal();
 }
 
@@ -568,6 +578,8 @@ const wholeMapImageArea = document.getElementById("whole-map-image-area");
 const floorMapImage = document.getElementById("floor-map-img");
 const campusMapImageArea = document.querySelector(".campus-img-area");
 const campusMapImage = document.getElementById("campus-img");
+const selectFromMapDisplay = document.getElementById("select-from-map-display");
+const appMain = document.getElementById("app-main");
 
 const wholeMapImages = {
   本部棟: document.querySelector('.map-scroll[data-wing="本部棟"]'),
