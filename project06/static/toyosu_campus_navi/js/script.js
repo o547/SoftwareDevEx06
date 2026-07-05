@@ -125,13 +125,14 @@ async function chatbotSubmit() {
   });
 
   const data = await response.json();
-  document.querySelector(".bot-loading").remove();
-  if (data.alert_message) {
-    alert(data.alert_message);
+  const alertMessage = data.alert_message;
+  let chatbotResponce = data.chatbot_response;
 
-    if (!data.chatbot_response) {
-      return;
-    }
+  document.querySelector(".bot-loading").remove();
+
+  if (alertMessage) {
+    alert(alertMessage);
+    chatbotResponce = "サーバーから返答を取得できませんでした。";
   }
 
   //返答文を描画
@@ -139,7 +140,7 @@ async function chatbotSubmit() {
     "beforeend",
     `<div class="chat-row bot-row">
       <img src="${botIconSrc}" class="bot-icon">
-      <div class="chatbot-message bot-message">${data.chatbot_response}</div>
+      <div class="chatbot-message bot-message">${chatbotResponce}</div>
     </div>`,
   );
 
@@ -177,7 +178,7 @@ async function selectLanguage(language) {
 
 //スタート地点またはゴール地点を決定
 function searchEnter(direction) {
-  //検索メニューの表記を変更
+  //検索モーダルの表記を選択した区画名に変更
   const startPointMenuButton = document.getElementById(
     "start-point-menu-button",
   );
@@ -191,7 +192,7 @@ function searchEnter(direction) {
   }
   if (goalSectionSelect.value) {
     goalPointMenuButton.innerText = goalSectionSelect.value;
-    goalPointMenuButton.style.fontSize = "1rem";
+    goalPointMenuButton.style.fontSize = "0.9rem";
   } else {
     goalPointMenuButton.innerText = "目的地";
     goalPointMenuButton.style.fontSize = "1rem";
@@ -261,10 +262,22 @@ async function sectionCoordinateSubmit(image_x, image_y) {
   }
 }
 
+//selectFromMapModeをfalseにして表示を切り替え
 function selectFromMapModeFalse() {
   selectFromMapMode = false;
   selectFromMapDisplay.style.display = "none";
   appMain.style.backgroundColor = "rgb(255, 255, 255)";
+}
+
+//selectFromMapMode中に立体平面を切り替えた場合の表示切替
+function toggleSelectFromMapDisplay() {
+  if (!isFloorMapMode) {
+    selectFromMapDisplay.style.display = "none";
+    appMain.style.backgroundColor = "rgb(255, 255, 255)";
+  } else {
+    selectFromMapDisplay.style.display = "";
+    appMain.style.backgroundColor = "rgb(218, 218, 218)";
+  }
 }
 
 //詳細表示モーダルを活性にする
@@ -366,6 +379,7 @@ async function getLocation() {
   }
 }
 
+//現在位置情報をサーバーに送信し，推定された現在いる棟を返す．
 async function getWingNameByLocation() {
   const location = await getLocation();
 
@@ -382,7 +396,9 @@ async function getWingNameByLocation() {
     }),
   });
   const data = await response.json();
-  return data.wing_name;
+  const wingName = data.wing_name;
+  console.log(wingName);
+  return wingName;
 }
 
 async function changeWingByLocation() {
@@ -720,6 +736,9 @@ function toggleDimention(switchElement) {
       changeWing(wingSwitch.value, wingSwitch);
     }
   }
+  if (selectFromMapMode) {
+    toggleSelectFromMapDisplay();
+  }
 }
 
 //棟を変更
@@ -994,9 +1013,9 @@ const goalWingSelect = document.getElementById("goal-wing-select");
 const goalFloorSelect = document.getElementById("goal-floor-select");
 const goalSectionSelect = document.getElementById("goal-section-select");
 
-//初期化処理
 Initializer();
 
+//初期化処理
 function Initializer() {
   if (is_superuser == true) {
     document.getElementById("notice-management-button").style.display = "";
