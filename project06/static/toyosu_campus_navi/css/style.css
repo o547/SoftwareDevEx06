@@ -809,8 +809,6 @@ body {
   width: 32px;
   height: 32px;
 
-  accent-color: white;
-
   flex-shrink: 0;
   cursor: pointer;
 }
@@ -867,6 +865,10 @@ body {
   cursor: pointer;
 }
 @media (max-width: 800px) {
+  .app {
+    height: 100dvh;
+  }
+
   .sidebar {
     position: fixed;
     right: 0;
