@@ -943,7 +943,7 @@ body {
   }
 
   #floor-select-menu {
-    max-width: calc(100vw - 40px);
+    max-width: calc(100vw - 20px);
     gap: 9px;
   }
   .wing-switch-menu {

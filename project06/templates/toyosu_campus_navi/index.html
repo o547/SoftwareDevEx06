@@ -115,23 +115,14 @@
             営業時間：<br>
           </div>
         </div>
-
       </div>
-
-
-      <!-- <div class="util_links">
-        <a href="/demo/guide">経路案内デモ</a><br /><a href="/plot">座標取得アプリ</a>
-      </div> -->
 
       <div class="sidebar-button square" id="sidebar-open-button"
         onclick="openSidebar('index-sidebar', 'sidebar-open-button')" style="width: 0">
         {% load static %}
         <img src="{% static 'toyosu_campus_navi/image/bars_24.png' %}" style="width: 45px" />
       </div>
-
-
     </div>
-
 
     <div class="sidebar" id="index-sidebar">
       <div class="sidebar-square-group">
@@ -368,7 +359,7 @@
               <div class="chat-row bot-row">
                 <img src="{%static 'toyosu_campus_navi/image/bot.png' %}" class="bot-icon">
                 <div class="chatbot-message bot-message">
-                  「出発地」と「目的地」を教えてください。<br>経路検索のリンクを案内します
+                  「出発地」と「目的地」を教えてください。<br>経路検索結果のリンクを案内します。
                 </div>
 
               </div>
@@ -376,7 +367,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <textarea class="chatbot-input" id="chatbot-input"　placeholder="質問を入力(200文字以内)"></textarea>
+            <textarea class="chatbot-input" id="chatbot-input" placeholder="質問を入力(200文字以内)"></textarea>
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>
