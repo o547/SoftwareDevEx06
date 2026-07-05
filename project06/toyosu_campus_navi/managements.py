@@ -6,6 +6,7 @@ User = get_user_model()
 
 # C8履歴管理部
 class HistoryInfoManagement:
+    # M8-1 履歴保存
     def save_history(self, request, username, start, goal):
         try:
             start_building, start_floor, start_section = str(start).split("_")
@@ -38,6 +39,7 @@ class HistoryInfoManagement:
             print(type(e), e)
             return False
 
+    # M8-2 履歴全検索
     def get_all_histories(self, request, username):
         try:
             if username != request.user.username:
@@ -78,6 +80,7 @@ class HistoryInfoManagement:
 
 # C9お知らせ管理部
 class NoticeManagement:
+    # M9-1 お知らせ新規作成
     def create_notice(self, request, title, body):
         try:
             Notice.objects.create(
@@ -89,6 +92,7 @@ class NoticeManagement:
             print(type(e), e)
             return False
 
+    # M9-2 お知らせ編集
     def update_notice(self, request, id, title, body):
         try:
             notice_object = Notice.objects.get(notice_ID=id)
@@ -100,6 +104,7 @@ class NoticeManagement:
             print(type(e), e)
             return False
 
+    # M9-3 お知らせ削除
     def delete_notice(self, request, id):
         try:
             notice_object = Notice.objects.get(notice_ID=id)
@@ -109,6 +114,7 @@ class NoticeManagement:
             print(type(e), e)
             return False
 
+    # M9-4 お知らせ取得
     def get_notice(self, request, id):
         try:
             notice_object = Notice.objects.filter(notice_ID=id).first()
@@ -139,6 +145,7 @@ class NoticeManagement:
                 "updated_at": "",
             }
 
+    # M9-5 お知らせ全取得
     def get_all_notices(self, request):
         try:
             all_notice_object = Notice.objects.all()
@@ -165,6 +172,7 @@ class NoticeManagement:
 
 # C10ユーザ情報管理部
 class UserInfoManagement:
+    # M10-1 ユーザ存在確認
     def check_existence(self, request, username):
         try:
             return User.objects.filter(username=username).exists()
@@ -172,6 +180,7 @@ class UserInfoManagement:
             print(type(e), e)
             return False
 
+    # M10-2 認証
     def certification(self, request, username, password):
         try:
             return authenticate(request, username=username, password=password)
@@ -179,6 +188,7 @@ class UserInfoManagement:
             print(type(e), e)
             return None
 
+    # M10-3 新規登録
     def user_regist(self, request, username, password):
         try:
             return User.objects.create_user(username, "", password)
@@ -186,6 +196,7 @@ class UserInfoManagement:
             print(type(e), e)
             return None
 
+    # M10-4 言語設定保存
     def save_language(self, request, language, username):
         try:
             update_count = User.objects.filter(username=username).update(
@@ -202,6 +213,7 @@ class UserInfoManagement:
 
 # C12区画情報管理部
 class SectionInfoManagement:
+    # M12-1 座標リスト取得処理
     def get_coordinate_list(self, request, map_name):
         try:
             building, floor = str(map_name).split("_")
@@ -236,6 +248,7 @@ class SectionInfoManagement:
             print(type(e), e)
             return []
 
+    # M12-2 区画情報取得処理
     def get_section_info(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
@@ -268,6 +281,7 @@ class SectionInfoManagement:
 
 # C16経路管理部
 class RouteManagement:
+    # M16-1 座標取得
     def get_node_coordinate(self, request, section_name):
         try:
             building, floor, section = str(section_name).split("_")
@@ -288,6 +302,7 @@ class RouteManagement:
             print(type(e), e)
             return {"section_id": None, "node_x": -1, "node_y": -1}
 
+    # M16-2 座標全取得
     def get_all_node_coordinates(self, request):
         try:
             all_section_object = Section.objects.all()
@@ -313,6 +328,7 @@ class RouteManagement:
             print(type(e), e)
             return []
 
+    # M16-3 エッジ全取得
     def get_all_edges(self, request):
         try:
             all_edge_object = Edge.objects.all()
