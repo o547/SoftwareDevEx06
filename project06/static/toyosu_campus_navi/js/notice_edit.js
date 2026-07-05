@@ -19,7 +19,7 @@ function changeLanguage(language) {
 changeLanguage(language);
 
 //お知らせを投稿(編集)
-async function submitNotice(language) {
+async function submitNotice() {
   const title = document.querySelector(".edit-title-input").value;
   const body = document.querySelector(".edit-content-input").value;
 
@@ -27,7 +27,7 @@ async function submitNotice(language) {
     alert("タイトルがありません");
     return;
   }
-  if (title.length > 128) {
+  if (title.length >= 128) {
     alert("タイトルは128文字未満で入力してください");
     return;
   }
@@ -38,7 +38,7 @@ async function submitNotice(language) {
 
   const url = new URL(window.location.href);
   const params = url.searchParams;
-  const notice_id = params.get("notice_id");
+  const noticeId = params.get("notice_id");
 
   //Ajax通信で返答を取得
   const response = await fetch("/notice/submit", {
@@ -50,13 +50,15 @@ async function submitNotice(language) {
     body: JSON.stringify({
       title: title,
       body: body,
-      notice_id: notice_id,
+      notice_id: noticeId,
     }),
   });
 
   const data = await response.json();
-  if (data.alert_message) {
-    alert(data.alert_message);
+  const alertMessage = data.alert_message;
+
+  if (alertMessage) {
+    alert(alertMessage);
   } else if (response.ok) {
     window.location.href = "/notice/management";
   }
