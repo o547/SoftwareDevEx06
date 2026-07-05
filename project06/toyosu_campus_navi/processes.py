@@ -20,6 +20,7 @@ from google import genai
 
 # C3お知らせ処理部
 class NoticeProcess:
+    # M3-1 お知らせ新規作成
     def create_notice(self, request, title, body):
         if not request.user.is_superuser:
             return "お知らせを保存できませんでした"
@@ -29,6 +30,7 @@ class NoticeProcess:
             else:
                 return "お知らせを保存できませんでした"
 
+    # M3-2 お知らせ編集
     def update_notice(self, request, id, title, body):
         if not request.user.is_superuser:
             return "お知らせを保存できませんでした"
@@ -38,6 +40,7 @@ class NoticeProcess:
             else:
                 return "お知らせを保存できませんでした"
 
+    # M3-3 お知らせ削除
     def notice_delete(self, request, id):
         if not request.user.is_superuser:
             return "お知らせを削除できませんでした"
@@ -47,6 +50,7 @@ class NoticeProcess:
             else:
                 return "お知らせを削除できませんでした"
 
+    # M3-4 お知らせ取得
     def get_notice(self, request, id):
         notice_object = NoticeManagement().get_notice(request, id)
         if notice_object and notice_object.get("title") != "":
@@ -66,6 +70,7 @@ class NoticeProcess:
                 "alert_message": "お知らせを取得できませんでした",
             }
 
+    # M3-5 お知らせ全取得
     def get_all_notices(self, request):
         try:
             notices = NoticeManagement().get_all_notices(request)
@@ -82,6 +87,7 @@ class NoticeProcess:
 
 # C4ログイン処理部
 class LoginProcess:
+    # M4-1 ログイン
     def user_login(self, request, username, password):
         user = UserInfoManagement().certification(
             request, username=username, password=password
@@ -94,6 +100,7 @@ class LoginProcess:
             request.session["alert_message"] = "ログインできませんでした"
             return "ログインできませんでした"
 
+    # M4-2 新規登録
     def user_regist(self, request, username, password):
         if UserInfoManagement().check_existence(request, username):
             # ユーザーIDが既に存在している
@@ -105,6 +112,7 @@ class LoginProcess:
             login(request, user)
             return ""
 
+    # M4-3 言語設定保存
     def save_language(self, request, language):
         user_info = self.get_user_info(request)
         if user_info["is_login"]:
@@ -116,6 +124,7 @@ class LoginProcess:
                 return "言語情報を保存できませんでした"
         return ""
 
+    # M4-4 ユーザ情報取得
     def get_user_info(self, request):
         if request.user.is_authenticated:
             return {
@@ -190,7 +199,6 @@ class CampusMapImageCreate:
             }
 
     # M5-2 平面地図作成処理
-
     def create_floor_map(self, request, route, map_folder_name):
         try:
             output_files = []
@@ -305,7 +313,6 @@ class CampusMapImageCreate:
             return []
 
     # M5-3 全体地図作成処理
-
     def create_whole_map(
         self,
         request,
@@ -665,6 +672,7 @@ class LocationProcess:
         ],
     }
 
+    # M6-1 棟特定処理
     def identify_wing(self, request, latitude, longitude):
         # いずれかの棟の中にいるか判定
         for building_name, corners in LocationProcess.building_corners.items():
@@ -706,6 +714,7 @@ class LocationProcess:
 class RouteSearchProcess:
     graph_instance = None
 
+    # M11-1 経路検索主処理
     def route_search_main(self, request, start, goal):
         # 最短経路を計算
         route = self.shortest_route_search(request, start, goal)
@@ -745,6 +754,7 @@ class RouteSearchProcess:
             "alert_message": alert_message,
         }
 
+    # M11-2 最短経路検索
     def shortest_route_search(self, request, start, goal):
         try:
             if RouteSearchProcess.graph_instance is None:
@@ -786,6 +796,7 @@ class RouteSearchProcess:
 
 # C13区画情報処理部
 class SectionInfoProcess:
+    # M13-3 区画全取得処理
     def get_all_sections(self, request):
         nodes = RouteManagement().get_all_node_coordinates(request)
         sections = []
@@ -798,6 +809,7 @@ class SectionInfoProcess:
             )
         return sections
 
+    # M13-1 区画情報取得処理
     def get_section_info(self, request, section_name):
         if not section_name:
             return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
@@ -818,6 +830,7 @@ class SectionInfoProcess:
 
         return {"section": "", "usage": "", "capacity": -1, "business_hours": ""}
 
+    # M13-2 区画特定処理
     def identify_section(self, request, image_x, image_y, map_name):
         section_objects = SectionInfoManagement().get_coordinate_list(request, map_name)
         for section in section_objects:
@@ -834,6 +847,7 @@ class SectionInfoProcess:
 
 # C15履歴情報処理部
 class HistoryInfoProcess:
+    # M15-1 履歴保存
     def save_history(self, request, username, start, goal):
         result = HistoryInfoManagement().save_history(request, username, start, goal)
         if result:
@@ -841,6 +855,7 @@ class HistoryInfoProcess:
         else:
             return "履歴が保存できませんでした"
 
+    # M15-2 履歴全検索
     def get_all_histories(self, request, username):
         histories = HistoryInfoManagement().get_all_histories(request, username)
         return histories
@@ -848,6 +863,7 @@ class HistoryInfoProcess:
 
 # C14チャットボット処理部
 class ChatBotProcess:
+    # M14-1 チャット返信処理
     def reply_to_chat(self, request, user_input):
         # APIキーはkeys.pyで管理している
         api_key = settings.GEMINI_API_KEY
@@ -878,6 +894,7 @@ class ChatBotProcess:
                 alert_message = "チャットボットが使用できません．"
                 return {"user_output": user_output, "alert_message": alert_message}
 
+    # M14-2 プロンプト作成処理
     def create_prompt(self, request, user_input):
         route = RouteManagement().get_all_node_coordinates(request)
         all_route = {}
