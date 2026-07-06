@@ -148,6 +148,7 @@ async function chatbotSubmit() {
   conversationArea.scrollTop = conversationArea.scrollHeight;
 }
 
+//POSTメソッドで送信するJsonデータを作成する
 function createPostJson(key, value) {
   return {
     method: "POST",
@@ -349,12 +350,7 @@ function getCurrentPositionPromise() {
   });
 }
 
-function getCurrentPositionPromise() {
-  return new Promise((resolve, reject) => {
-    navigator.geolocation.getCurrentPosition(resolve, reject);
-  });
-}
-
+//GPSの位置情報を取得する
 async function getLocation() {
   if (!navigator.geolocation) {
     return {
@@ -401,6 +397,7 @@ async function getWingNameByLocation() {
   return wingName;
 }
 
+//棟選択メニューの「GPSから取得」
 async function changeWingByLocation() {
   const wingGPSButton = document.querySelector(".wing-gps-button");
   wingGPSButton.innerText = "位置を取得中...";
@@ -454,6 +451,8 @@ function selectFromMap(direction) {
 
   selectFromMapDisplay.style.display = "";
   appMain.style.backgroundColor = "rgb(218, 218, 218)";
+
+  closeSidebarForResponsive();
 
   closeModal();
 }
@@ -581,8 +580,6 @@ function controlSearchMenu(selectBoxId) {
     }
   }
 }
-
-//---------------地図切り替え処理 開始---------------
 
 let currentWing = "教室棟";
 let currentFloorNumber = 1;
@@ -796,8 +793,6 @@ function changeWing(wingName, inputElement) {
   }
 }
 
-//---------------地図切り替え処理 終了---------------
-
 function googleTranslateElementInit() {
   new google.translate.TranslateElement(
     { pageLanguage: "ja" },
@@ -838,6 +833,8 @@ const wingTranslations = {
     研究棟: "研究棟",
   },
 };
+
+//棟の名前を正式名称で翻訳する
 function translateWingNames(language) {
   const names = document.querySelectorAll(".wing-name");
 
@@ -1017,6 +1014,8 @@ Initializer();
 
 //初期化処理
 function Initializer() {
+  closeSidebarForResponsive();
+
   if (is_superuser == true) {
     document.getElementById("notice-management-button").style.display = "";
   }
@@ -1040,7 +1039,6 @@ function Initializer() {
   goalFloorSelect.innerHTML = startFloorSelect.innerHTML;
   goalSectionSelect.innerHTML = startSectionSelect.innerHTML;
 
-  changeLayoutForResponsive();
   changeFloor(1);
   const inRouteWings = [];
 
@@ -1104,9 +1102,10 @@ function getCookieValue(name) {
   return null;
 }
 
-window.addEventListener("resize", changeLayoutForResponsive);
+window.addEventListener("resize", closeSidebarForResponsive);
 
-function changeLayoutForResponsive() {
+//画面が一定以上小さくなった際にサイドバーを閉じる
+function closeSidebarForResponsive() {
   if (window.innerWidth < 800) {
     closeSidebar("index-sidebar", "sidebar-open-button");
   }
