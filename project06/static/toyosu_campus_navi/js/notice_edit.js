@@ -80,3 +80,9 @@ if (currentNotice.alert_message) {
 }
 
 changeLanguage(language);
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});

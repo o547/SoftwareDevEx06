@@ -32,3 +32,9 @@ const noticesAlertMessage = JSON.parse(
 if (noticesAlertMessage) {
   alert(noticesAlertMessage);
 }
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
