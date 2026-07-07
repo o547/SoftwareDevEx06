@@ -24,3 +24,9 @@ changeLanguage(language);
 if (histories.length == 0) {
   alert("履歴がありません");
 }
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});

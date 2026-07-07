@@ -173,8 +173,16 @@ async function selectLanguage(language) {
   if (data.alert_message) {
     alert(data.alert_message);
   }
-  await changeLanguage(language);
-  await changeLanguage(language);
+
+  const select = document.querySelector(".goog-te-combo");
+  if (select) {
+    select.value = language;
+    select.dispatchEvent(new Event("change"));
+  }
+
+  setTimeout(() => {
+    window.location.reload();
+  }, 1500);
 }
 
 //スタート地点またはゴール地点を決定
@@ -793,26 +801,24 @@ function changeWing(wingName, inputElement) {
   }
 }
 
-function googleTranslateElementInit() {
+window.googleTranslateElementInit = function () {
   new google.translate.TranslateElement(
     { pageLanguage: "ja" },
     "google_translate_element",
   );
-}
+};
 
 //google翻訳による言語切り替え
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
+  translateWingNames(language);
   const select = document.querySelector(".goog-te-combo");
-
   if (select) {
     select.value = language;
     select.dispatchEvent(new Event("change"));
   }
-  setTimeout(() => {
-    translateWingNames(language);
-  }, 1000);
 }
+
 const wingTranslations = {
   en: {
     本部棟: "Centennial Main Building",
@@ -872,9 +878,6 @@ if (is_superuser == true) {
 }
 
 let language = JSON.parse(document.getElementById("language").textContent);
-if (!language) {
-  language = "ja";
-}
 
 const sectionNames = JSON.parse(
   document.getElementById("section_names").textContent,
@@ -1072,19 +1075,15 @@ function Initializer() {
   }
 
   //翻訳
-  if (language == "JA") {
-    language = "ja";
-  }
-
-  if (language != "ja") {
-    changeLanguage(language);
-    return;
-  }
-
   const cookieLangage = getCookieValue("googtrans");
-  if (cookieLangage && cookieLangage.split("/")[2]) {
+  if (language != "") {
+    changeLanguage(language);
+  } else if (cookieLangage && cookieLangage.split("/")[2]) {
     changeLanguage(cookieLangage.split("/")[2]);
-    return;
+  }
+
+  if (language == "") {
+    language = "ja";
   }
 }
 
@@ -1101,6 +1100,12 @@ function getCookieValue(name) {
 
   return null;
 }
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
 
 window.addEventListener("resize", closeSidebarForResponsive);
 

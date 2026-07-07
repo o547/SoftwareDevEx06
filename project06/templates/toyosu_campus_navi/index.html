@@ -7,7 +7,7 @@
   <title>豊洲キャンパスナビ | 芝浦工業大学豊洲キャンパスの構内地図・経路案内アプリ</title>
   <meta
     name="description"
-    content="芝浦工業大学 豊洲キャンパスの、構内図の閲覧および経路検索ができる非公式webアプリです。出発地と目的地を設定することで、教室や施設同士の経路を地図上で案内します。"
+    content="芝浦工業大学 豊洲キャンパスの、構内図の閲覧および経路検索ができる非公式webアプリです。出発地と目的地を設定することで、教室や施設同士の経路を地図上で案内します。また、フロアマップをクリックすると施設情報が表示されます。"
   >
   {% load static %}
   <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}" />
@@ -15,7 +15,6 @@
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
-  <script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
@@ -395,5 +394,7 @@
 {{ map_folder_name|json_script:"map_folder_name" }}
 {% load static %}
 <script src="{% static 'toyosu_campus_navi/js/script.js' %}"></script>
+<script src="https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit"></script>
+
 
 </html>

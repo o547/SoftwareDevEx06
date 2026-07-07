@@ -9,11 +9,17 @@ function googleTranslateElementInit() {
 function changeLanguage(language) {
   console.log(`${language}に切り替えます`);
   const select = document.querySelector(".goog-te-combo");
-  
+
   if (select) {
     select.value = language;
     select.dispatchEvent(new Event("change"));
   }
 }
 
-changeLanguage(language)
+changeLanguage(language);
+
+window.addEventListener("pageshow", (event) => {
+  if (event.persisted) {
+    window.location.reload();
+  }
+});
