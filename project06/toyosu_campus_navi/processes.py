@@ -140,7 +140,7 @@ class LoginProcess:
                 "id": -1,
                 "username": "AnonymousUser",
                 "is_superuser": False,
-                "language": "JA",
+                "language": "",
             }
 
 
