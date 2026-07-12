@@ -16,7 +16,9 @@ function changeLanguage(language) {
   }
 }
 
-changeLanguage(language);
+setTimeout(() => {
+  changeLanguage(language);
+}, 1500);
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {

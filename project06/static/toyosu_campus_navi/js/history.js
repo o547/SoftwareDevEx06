@@ -19,7 +19,9 @@ function googleTranslateElementInit() {
   );
 }
 
-changeLanguage(language);
+setTimeout(() => {
+  changeLanguage(language);
+}, 1500);
 
 if (histories.length == 0) {
   alert("履歴がありません");
