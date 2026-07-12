@@ -1,0 +1,5 @@
+Django==6.0.7
+networkx==3.6.1
+numpy==2.5.1
+protobuf==7.35.1
+opencv-python==4.13.0.90
