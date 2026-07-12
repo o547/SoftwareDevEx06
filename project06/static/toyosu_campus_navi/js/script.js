@@ -1143,7 +1143,7 @@ function getCookieValue(name) {
   for (const cookie of cookies) {
     const [key, ...valueParts] = cookie.split("=");
 
-    if (key === name) {
+    if (key == name) {
       return decodeURIComponent(valueParts.join("="));
     }
   }
@@ -1165,6 +1165,11 @@ window.addEventListener("resize", () => {
     activeElement instanceof HTMLInputElement ||
     activeElement instanceof HTMLTextAreaElement
   ) {
+    return;
+  }
+
+  //スマホである場合無視
+  if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
     return;
   }
 
