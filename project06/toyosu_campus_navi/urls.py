@@ -18,6 +18,7 @@ urlpatterns = [
     path("notice/submit", views.notice_submit, name="notice_submit"),
     path("notice/delete/<uuid:notice_id>", views.notice_delete, name="notice_delete"),
     path("history", views.history, name="history"),
+    path("logout", views.logout_view, name="logout_view"),
     path("identify/wing", views.identify_wing, name="identify_wing"),
     path("debug", views.debug, name="debug"),
 ]

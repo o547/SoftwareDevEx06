@@ -16,7 +16,7 @@ from .processes import (
 
 from django.contrib.auth.mixins import LoginRequiredMixin
 from django.contrib.auth.models import User
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, logout
 from django.http import JsonResponse
 import json
 import uuid
@@ -74,6 +74,9 @@ class NoticeView(View):
 # /notice/management
 class NoticeManagementView(View):
     def get(self, request):
+        if not request.user.is_superuser:
+            return redirect("toyosu_campus_navi:index")
+
         all_notices = NoticeProcess().get_all_notices(request)
         info_to_send = create_info_to_send(request) | {
             "notices": all_notices["notices"],
@@ -87,6 +90,9 @@ class NoticeManagementView(View):
 # /notice/edit
 class NoticeEditView(View):
     def get(self, request):
+        if not request.user.is_superuser:
+            return redirect("toyosu_campus_navi:index")
+
         info_to_send = create_info_to_send(request)
         if "notice_id" in request.GET:
             # 既存のお知らせの編集
@@ -132,6 +138,9 @@ class NoticeSubmitView(View):
 # /history
 class HistoryView(View):
     def get(self, request):
+        if not request.user.is_authenticated:
+            return redirect("toyosu_campus_navi:index")
+
         info_to_send = create_info_to_send(request) | {
             "histories": HistoryInfoProcess().get_all_histories(
                 request, request.user.username
@@ -169,6 +178,13 @@ class UserLoginView(View):
         return redirect("toyosu_campus_navi:index")
 
 
+# /logout
+class LogoutView(View):
+    def get(self, request):
+        logout(request)
+        return redirect("toyosu_campus_navi:index")
+
+
 # /chatbot/submit
 class ChatBotView(View):
     def post(self, request):
@@ -191,7 +207,7 @@ class LanguageView(View):
         body = json.loads(request.body)
         language = body["language"]
         response = LoginProcess().save_language(request, language)
-        print("responce : " + response)
+
         return JsonResponse({"alert_message": response})
 
 
@@ -290,7 +306,6 @@ class PlotView(View):
 
 # /debug
 # ここを書き換えて、/deubugにアクセスする
-
 class DebugView(View):
     def get(self, request):
 
@@ -313,6 +328,7 @@ notice_delete = NoticeDeleteView.as_view()
 notice_submit = NoticeSubmitView.as_view()
 history = HistoryView.as_view()
 identify_wing = IdentifyWingView.as_view()
+logout_view = LogoutView.as_view()
 plot = PlotView.as_view()
 demo_index = DemoIndexView.as_view()
 debug = DebugView.as_view()
