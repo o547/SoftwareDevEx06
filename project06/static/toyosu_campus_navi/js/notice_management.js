@@ -16,7 +16,9 @@ function changeLanguage(language) {
   }
 }
 
-changeLanguage(language);
+setTimeout(() => {
+  changeLanguage(language);
+}, 1500);
 
 const alertMessage = JSON.parse(
   document.getElementById("alert_message").textContent,

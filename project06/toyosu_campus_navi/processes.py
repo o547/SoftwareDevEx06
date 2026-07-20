@@ -2,7 +2,6 @@ from django.contrib.auth import authenticate, login
 from .models import *
 import os
 import cv2
-from .navi import navi
 import numpy as np
 from django.conf import settings
 import datetime
@@ -757,7 +756,8 @@ class RouteSearchProcess:
         print("経路 : " + str(route))
 
         # 構内図画像を作成
-        map_folder_name = datetime.datetime.now().strftime("%Y_%m_%d_%H_%M_%S")
+        now = datetime.datetime.now()
+        map_folder_name = now.strftime("%Y_%m_%d_%H_%M_%S_") + now.strftime("%f")[:4]
         map_result = CampusMapImageCreate().create_map_image(
             request, route, map_folder_name
         )

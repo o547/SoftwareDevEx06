@@ -79,7 +79,9 @@ if (currentNotice.alert_message) {
   alert(currentNotice.alert_message);
 }
 
-changeLanguage(language);
+setTimeout(() => {
+  changeLanguage(language);
+}, 1500);
 
 window.addEventListener("pageshow", (event) => {
   if (event.persisted) {

@@ -182,7 +182,7 @@ async function selectLanguage(language) {
 
   setTimeout(() => {
     window.location.reload();
-  }, 1500);
+  }, 1000);
 }
 
 //スタート地点またはゴール地点を決定
@@ -425,7 +425,7 @@ async function changeWingByLocation() {
     }
     wingGPSButton.innerText = `GPSから取得 (${wingName})`;
   } else {
-    wingGPSButton.innerHTML = `GPSから取得 (失敗))`;
+    wingGPSButton.innerHTML = `GPSから取得 (失敗)`;
     alert("現在いる棟を取得できませんでした。手動で入力をしてください。");
   }
 }
@@ -527,8 +527,10 @@ function controlSearchMenu(selectBoxId) {
           )
         ) {
           floorSelectOption.style.display = "";
+          unwrapElement(floorSelectOption);
         } else {
           floorSelectOption.style.display = "none";
+          wrapElement(floorSelectOption);
           if (floorSelectOption.value == floorSelect.value) {
             floorSelect.value = "";
             floorSelectChanged = true;
@@ -536,6 +538,7 @@ function controlSearchMenu(selectBoxId) {
         }
       } else {
         floorSelectOption.style.display = "";
+        unwrapElement(floorSelectOption);
       }
     }
 
@@ -544,8 +547,10 @@ function controlSearchMenu(selectBoxId) {
       if (selectedWingName) {
         if (sectionSelectOption.dataset.wing == selectedWingName) {
           sectionSelectOption.style.display = "";
+          unwrapElement(sectionSelectOption);
         } else {
           sectionSelectOption.style.display = "none";
+          wrapElement(sectionSelectOption);
           if (sectionSelectOption.value == sectionSelect.value) {
             sectionSelect.value = "";
             sectionSelectChenged = true;
@@ -553,6 +558,7 @@ function controlSearchMenu(selectBoxId) {
         }
       } else {
         sectionSelectOption.style.display = "";
+        unwrapElement(sectionSelectOption);
       }
     }
 
@@ -578,15 +584,58 @@ function controlSearchMenu(selectBoxId) {
             sectionSelectOption.dataset.wing == selectedWingName)
         ) {
           sectionSelectOption.style.display = "";
+          unwrapElement(sectionSelectOption);
           continue;
         }
       }
       sectionSelectOption.style.display = "none";
+      wrapElement(sectionSelectOption);
       if (sectionSelectOption.value == sectionSelect.value) {
         sectionSelect.value = "";
+        unwrapElement(sectionSelectOption);
       }
     }
   }
+}
+
+// element を wrapperTag で包む
+function wrapElement(element) {
+  const wrapperTag = "span";
+  if (!element || !element.parentNode) return;
+
+  const parent = element.parentNode;
+
+  // すでにwrapperTagで包まれている場合は何もしない
+  if (
+    parent.tagName &&
+    parent.tagName.toLowerCase() == wrapperTag.toLowerCase()
+  ) {
+    return;
+  }
+
+  const wrapper = document.createElement(wrapperTag);
+  wrapper.classList.add("wrap");
+
+  parent.insertBefore(wrapper, element);
+  wrapper.appendChild(element);
+}
+
+// elementの親wrapperTagを外す
+function unwrapElement(element, wrapperTag = "span") {
+  if (!element || !element.parentNode) return;
+
+  const wrapper = element.parentNode;
+
+  // 親にclass="wrap"が付いていなければ何もしない
+  if (!wrapper.classList || !wrapper.classList.contains("wrap")) {
+    return;
+  }
+
+  const grandParent = wrapper.parentNode;
+  if (!grandParent) return;
+
+  grandParent.insertBefore(element, wrapper);
+  grandParent.removeChild(wrapper);
 }
 
 let currentWing = "教室棟";
@@ -1076,15 +1125,16 @@ function Initializer() {
 
   //翻訳
   const cookieLangage = getCookieValue("googtrans");
-  if (language != "") {
-    changeLanguage(language);
-  } else if (cookieLangage && cookieLangage.split("/")[2]) {
-    changeLanguage(cookieLangage.split("/")[2]);
-  }
-
-  if (language == "") {
-    language = "ja";
-  }
+  setTimeout(() => {
+    if (language != "") {
+      changeLanguage(language);
+    } else if (cookieLangage && cookieLangage.split("/")[2]) {
+      changeLanguage(cookieLangage.split("/")[2]);
+    }
+    if (language == "") {
+      language = "ja";
+    }
+  }, 1500);
 }
 
 function getCookieValue(name) {
@@ -1093,7 +1143,7 @@ function getCookieValue(name) {
   for (const cookie of cookies) {
     const [key, ...valueParts] = cookie.split("=");
 
-    if (key === name) {
+    if (key == name) {
       return decodeURIComponent(valueParts.join("="));
     }
   }
@@ -1107,7 +1157,24 @@ window.addEventListener("pageshow", (event) => {
   }
 });
 
-window.addEventListener("resize", closeSidebarForResponsive);
+window.addEventListener("resize", () => {
+  const activeElement = document.activeElement;
+
+  // ソフトウェアキーボードの表示などによるresizeの可能性があるため無視
+  if (
+    activeElement instanceof HTMLInputElement ||
+    activeElement instanceof HTMLTextAreaElement
+  ) {
+    return;
+  }
+
+  //スマホである場合無視
+  if (navigator.userAgent.match(/iPhone|Android.+Mobile/)) {
+    return;
+  }
+
+  closeSidebarForResponsive();
+});
 
 //画面が一定以上小さくなった際にサイドバーを閉じる
 function closeSidebarForResponsive() {
