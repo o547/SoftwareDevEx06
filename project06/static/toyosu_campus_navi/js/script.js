@@ -425,7 +425,7 @@ async function changeWingByLocation() {
     }
     wingGPSButton.innerText = `GPSから取得 (${wingName})`;
   } else {
-    wingGPSButton.innerHTML = `GPSから取得 (失敗))`;
+    wingGPSButton.innerHTML = `GPSから取得 (失敗)`;
     alert("現在いる棟を取得できませんでした。手動で入力をしてください。");
   }
 }
