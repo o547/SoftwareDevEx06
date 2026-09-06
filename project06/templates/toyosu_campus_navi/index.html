@@ -9,15 +9,17 @@
     name="description"
     content="芝浦工業大学 豊洲キャンパスの、構内図の閲覧および経路検索ができる非公式webアプリです。出発地と目的地を設定することで、教室や施設同士の経路を地図上で案内します。また、フロアマップをクリックすると施設情報が表示されます。"
   >
+  <meta name="msvalidate.01" content="C39BE38D90BB030F352F14C009945873" />
+
   {% load static %}
   <link rel="stylesheet" href="{% static 'toyosu_campus_navi/css/style.css' %}" />
-  
 
   <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
   <script src="https://cdn.jsdelivr.net/npm/@panzoom/panzoom/dist/panzoom.min.js"></script>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+JP:wght@100..900&display=swap" rel="stylesheet">
+  <meta name="google-site-verification" content="vZ_LVL9ynG4Tv2YhQ05xRLPor3tlFvUygjx1WBU9iwo" />
 </head>
 
 <body>
@@ -44,7 +46,7 @@
         <div class="map-scroll" style="width: 60%; display: none;" data-wing="本部棟">
           <img class="whole-map-img" src="{% static 'toyosu_campus_navi/image/floor_map/本部棟.jpg' %}" />
         </div>
-        
+
         <div class="campus-img-area" style="display: none;">
           <img class="campus-img" id="campus-img" src="{% static 'toyosu_campus_navi/image/floor_map/キャンパス.jpg' %}" />
         </div>
@@ -239,7 +241,6 @@
         <div class="account-row"></div>
       </div>
     </div>
-    <!-- モーダルウィンドウ開始 -->
     <div id="modal" class="modal" onclick="if (event.target == event.currentTarget) closeModal();">
       <div class="modal-content">
         <!-- 検索メニュー -->
@@ -379,7 +380,6 @@
         </div>
       </div>
     </div>
-    <!-- モーダルウィンドウ終了 -->
   </div>
 </body>
 
