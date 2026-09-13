@@ -868,6 +868,34 @@ body {
   cursor: pointer;
 }
 
+#section-search-input {
+  width: 60%;
+  height: 50px;
+  padding: 0 10px;
+  border-radius: 5px;
+  background: #e9f0f0;
+  border-style: none;
+  font-size: large;
+}
+
+.section-search-submit {
+  width: 80px;
+  height: 50px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 10px;
+  background: #6d9898;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: large;
+}
+
+.section-search-input-row {
+  justify-content: center;
+  gap: 10px;
+}
+
 @media (max-width: 800px) {
   .app {
     height: 100dvh;
@@ -906,6 +934,11 @@ body {
 
     gap: 10px;
   }
+  #search-select-menu .modal-body > .modal-row {
+    flex-direction: column;
+    gap: 80px;
+  }
+
   #search-menu .modal-body > .modal-row {
     flex-direction: column;
     gap: 40px;

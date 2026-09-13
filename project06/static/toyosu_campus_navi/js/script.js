@@ -1054,6 +1054,16 @@ document
     }
   });
 
+//enterで施設検索実行
+document
+  .getElementById("section-search-input")
+  .addEventListener("keydown", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      enterSectionSearch();
+    }
+  });
+
 //検索の選択肢を初期化
 const startWingSelect = document.getElementById("start-wing-select");
 const startFloorSelect = document.getElementById("start-floor-select");
@@ -1181,4 +1191,25 @@ function closeSidebarForResponsive() {
   if (window.innerWidth < 800) {
     closeSidebar("index-sidebar", "sidebar-open-button");
   }
+}
+
+//施設検索を実行
+function enterSectionSearch() {
+  const searchWord = document.getElementById("section-search-input").value;
+  console.log(getSectionsBySearchWord(searchWord));
+}
+
+//検索ワードが含まれるsection配列を取得
+function getSectionsBySearchWord(searchWord) {
+  let searchResults = [];
+  for (const sectionName of sectionNames) {
+    if (
+      sectionName.split("_")[2].includes(searchWord) &&
+      !sectionName.includes("中継") &&
+      !sectionName.includes("区画調整")
+    ) {
+      searchResults.push(sectionName);
+    }
+  }
+  return searchResults;
 }
