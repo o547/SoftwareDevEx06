@@ -1196,7 +1196,18 @@ function closeSidebarForResponsive() {
 //施設検索を実行
 function enterSectionSearch() {
   const searchWord = document.getElementById("section-search-input").value;
-  console.log(getSectionsBySearchWord(searchWord));
+  const resultTableTrs = document
+    .getElementById("section-search-result")
+    .querySelectorAll("tr");
+  const searchResults = getSectionsBySearchWord(searchWord);
+  for (let i = 0; i < 5; i++) {
+    if (searchResults[i]) {
+      const tds = resultTableTrs[i + 1].querySelectorAll("td");
+      tds[0].innerText = searchResults[i].split("_")[2];
+      tds[1].innerText =
+        searchResults[i].split("_")[0] + searchResults[i].split("_")[1];
+    }
+  }
 }
 
 //検索ワードが含まれるsection配列を取得

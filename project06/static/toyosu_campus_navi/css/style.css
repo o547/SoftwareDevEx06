@@ -896,6 +896,30 @@ body {
   gap: 10px;
 }
 
+#section-search-result {
+  background: #d6d6d6;
+  border-collapse: collapse;
+  font-size: 1.1rem;
+  color: black;
+  width: 80%;
+  border-radius: 3px;
+}
+
+#section-search-result th {
+  background: rgb(197, 195, 195);
+}
+
+#section-search-result th,
+#section-search-result td {
+  width: 30%;
+  padding-left: 5px;
+}
+
+#section-search-result th:first-child,
+#section-search-result td:first-child {
+  width: 40%;
+}
+
 @media (max-width: 800px) {
   .app {
     height: 100dvh;
