@@ -245,7 +245,8 @@
         <div id="search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">経路検索</h2>
-            <h2 onclick="toggleMenu('search-menu', 'search-select-menu', 'contents')" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('search-menu', 'search-select-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
@@ -402,45 +403,52 @@
         <div id="section-search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">施設検索</h2>
-            <h2 onclick="toggleMenu('section-search-menu', 'search-select-menu', 'contents')" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('section-search-menu', 'search-select-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body" style="padding: 2vh 0">
             <div class="modal-row section-search-input-row">
-              <input id="section-search-input" placeholder="施設名を入力">
+              <input id="section-search-input" placeholder="施設名を入力(例：405教室)">
               <button class="section-search-submit" onclick="enterSectionSearch()">検索</button>
             </div>
             <div class="modal-row">
-              <table border="1" id="section-search-result">
-                <tr>
-                  <th>施設名</th>
-                  <th>場所</th>
-                  <th>アクション</th>
-                </tr>
-                <tr>
-                  <td>　</td>
-                  <td>　</td>
-                  <td>　</td>
-                </tr>
-                <tr>
-                  <td>　</td>
-                  <td>　</td>
-                  <td>　</td>
-                </tr>
-                <tr>
-                  <td>　</td>
-                  <td>　</td>
-                  <td>　</td>
-                </tr>
-                <tr>
-                  <td>　</td>
-                  <td>　</td>
-                  <td>　</td>
-                </tr>
-                <tr>
-                  <td>　</td>
-                  <td>　</td>
-                  <td>　</td>
-                </tr>
+              <table id="section-search-result">
+                <thead>
+                  <tr>
+                    <th>施設名</th>
+                    <th>場所</th>
+                  </tr>
+                  <thead>
+                  <tbody>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                  </tbody>
               </table>
             </div>
           </div>

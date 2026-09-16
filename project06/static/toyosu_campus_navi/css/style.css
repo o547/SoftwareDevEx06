@@ -873,7 +873,6 @@ body {
   height: 50px;
   padding: 0 10px;
   border-radius: 5px;
-  background: #e9f0f0;
   border-style: none;
   font-size: large;
 }
@@ -897,27 +896,45 @@ body {
 }
 
 #section-search-result {
-  background: #d6d6d6;
+  background: white;
   border-collapse: collapse;
-  font-size: 1.1rem;
+  font-size: 1.05rem;
   color: black;
-  width: 80%;
+  width: 85%;
   border-radius: 3px;
+  margin-top: 10px;
 }
 
 #section-search-result th {
-  background: rgb(197, 195, 195);
+  background-color: #6d9898;
+  color: white;
 }
 
 #section-search-result th,
 #section-search-result td {
-  width: 30%;
-  padding-left: 5px;
+  border: 2px solid #d0d0d0; /* 境界線の太さを2pxに設定 */
+  padding: 5px;
+  vertical-align: middle;
 }
 
 #section-search-result th:first-child,
 #section-search-result td:first-child {
-  width: 40%;
+  width: 70%;
+  padding: 3px;
+}
+
+#section-search-result button {
+  height: 1.3rem;
+  margin: 5px;
+  display: flex;
+  justify-content: center; /* 左右中央 */
+  align-items: center; /* 上下中央 */
+}
+
+#section-search-result a {
+  color: -webkit-link;
+  cursor: pointer;
+  text-decoration: underline;
 }
 
 @media (max-width: 800px) {
@@ -1080,5 +1097,14 @@ body {
     min-height: 20vh;
     width: 35vh;
     margin: 30px auto;
+  }
+
+  #section-search-result {
+    width: 90%;
+  }
+
+  #section-search-result th,
+  #section-search-result td {
+    padding: 8px 5px;
   }
 }

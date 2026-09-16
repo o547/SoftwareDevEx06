@@ -797,7 +797,6 @@ function toggleDimention(switchElement) {
 
 //棟を変更
 function changeWing(wingName, inputElement) {
-  // console.log(wingName, inputElement.checked);
   if (isFloorMapMode) {
     currentWing = wingName;
     //階選択メニューを変更
@@ -847,6 +846,25 @@ function changeWing(wingName, inputElement) {
         campusMapImageArea.style.display = "none";
       }
     }
+  }
+}
+
+//任意の平面地図に画面遷移
+function junpToFloorMap(wingName, floorNumber) {
+  if (!isFloorMapMode) {
+    //立体地図から平面地図に切り替え
+    toggleDimention(document.querySelector(".dimention-switch-switch"));
+  }
+  if (currentWing != wingName) {
+    //棟を切り替え
+    changeWing(
+      wingName,
+      document.querySelector(`.wing-switch[value="${wingName}"]`),
+    );
+  }
+  if (currentFloorNumber != floorNumber) {
+    //階を切り替え
+    changeFloor(floorNumber);
   }
 }
 
@@ -1198,20 +1216,31 @@ function enterSectionSearch() {
   const searchWord = document.getElementById("section-search-input").value;
   const resultTableTrs = document
     .getElementById("section-search-result")
+    .querySelector("tbody")
     .querySelectorAll("tr");
   const searchResults = getSectionsBySearchWord(searchWord);
-  for (let i = 0; i < 5; i++) {
+  for (let i = 0; i < 7; i++) {
+    const tds = resultTableTrs[i].querySelectorAll("td");
     if (searchResults[i]) {
-      const tds = resultTableTrs[i + 1].querySelectorAll("td");
       tds[0].innerText = searchResults[i].split("_")[2];
-      tds[1].innerText =
-        searchResults[i].split("_")[0] + searchResults[i].split("_")[1];
+      if (searchResults[i].split("_")[2].length > 10) {
+        tds[0].style.fontSize = "0.95rem";
+      } else {
+        tds[0].style.fontSize = "";
+      }
+      tds[1].innerHTML = `<a onclick="closeModal();junpToFloorMap('${searchResults[i].split("_")[0]}',${searchResults[i].split("_")[1].replace("階", "")});">${searchResults[i].split("_")[0] + searchResults[i].split("_")[1]}</a>`;
+    } else {
+      tds[0].innerText = "　";
+      tds[1].innerText = "　";
     }
   }
 }
 
 //検索ワードが含まれるsection配列を取得
 function getSectionsBySearchWord(searchWord) {
+  if (!searchWord) {
+    return [];
+  }
   let searchResults = [];
   for (const sectionName of sectionNames) {
     if (
