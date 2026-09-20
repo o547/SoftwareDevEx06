@@ -1212,13 +1212,13 @@ function closeSidebarForResponsive() {
 }
 
 //施設検索を実行
-function enterSectionSearch() {
+async function enterSectionSearch() {
   const searchWord = document.getElementById("section-search-input").value;
   const resultTableTrs = document
     .getElementById("section-search-result")
     .querySelector("tbody")
     .querySelectorAll("tr");
-  const searchResults = getSectionsBySearchWord(searchWord);
+  const searchResults = await getSectionsBySearchWord(searchWord);
   for (let i = 0; i < 7; i++) {
     const tds = resultTableTrs[i].querySelectorAll("td");
     if (searchResults[i]) {
@@ -1237,19 +1237,36 @@ function enterSectionSearch() {
 }
 
 //検索ワードが含まれるsection配列を取得
-function getSectionsBySearchWord(searchWord) {
+async function getSectionsBySearchWord(searchWord) {
   if (!searchWord) {
     return [];
   }
-  let searchResults = [];
-  for (const sectionName of sectionNames) {
-    if (
-      sectionName.split("_")[2].includes(searchWord) &&
-      !sectionName.includes("中継") &&
-      !sectionName.includes("区画調整")
-    ) {
-      searchResults.push(sectionName);
-    }
+  const response = await fetch("/section/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+    },
+    body: JSON.stringify({
+      user_input: searchWord,
+      max_results_count: 7,
+    }),
+  });
+
+  const data = await response.json();
+
+  //一致確率順の配列を返す
+  let sortedArray = Object.entries(data.results);
+
+  // 数値で降順ソート
+  sortedArray.sort(function (a, b) {
+    return b[1] - a[1];
+  });
+
+  let sectionNames = [];
+  for (const element of sortedArray) {
+    sectionNames.push(element[0]);
   }
-  return searchResults;
+
+  return sectionNames;
 }

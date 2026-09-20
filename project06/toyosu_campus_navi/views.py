@@ -10,6 +10,7 @@ from .processes import (
     NoticeProcess,
     RouteSearchProcess,
     SectionInfoProcess,
+    SectionSearchProcess,
 )
 
 from django.contrib.auth.mixins import LoginRequiredMixin
@@ -226,6 +227,23 @@ class SearchView(View):
         return redirect("toyosu_campus_navi:index")
 
 
+# /section/search
+class SectionSearchView(View):
+    def post(self, request):
+
+        body = json.loads(request.body)
+        user_input = body["user_input"]
+        max_results_count = int(body["max_results_count"])
+
+        return JsonResponse(
+            {
+                "results": SectionSearchProcess().section_search(
+                    request, user_input, max_results_count
+                )
+            }
+        )
+
+
 # -------------------豊洲キャンパスナビ対象外 ここから-------------------
 
 
@@ -250,8 +268,7 @@ class LogoutView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-
-        return redirect("toyosu_campus_navi:index")
+        return ""
 
 
 # -------------------豊洲キャンパスナビ対象外 ここまで-------------------
@@ -270,6 +287,7 @@ notice_delete = NoticeDeleteView.as_view()
 notice_submit = NoticeSubmitView.as_view()
 history = HistoryView.as_view()
 identify_wing = IdentifyWingView.as_view()
+section_search = SectionSearchView.as_view()
 logout_view = LogoutView.as_view()
 plot = PlotView.as_view()
 debug = DebugView.as_view()

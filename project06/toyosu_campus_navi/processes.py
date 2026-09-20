@@ -15,6 +15,7 @@ from .managements import (
     RouteManagement,
 )
 from google import genai
+from typesafe_sdk import Choice, Noul, Score, TypeSafeClient
 
 
 # C3お知らせ処理部
@@ -968,3 +969,102 @@ class ChatBotProcess:
             f"過去のチャット履歴はこちらです．{history}"
         )
         return prompt
+
+
+# 施設検索処理部
+class SectionSearchProcess:
+    # Jev施設検索
+    def section_search(self, request, user_input, max_results_count):
+        nodes = RouteManagement().get_all_node_coordinates(request)
+        jev_noul_questions = {}
+        section_usages = {}
+        for node in nodes:
+            section_name = node["section_name"]
+            if "中継" in section_name or "区画調整" in section_name:
+                continue
+            # プロンプトに加える
+            jev_noul_questions[section_name] = {
+                "type": "noul",
+                "instructions": f"検索結果：{section_name}",
+            }
+
+            section_usage = SectionInfoManagement().get_section_info(
+                request, section_name
+            )["usage"]
+
+            if section_usage:
+                jev_noul_questions[section_name]["instructions"] += (
+                    " 施設の詳細：" + section_usage
+                )
+                section_usages[section_name] = section_usage
+
+        client = TypeSafeClient(api_key=f"{settings.JEV_API_KEY}")
+
+        response = client.system_one(
+            state={
+                "task": "大学内の施設を検索する検索ワードに対して、提示された検索結果が適切であるかを評価してください。",
+                "search_word": user_input,
+            },
+            questions=jev_noul_questions,
+        )
+
+        # print(response)
+
+        # scoreが0.7以上のものだけを取り出す
+        result_candidate = {}
+        for key, answer in response.answers.items():
+            if answer.noul > 0.7:
+                result_candidate[key] = answer.noul
+
+        # 上位項目255件だけを抽出
+        result_candidate = dict(
+            sorted(result_candidate.items(), key=lambda x: x[1], reverse=True)[:255]
+        )
+
+        # Jev Choiceで最終回答を得る
+
+        # プロンプト作成
+        jev_choice_questions = {
+            "search_result_choice": {
+                "type": "choice",
+                "instructions": {
+                    "question": "大学内の施設を検索する検索ワードに対して、どの検索結果が最も適切かを判断してください",
+                    "search_word": user_input,
+                },
+                "criteria": {},
+            }
+        }
+
+        for key, value in result_candidate.items():
+            if section_name in section_usages:
+                jev_choice_questions["search_result_choice"]["criteria"][key] = {
+                    value: {"info": section_name}
+                }
+            else:
+                jev_choice_questions["search_result_choice"]["criteria"][key] = {
+                    value: {"info": "詳細情報なし"}
+                }
+
+        # Jevに送信
+        response = client.system_one(
+            state={},
+            questions=jev_choice_questions,
+        )
+
+        # 確率が高い順にソート
+        sorted_probs = sorted(
+            response.answers["search_result_choice"].probabilities.items(),
+            key=lambda x: x[1],
+            reverse=True,
+        )
+
+        # 確率が 0.005以上のmax_results_count件を取り出す
+        results = {}
+        for i, (facility_name, prob) in enumerate(sorted_probs, start=1):
+            if prob < 0.005 or i > max_results_count:
+                break
+
+            print(f"{facility_name}: {prob * 100:.1f}%")
+            results[facility_name] = prob
+
+        return results
