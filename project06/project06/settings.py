@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = DJANGO_SECRET_KEY
 
 GEMINI_API_KEY = GEMINI_API_KEY
-GEMINI_API_KEY = JEV_API_KEY
+JEV_API_KEY = JEV_API_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

@@ -268,7 +268,7 @@ class LogoutView(View):
 # ここを書き換えて、/deubugにアクセスする
 class DebugView(View):
     def get(self, request):
-        return ""
+        return redirect("toyosu_campus_navi:index")
 
 
 # -------------------豊洲キャンパスナビ対象外 ここまで-------------------

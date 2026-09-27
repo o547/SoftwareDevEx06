@@ -978,11 +978,11 @@ class SectionSearchProcess:
         nodes = RouteManagement().get_all_node_coordinates(request)
         jev_noul_questions = {}
         section_usages = {}
+        # プロンプトを組み立てる
         for node in nodes:
             section_name = node["section_name"]
             if "中継" in section_name or "区画調整" in section_name:
                 continue
-            # プロンプトに加える
             jev_noul_questions[section_name] = {
                 "type": "noul",
                 "instructions": f"検索結果：{section_name}",
