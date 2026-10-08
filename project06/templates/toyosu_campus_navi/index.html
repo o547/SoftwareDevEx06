@@ -244,7 +244,7 @@
         <!-- 経路検索メニュー -->
         <div id="search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
-            <h2 class="modal-title">経路検索</h2>
+            <h2 class="modal-title">ルートを検索</h2>
             <h2 onclick="toggleMenu('search-menu', 'search-select-menu', 'contents')"
               class="modal-close-button notranslate">×</h2>
           </div>
@@ -382,18 +382,18 @@
         <!-- 検索モード選択 -->
         <div id="search-select-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
-            <h2 class="modal-title">検索モード選択</h2>
+            <h2 class="modal-title">モード選択</h2>
             <h2 onclick="closeModal()" class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
               <div class="search-menu-button" onclick="
                   toggleMenu('search-select-menu', 'search-menu', 'contents')">
-                経路
+                ルートを検索
               </div>
               <div class="search-menu-button" onclick="
                   toggleMenu('search-select-menu', 'section-search-menu', 'contents')">
-                施設
+                施設を探す
               </div>
             </div>
           </div>
@@ -402,13 +402,13 @@
         <!-- 施設検索 -->
         <div id="section-search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
-            <h2 class="modal-title">施設検索</h2>
+            <h2 class="modal-title">施設を探す</h2>
             <h2 onclick="toggleMenu('section-search-menu', 'search-select-menu', 'contents')"
               class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body" style="padding: 2vh 0">
             <div class="modal-row section-search-input-row">
-              <input id="section-search-input" placeholder="施設名を入力(例：405教室)">
+              <input id="section-search-input" placeholder="施設名や用途を入力(例：405教室)">
               <button class="section-search-submit" onclick="enterSectionSearch()">検索</button>
             </div>
             <div class="modal-row">

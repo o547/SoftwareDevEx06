@@ -216,6 +216,13 @@ select.search-menu-section {
   visibility: hidden;
 }
 
+#search-select-menu .search-menu-button {
+  height: 145px;
+  border-radius: 20px;
+  font-size: 25px;
+  box-shadow: 0 4px 0 #bdbdbd;
+}
+
 #search-loading {
   font-size: 2rem;
 }
