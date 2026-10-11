@@ -1254,6 +1254,12 @@ async function getSectionsBySearchWord(searchWord) {
   });
 
   const data = await response.json();
+  const alertMessage = data.alert_message;
+
+  if (alertMessage) {
+    alert(alertMessage);
+    return [];
+  }
 
   //一致確率順の配列を返す
   let sortedArray = Object.entries(data.results);

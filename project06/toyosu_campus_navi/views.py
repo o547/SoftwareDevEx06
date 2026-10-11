@@ -151,7 +151,6 @@ class HistoryView(View):
 # /identify/wing
 class IdentifyWingView(View):
     def post(self, request):
-
         body = json.loads(request.body)
         latitude = body["latitude"]
         longitude = body["longitude"]
@@ -162,7 +161,6 @@ class IdentifyWingView(View):
 # /user/login
 class UserLoginView(View):
     def post(self, request):
-
         login_id = request.POST["login-id"]
         login_password = request.POST["login-password"]
         login_method = request.POST["login-method"]
@@ -180,7 +178,6 @@ class UserLoginView(View):
 # /chatbot/submit
 class ChatBotView(View):
     def post(self, request):
-
         body = json.loads(request.body)
         question = body["question"]
         reply = ChatBotProcess().reply_to_chat(request, question)
@@ -195,7 +192,6 @@ class ChatBotView(View):
 # /language/submit
 class LanguageView(View):
     def post(self, request):
-
         body = json.loads(request.body)
         language = body["language"]
         response = LoginProcess().save_language(request, language)
@@ -230,21 +226,19 @@ class SearchView(View):
 # /section/search
 class SectionSearchView(View):
     def post(self, request):
-
         body = json.loads(request.body)
         user_input = body["user_input"]
         max_results_count = int(body["max_results_count"])
+        search_result = SectionSearchProcess().section_search(
+            request, user_input, max_results_count
+        )
 
         return JsonResponse(
             {
-                "results": SectionSearchProcess().section_search(
-                    request, user_input, max_results_count
-                )
+                "results": search_result["results"],
+                "alert_message": search_result["alert_message"],
             }
         )
-
-
-# -------------------豊洲キャンパスナビ対象外 ここから-------------------
 
 
 # /plot
@@ -269,9 +263,6 @@ class LogoutView(View):
 class DebugView(View):
     def get(self, request):
         return redirect("toyosu_campus_navi:index")
-
-
-# -------------------豊洲キャンパスナビ対象外 ここまで-------------------
 
 
 index = IndexView.as_view()
