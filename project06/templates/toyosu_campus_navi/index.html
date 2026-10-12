@@ -5,10 +5,8 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>豊洲キャンパスナビ | 芝浦工業大学豊洲キャンパスの構内地図・経路案内アプリ</title>
-  <meta
-    name="description"
-    content="芝浦工業大学 豊洲キャンパスの、構内図の閲覧および経路検索ができる非公式webアプリです。出発地と目的地を設定することで、教室や施設同士の経路を地図上で案内します。また、フロアマップをクリックすると施設情報が表示されます。"
-  >
+  <meta name="description"
+    content="芝浦工業大学 豊洲キャンパスの、構内図の閲覧および経路検索ができる非公式webアプリです。出発地と目的地を設定することで、教室や施設同士の経路を地図上で案内します。また、フロアマップをクリックすると施設情報が表示されます。">
   <meta name="msvalidate.01" content="C39BE38D90BB030F352F14C009945873" />
 
   {% load static %}
@@ -92,7 +90,7 @@
         <div class="wing-switch-title">表示させたい棟</div>
         <div>
           <label><input type="checkbox" onchange="changeWing('研究棟',this)" class="wing-switch" value="研究棟"
-            name="wing-switch" /> <span class="wing-name notranslate" data-wing="研究棟">研究棟</span></label>
+              name="wing-switch" /> <span class="wing-name notranslate" data-wing="研究棟">研究棟</span></label>
         </div>
         <div>
           <label><input type="checkbox" onchange="changeWing('教室棟',this)" class="wing-switch" value="教室棟"
@@ -100,13 +98,13 @@
         </div>
         <div>
           <label><input type="checkbox" onchange="changeWing('交流棟',this)" class="wing-switch" value="交流棟"
-            name="wing-switch" /> <span class="wing-name notranslate" data-wing="交流棟">交流棟</span></label>
+              name="wing-switch" /> <span class="wing-name notranslate" data-wing="交流棟">交流棟</span></label>
         </div>
         <div>
           <label><input type="checkbox" onchange="changeWing('本部棟',this)" class="wing-switch" name="wing-switch"
               value="本部棟" /> <span class="wing-name notranslate" data-wing="本部棟">本部棟</span></label>
         </div>
-            <div onclick="changeWingByLocation()" class="wing-gps-button">GPSから取得</div>
+        <div onclick="changeWingByLocation()" class="wing-gps-button">GPSから取得</div>
       </div>
 
       <div class="modal section-modal" onclick="if (event.target == event.currentTarget) closeSectionModal();">
@@ -159,7 +157,7 @@
       </div>
 
       <div id="sidebar-buttons">
-        <div class="sidebar-button" onclick="selectFromMapModeFalse(); openModal('search-menu')">
+        <div class="sidebar-button" onclick="selectFromMapModeFalse(); openModal('search-select-menu')">
           <img src="{%static 'toyosu_campus_navi/image/search.png' %}" class="menu-icon">
           <span>検索</span>
         </div>
@@ -243,11 +241,12 @@
     </div>
     <div id="modal" class="modal" onclick="if (event.target == event.currentTarget) closeModal();">
       <div class="modal-content">
-        <!-- 検索メニュー -->
+        <!-- 経路検索メニュー -->
         <div id="search-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
-            <h2 class="modal-title">検索</h2>
-            <h2 onclick="closeModal()" class="modal-close-button notranslate">×</h2>
+            <h2 class="modal-title">ルートを検索</h2>
+            <h2 onclick="toggleMenu('search-menu', 'search-select-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body" style="padding: 8vh 0">
             <div class="modal-row">
@@ -257,7 +256,7 @@
                 出発地
               </div>
               <div class="search-arrow">▶▶▶</div>
-              <div class="search-menu-button"  id="goal-point-menu-button" onclick="
+              <div class="search-menu-button" id="goal-point-menu-button" onclick="
                   toggleSearchEnterButton('goal'); toggleMenu('search-menu', 'goal-point-menu', 'contents')
                 ">
                 目的地
@@ -269,7 +268,8 @@
         <div id="start-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">出発地点入力</h2>
-            <h2 onclick="toggleMenu('start-point-menu', 'search-menu', 'contents')" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('start-point-menu', 'search-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -325,7 +325,8 @@
         <div id="goal-point-menu" class="modal-menu" style="display: none">
           <div class="modal-row modal-header">
             <h2 class="modal-title">目的地点入力</h2>
-            <h2 onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')" class="modal-close-button notranslate">×</h2>
+            <h2 onclick="toggleMenu('goal-point-menu', 'search-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
           </div>
           <div class="modal-body">
             <div class="modal-body-title">自動入力</div>
@@ -345,8 +346,7 @@
             </div>
           </div>
           <div class="modal-row modal-footer">
-            <div class="sidebar-button square" id="goal-point-enter-button"
-              onclick="searchEnter('goal');">
+            <div class="sidebar-button square" id="goal-point-enter-button" onclick="searchEnter('goal');">
               決定
             </div>
           </div>
@@ -366,7 +366,6 @@
                 <div class="chatbot-message bot-message">
                   「出発地」と「目的地」を教えてください。<br>経路検索結果のリンクを案内します。
                 </div>
-
               </div>
 
             </div>
@@ -376,6 +375,81 @@
             <button class="chatbot-submit" onclick="chatbotSubmit()">
               送信
             </button>
+          </div>
+        </div>
+
+        <!-- 検索モード選択 -->
+        <div id="search-select-menu" class="modal-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">モード選択</h2>
+            <h2 onclick="closeModal()" class="modal-close-button notranslate">×</h2>
+          </div>
+          <div class="modal-body" style="padding: 8vh 0">
+            <div class="modal-row">
+              <div class="search-menu-button" onclick="
+                  toggleMenu('search-select-menu', 'search-menu', 'contents')">
+                ルートを検索
+              </div>
+              <div class="search-menu-button" onclick="
+                  toggleMenu('search-select-menu', 'section-search-menu', 'contents')">
+                施設を探す
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- 施設検索 -->
+        <div id="section-search-menu" class="modal-menu" style="display: none">
+          <div class="modal-row modal-header">
+            <h2 class="modal-title">施設を探す</h2>
+            <h2 onclick="toggleMenu('section-search-menu', 'search-select-menu', 'contents')"
+              class="modal-close-button notranslate">×</h2>
+          </div>
+          <div class="modal-body" style="padding: 2vh 0">
+            <div class="modal-row section-search-input-row">
+              <input id="section-search-input" placeholder="施設名や用途を入力(例：405教室)">
+              <button class="section-search-submit" onclick="enterSectionSearch()">検索</button>
+            </div>
+            <div class="modal-row">
+              <table id="section-search-result">
+                <thead>
+                  <tr>
+                    <th>施設名</th>
+                    <th>場所</th>
+                  </tr>
+                  <thead>
+                  <tbody>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                    <tr>
+                      <td>　</td>
+                      <td>　</td>
+                    </tr>
+                  </tbody>
+              </table>
+            </div>
           </div>
         </div>
       </div>

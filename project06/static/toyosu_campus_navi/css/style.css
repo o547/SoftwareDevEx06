@@ -216,6 +216,13 @@ select.search-menu-section {
   visibility: hidden;
 }
 
+#search-select-menu .search-menu-button {
+  height: 145px;
+  border-radius: 20px;
+  font-size: 25px;
+  box-shadow: 0 4px 0 #bdbdbd;
+}
+
 #search-loading {
   font-size: 2rem;
 }
@@ -868,6 +875,84 @@ body {
   cursor: pointer;
 }
 
+#section-search-input {
+  width: 60%;
+  height: 50px;
+  padding: 0 10px;
+  border-radius: 5px;
+  border-style: none;
+  font-size: large;
+}
+
+.section-search-submit {
+  width: 80px;
+  height: 50px;
+  flex-shrink: 0;
+  border: none;
+  border-radius: 10px;
+  background: #6d9898;
+  color: white;
+  cursor: pointer;
+  transition: all 0.15s ease;
+  font-size: large;
+}
+
+.section-search-input-row {
+  justify-content: center;
+  gap: 10px;
+  margin-bottom: 10px;
+}
+
+#section-search-result {
+  background: white;
+  border-collapse: collapse;
+  font-size: 1.05rem;
+  color: black;
+  width: 85%;
+  border-radius: 3px;
+  margin-top: 10px;
+}
+
+#section-search-result th {
+  background-color: #6d9898;
+  color: white;
+}
+
+#section-search-result th,
+#section-search-result td {
+  border: 2px solid #d0d0d0; /* 境界線の太さを2pxに設定 */
+  padding: 5px;
+  vertical-align: middle;
+}
+
+#section-search-result th:first-child,
+#section-search-result td:first-child {
+  width: 70%;
+  padding: 3px;
+}
+
+#section-search-result button {
+  height: 1.3rem;
+  margin: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#section-search-result a {
+  color: -webkit-link;
+  cursor: pointer;
+  text-decoration: underline;
+}
+
+#section-search-menu .modal-body {
+  overflow: hidden;
+}
+
+#section-search-menu .modal-body > .modal-row:last-child {
+  overflow-y: auto;
+}
+
 @media (max-width: 800px) {
   .app {
     height: 100dvh;
@@ -906,6 +991,11 @@ body {
 
     gap: 10px;
   }
+  #search-select-menu .modal-body > .modal-row {
+    flex-direction: column;
+    gap: 80px;
+  }
+
   #search-menu .modal-body > .modal-row {
     flex-direction: column;
     gap: 40px;
@@ -1023,5 +1113,14 @@ body {
     min-height: 20vh;
     width: 35vh;
     margin: 30px auto;
+  }
+
+  #section-search-result {
+    width: 90%;
+  }
+
+  #section-search-result th,
+  #section-search-result td {
+    padding: 8px 5px;
   }
 }

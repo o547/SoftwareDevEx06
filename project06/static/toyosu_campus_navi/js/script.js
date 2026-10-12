@@ -797,7 +797,6 @@ function toggleDimention(switchElement) {
 
 //棟を変更
 function changeWing(wingName, inputElement) {
-  // console.log(wingName, inputElement.checked);
   if (isFloorMapMode) {
     currentWing = wingName;
     //階選択メニューを変更
@@ -847,6 +846,25 @@ function changeWing(wingName, inputElement) {
         campusMapImageArea.style.display = "none";
       }
     }
+  }
+}
+
+//任意の平面地図に画面遷移
+function junpToFloorMap(wingName, floorNumber) {
+  if (!isFloorMapMode) {
+    //立体地図から平面地図に切り替え
+    toggleDimention(document.querySelector(".dimention-switch-switch"));
+  }
+  if (currentWing != wingName) {
+    //棟を切り替え
+    changeWing(
+      wingName,
+      document.querySelector(`.wing-switch[value="${wingName}"]`),
+    );
+  }
+  if (currentFloorNumber != floorNumber) {
+    //階を切り替え
+    changeFloor(floorNumber);
   }
 }
 
@@ -1054,6 +1072,16 @@ document
     }
   });
 
+//enterで施設検索実行
+document
+  .getElementById("section-search-input")
+  .addEventListener("keydown", (event) => {
+    if (event.key == "Enter") {
+      event.preventDefault();
+      enterSectionSearch();
+    }
+  });
+
 //検索の選択肢を初期化
 const startWingSelect = document.getElementById("start-wing-select");
 const startFloorSelect = document.getElementById("start-floor-select");
@@ -1181,4 +1209,70 @@ function closeSidebarForResponsive() {
   if (window.innerWidth < 800) {
     closeSidebar("index-sidebar", "sidebar-open-button");
   }
+}
+
+//施設検索を実行
+async function enterSectionSearch() {
+  const searchWord = document.getElementById("section-search-input").value;
+  const resultTableTrs = document
+    .getElementById("section-search-result")
+    .querySelector("tbody")
+    .querySelectorAll("tr");
+  const searchResults = await getSectionsBySearchWord(searchWord);
+  for (let i = 0; i < 7; i++) {
+    const tds = resultTableTrs[i].querySelectorAll("td");
+    if (searchResults[i]) {
+      tds[0].innerText = searchResults[i].split("_")[2];
+      if (searchResults[i].split("_")[2].length > 10) {
+        tds[0].style.fontSize = "0.95rem";
+      } else {
+        tds[0].style.fontSize = "";
+      }
+      tds[1].innerHTML = `<a onclick="closeModal();junpToFloorMap('${searchResults[i].split("_")[0]}',${searchResults[i].split("_")[1].replace("階", "")});">${searchResults[i].split("_")[0] + searchResults[i].split("_")[1]}</a>`;
+    } else {
+      tds[0].innerText = "　";
+      tds[1].innerText = "　";
+    }
+  }
+}
+
+//検索ワードが含まれるsection配列を取得
+async function getSectionsBySearchWord(searchWord) {
+  if (!searchWord) {
+    return [];
+  }
+  const response = await fetch("/section/search", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "X-CSRFToken": document.querySelector("[name=csrfmiddlewaretoken]").value,
+    },
+    body: JSON.stringify({
+      user_input: searchWord,
+      max_results_count: 7,
+    }),
+  });
+
+  const data = await response.json();
+  const alertMessage = data.alert_message;
+
+  if (alertMessage) {
+    alert(alertMessage);
+    return [];
+  }
+
+  //一致確率順の配列を返す
+  let sortedArray = Object.entries(data.results);
+
+  // 数値で降順ソート
+  sortedArray.sort(function (a, b) {
+    return b[1] - a[1];
+  });
+
+  let sectionNames = [];
+  for (const element of sortedArray) {
+    sectionNames.push(element[0]);
+  }
+
+  return sectionNames;
 }

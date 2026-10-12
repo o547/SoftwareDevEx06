@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/6.0/ref/settings/
 from pathlib import Path
 from .keys import DJANGO_SECRET_KEY
 from .keys import GEMINI_API_KEY
+from .keys import JEV_API_KEY
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
@@ -25,6 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = DJANGO_SECRET_KEY
 
 GEMINI_API_KEY = GEMINI_API_KEY
+JEV_API_KEY = JEV_API_KEY
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True

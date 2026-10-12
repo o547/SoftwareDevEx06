@@ -18,6 +18,7 @@ urlpatterns = [
     path("history", views.history, name="history"),
     path("logout", views.logout_view, name="logout_view"),
     path("identify/wing", views.identify_wing, name="identify_wing"),
+    path("section/search", views.section_search, name="section_search"),
     path("plot", views.plot, name="plot"),
     path("debug", views.debug, name="debug"),
 ]
